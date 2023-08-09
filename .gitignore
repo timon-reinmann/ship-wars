@@ -3,6 +3,38 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
+
+
+# Visual Studio
+.vs/
+.vscode/
+/CI/tools/*
+!/CI/tools/packages.config
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+*.awcache
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+
+
 # Node artifact files
 node_modules/
 dist/
@@ -47,4 +79,6 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+
+
 
