@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YOO.Trainees.Christmastree.Timon", "YOO.Trainees.Christmastree.Timon\YOO.Trainees.Christmastree.Timon.csproj", "{874C8670-996D-47E0-B65A-2E4351B1BBCA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{874C8670-996D-47E0-B65A-2E4351B1BBCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{874C8670-996D-47E0-B65A-2E4351B1BBCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{874C8670-996D-47E0-B65A-2E4351B1BBCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{874C8670-996D-47E0-B65A-2E4351B1BBCA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {39F5E031-5C1A-4D0A-A917-513FCC844E0A}
+	EndGlobalSection
+EndGlobal
