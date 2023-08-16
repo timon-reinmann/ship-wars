@@ -1,25 +1,19 @@
-﻿using System.Collections.Generic;
-
-{
-    class Program
+﻿class Program
 {
     static void Main(string[] args)
     {
-        int value = 1;
-        Dictionary<int, int> tmp = new Dictionary<int, int>();
-        bool exitOuterLoop = false;
         int[,] sudokuTest = {
-                {5,3,0, 0,7,0, 0,0,0 },
-                {6,0,0, 1,9,5, 0,0,0 },
-                {0,9,8, 0,0,0, 0,6,0 },
+                {1,3,0, 0,0,5, 0,4,0 },
+                {5,0,0, 7,3,0, 0,0,0 },
+                {7,0,0, 0,1,9, 0,0,0 },
 
-                {8,0,0, 0,6,0, 0,0,3 },
-                {4,0,0, 8,0,3, 0,0,1 },
-                {7,0,0, 0,2,0, 0,0,6 },
+                {0,0,6, 0,0,0, 1,0,9 },
+                {0,0,9, 8,0,0, 0,0,2 },
+                {8,7,0, 0,0,0, 0,0,0 },
 
-                {0,6,0, 0,0,0, 2,8,0 },
-                {0,0,0, 4,1,9, 0,0,5 },
-                {0,0,0, 0,8,0, 0,7,9 }
+                {0,0,0, 0,0,8, 0,0,0 },
+                {0,0,0, 3,4,0, 0,6,0 },
+                {6,0,0, 0,0,0, 0,0,5 }
             };
         int[,] sudokuCompare = {
                 {5,3,4, 6,7,8, 9,1,2 },
@@ -34,111 +28,79 @@
                 {2,8,7, 4,1,9, 6,3,5 },
                 {3,4,5, 2,8,6, 1,7,9 }
             };
-        for (int i = 0; i < 9; i++)
+        if (SudokuLös(sudokuTest))
         {
-            for (int j = 0; j < 9; j++)
+            Console.WriteLine("SUDOKU GELÖÖÖST");
+        }else
+        {
+            Console.WriteLine("Sudoku Unlösbar");
+        }
+            
+    }
+
+    private static bool SudokuLös(int[,] sudokuTest)
+    {
+        for(int y = 0; y < 9; y++)
+        {
+            for(int x = 0; x < 9; x++)
             {
-                if (!exitOuterLoop)
-                    value = 1 + sudokuTest[i, j];
-                exitOuterLoop = false;
-                if (sudokuTest[i, j] != 0)
+                if (sudokuTest[y, x] != 0)
                 {
                     continue;
                 }
-                // Check if value is already there in 3x3?
-                ThreeByThree(ref value, ref exitOuterLoop, sudokuTest, i, ref j);
-                if (exitOuterLoop)
+                for (int wert = 1; wert <= 9; wert++)
                 {
-                    if (value == 9)
-                        j--;
-                    continue;
+                    if (FeldFrei(sudokuTest, y, x, wert))
+                    {
+                        sudokuTest[y, x] = wert;
+                        Console.Clear();
+                        SudokuZeichnen(sudokuTest);
+                        Thread.Sleep(5);
+                        if (SudokuLös(sudokuTest))
+                        {
+                            return true;
+                        }
+                        sudokuTest[y, x] = 0;
+                    }
                 }
-                //Check if Value is alread there in up down and left to 
-                Xplus9(ref value, ref exitOuterLoop, sudokuTest, i, ref j);
-                if (exitOuterLoop)
-                {
-                    if (value == 9)
-                        j--;
-                    continue;
-                }
-                Yplus9(ref value, ref exitOuterLoop, sudokuTest, i, ref j);
-                if (exitOuterLoop)
-                {
-                    if (value == 9)
-                        j--;
-                    continue;
-                }
-                sudokuTest[i, j] = value;
+                return false;
             }
         }
-        CorrectTest(sudokuTest, sudokuCompare);
+        return true;
     }
 
-    private static void Yplus9(ref int value, ref bool exitOuterLoop, int[,] sudokuTest, int i, ref int j)
+    private static void SudokuZeichnen(int[,] sudokuTest)
     {
-        for (int l = 0; l < 9; l++)
+        for (int y = 0; y < 9; y++)
         {
-            if (sudokuTest[l, i] == value)
-            {
-                exitOuterLoop = true;
-                value++;
-                j--;
-                break;
+            if (y != 0 && y % 3 == 0)
+            { 
+                Console.WriteLine(new string('-', 19));
             }
-        }
-    }
 
-    private static void Xplus9(ref int value, ref bool exitOuterLoop, int[,] sudokuTest, int i, ref int j)
-    {
-        for (int l = 0; l < 9; l++)
-        {
-            if (sudokuTest[i, l] == value)
+            for (int x = 0; x < 9; x++)
             {
-                exitOuterLoop = true;
-                value++;
-                j--;
-                break;
+                if (x != 0 && x % 3 == 0)
+                    Console.Write("|");
+
+                Console.Write(sudokuTest[y, x]);
+
+                if (x < 8) 
+                    Console.Write(" ");
             }
+            Console.WriteLine();
         }
     }
 
-    private static void ThreeByThree(ref int value, ref bool exitOuterLoop, int[,] sudokuTest, int i, ref int j)
+    private static bool FeldFrei(int[,] sudokuTest, int y, int x, int wert)
     {
-        for (int k = i - (i % 3); k < (i - (i % 3) + 3); k++)
+        for(int i =  0; i < 9; i++)
         {
-            for (int l = j - (j % 3); l < l + 3; l++)
+            if (sudokuTest[y, i] == wert || sudokuTest[i, x] == wert || sudokuTest[y - y % 3 + i  / 3, x - x % 3 + i % 3] == wert)
             {
-                if (sudokuTest[k, l] == value)
-                {
-                    exitOuterLoop = true;
-                    break;
-                }
-            }
-            if (exitOuterLoop)
-            {
-                j--;
-                value++;
-                break;
+                return false;
             }
         }
+        return true;
     }
-
-    private static void CorrectTest(int[,] sudokuTest, int[,] sudokuCompare)
-    {
-        for (int i = 0; i < 9; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                if (sudokuTest[i, j] != sudokuCompare[i, j])
-                {
-                    Console.WriteLine("Code funktioniert noch nicht :(");
-                    Thread.Sleep(10000);
-                    Environment.Exit(0);
-                }
-            }
-        }
-        Console.WriteLine("Code funktioniert :) !!!");
-        Thread.Sleep(10000);
-    }
-}
 }
