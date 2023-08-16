@@ -14,6 +14,7 @@ namespace Snake.io
 
             snake.WriteSnake();
             snake.WriteBoard();
+            snake.MoveSnake();
             Console.ReadKey();
         }
     }
