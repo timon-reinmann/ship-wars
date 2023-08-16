@@ -53,7 +53,7 @@ namespace Snake.io
             for (int i = 0; i <= (Width); i++)
             {
                 Console.SetCursorPosition(i + 1, (Height + 1));
-                Console.Write("");
+                Console.Write("-");
             }
 
             for (int i = 0; i <= (Height); i++)
@@ -67,6 +67,10 @@ namespace Snake.io
                 Console.SetCursorPosition((Width + 1), i + 1);
                 Console.Write("|");
             }
+        }
+        public void MoveSnake()
+        {
+                 
         }
     }
 }
