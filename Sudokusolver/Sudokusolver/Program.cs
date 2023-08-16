@@ -105,7 +105,7 @@ namespace Sudokusolver
 
         private static void ThreeByThree(ref int value, ref bool exitOuterLoop, int[,] sudokuTest, int i, ref int j)
         {
-            for (int k = i - (i % 3); k < k + 3; k++)
+            for (int k = i - (i % 3); k < (i - (i % 3) + 3); k++)
             {
                 for (int l = j - (j % 3); l < l + 3; l++)
                 {
