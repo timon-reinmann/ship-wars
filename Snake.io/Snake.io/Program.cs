@@ -11,18 +11,7 @@ namespace Snake.io
         static public void Main(String[] args)
         {
             SnakeIO snake = new SnakeIO();
-
-            snake.WriteBoard();
-            for (int i = 0; i < 5; i++)
-            {
-                snake.MoveSnake();
-                if (i == 5)
-                {
-                    Console.Clear();
-                    i = 0;
-                }
-            }
-            Console.ReadKey();
+            snake.RunGame();
         }
     }
 }
