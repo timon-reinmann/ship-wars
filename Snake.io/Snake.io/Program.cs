@@ -6,15 +6,22 @@ using System.Threading.Tasks;
 
 namespace Snake.io
 {
-    public class Program 
-    { 
+    public class Program
+    {
         static public void Main(String[] args)
         {
             SnakeIO snake = new SnakeIO();
 
-            snake.WriteSnake();
             snake.WriteBoard();
-            snake.MoveSnake();
+            for (int i = 0; i < 5; i++)
+            {
+                snake.MoveSnake();
+                if (i == 5)
+                {
+                    Console.Clear();
+                    i = 0;
+                }
+            }
             Console.ReadKey();
         }
     }
