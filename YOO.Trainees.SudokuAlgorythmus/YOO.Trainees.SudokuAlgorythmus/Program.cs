@@ -4,7 +4,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        List<List<int>> nakedPairs = new List<List<int>>();
         Console.WriteLine("Bitte geben Sie das 2D-Array im folgenden Format ein:");
         Console.WriteLine("{1,3,0, 0,0,5, 0,4,0 },");
         Console.WriteLine("...");
@@ -22,26 +21,13 @@ class Program
                 array[i, j] = int.Parse(elements[j]);
             }
         }
-
-        int[,] sudokuTest = {
-                {1,3,0, 0,0,5, 0,4,0 },
-                {5,0,0, 7,3,0, 0,0,0 },
-                {7,0,0, 0,1,9, 0,0,0 },
-
-                {0,0,6, 0,0,0, 1,0,9 },
-                {0,0,9, 8,0,0, 0,0,2 },
-                {8,7,0, 0,0,0, 0,0,0 },
-
-                {0,0,0, 0,0,8, 0,0,0 },
-                {0,0,0, 3,4,0, 0,6,0 },
-                {6,0,0, 0,0,0, 0,0,5 }
-            };
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        if (SudokuLös(array, nakedPairs))
+        if (SudokuLös(array))
         {
             Console.WriteLine("SUDOKU GELÖÖÖST");
+            SudokuZeichnen(array);
         }
         else
         {
@@ -55,44 +41,35 @@ class Program
 
     }
 
-    private static bool SudokuLös(int[,] sudokuTest, List<List<int>> nakedPairs)
+    private static bool SudokuLös(int[,] sudokuTest)
     {
         List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         for (int y = 0; y < 9; y++)
         {
+
             for (int x = 0; x < 9; x++)
             {
                 if (sudokuTest[y, x] != 0)
                 {
                     continue;
                 }
-                numbers = NakedPair(PossibleNumbers(sudokuTest, x, y, numbers), nakedPairs);
-                nakedPairs.Add(numbers);
-                for (int i = 0; i < numbers.Count; i++)
+                numbers = PossibleNumbers(sudokuTest, x, y, numbers);
+                foreach (int number in numbers)
                 {
-                    if (FeldFrei(sudokuTest, y, x, numbers[i]))
+                    sudokuTest[y, x] = number;
+                    Console.Clear();
+                    SudokuZeichnen(sudokuTest);
+                    Thread.Sleep(5);
+                    if (SudokuLös(sudokuTest))
                     {
-                        sudokuTest[y, x] = numbers[i];
-                        /* Console.Clear();
-                         SudokuZeichnen(sudokuTest);
-                         Thread.Sleep(5);*/
-                        if (SudokuLös(sudokuTest, nakedPairs))
-                        {
-                            return true;
-                        }
-                        sudokuTest[y, x] = 0;
+                        return true;
                     }
+                    sudokuTest[y, x] = 0;
                 }
                 return false;
             }
         }
         return true;
-    }
-
-    private static List<int> NakedPair(List<int> list, List<List<int>> nakedPairs)
-    {
-        
-        return list;
     }
 
     private static List<int> PossibleNumbers(int[,] sudokuTest, int x, int y, List<int> numbers)
@@ -136,17 +113,5 @@ class Program
             }
             Console.WriteLine();
         }
-    }
-
-    private static bool FeldFrei(int[,] sudokuTest, int y, int x, int wert)
-    {
-        for (int i = 0; i < 9; i++)
-        {
-            if (sudokuTest[y, i] == wert || sudokuTest[i, x] == wert || sudokuTest[y - y % 3 + i / 3, x - x % 3 + i % 3] == wert)
-            {
-                return false;
-            }
-        }
-        return true;
     }
 }
