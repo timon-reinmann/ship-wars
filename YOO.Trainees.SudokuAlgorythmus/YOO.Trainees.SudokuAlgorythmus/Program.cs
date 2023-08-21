@@ -2,6 +2,24 @@
 {
     static void Main(string[] args)
     {
+        Console.WriteLine("Bitte geben Sie das 2D-Array im folgenden Format ein:");
+        Console.WriteLine("{1,3,0, 0,0,5, 0,4,0 },");
+        Console.WriteLine("...");
+        Console.WriteLine("{6,0,0, 0,0,0, 0,0,5 }");
+
+        int[,] array = new int[9, 9];
+
+        for (int i = 0; i < 9; i++)
+        {
+            string inputLine = Console.ReadLine().Trim(' ', '{', '}', ',');
+            string[] elements = inputLine.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int j = 0; j < elements.Length; j++)
+            {
+                array[i, j] = int.Parse(elements[j]);
+            }
+        }
+
         int[,] sudokuTest = {
                 {1,3,0, 0,0,5, 0,4,0 },
                 {5,0,0, 7,3,0, 0,0,0 },
@@ -15,20 +33,7 @@
                 {0,0,0, 3,4,0, 0,6,0 },
                 {6,0,0, 0,0,0, 0,0,5 }
             };
-        int[,] sudokuCompare = {
-                {5,3,4, 6,7,8, 9,1,2 },
-                {6,7,2, 1,9,5, 3,4,8 },
-                {1,9,8, 3,4,2, 5,6,7 },
-
-                {8,5,9, 7,6,1, 4,2,3 },
-                {4,2,6, 8,5,3, 7,9,1 },
-                {7,1,3, 9,2,4, 8,5,6 },
-
-                {9,6,1, 5,3,7, 2,8,4 },
-                {2,8,7, 4,1,9, 6,3,5 },
-                {3,4,5, 2,8,6, 1,7,9 }
-            };
-        if (SudokuLös(sudokuTest))
+        if (SudokuLös(array))
         {
             Console.WriteLine("SUDOKU GELÖÖÖST");
         }else
