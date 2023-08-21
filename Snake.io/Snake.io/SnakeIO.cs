@@ -144,7 +144,7 @@ namespace Snake.io
                     }
                     else
                     {
-                        Console.SetCursorPosition(j - 1, i - 1);
+                        Console.SetCursorPosition(j , i);
                         Console.Write(' ');
                     }
                 }
