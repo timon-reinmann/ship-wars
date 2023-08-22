@@ -27,7 +27,6 @@ class Program
         if (SudokuLös(array))
         {
             Console.WriteLine("SUDOKU GELÖÖÖST");
-            SudokuZeichnen(array);
         }
         else
         {
@@ -38,7 +37,6 @@ class Program
 
         TimeSpan ts = stopwatch.Elapsed;
         Console.WriteLine($"Verstrichene Zeit: {ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}.{ts.Milliseconds / 10:00}");
-
     }
 
     private static bool SudokuLös(int[,] sudokuTest)
@@ -46,20 +44,20 @@ class Program
         List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         for (int y = 0; y < 9; y++)
         {
-
             for (int x = 0; x < 9; x++)
             {
                 if (sudokuTest[y, x] != 0)
                 {
                     continue;
                 }
+
                 numbers = PossibleNumbers(sudokuTest, x, y, numbers);
                 foreach (int number in numbers)
                 {
                     sudokuTest[y, x] = number;
                     Console.Clear();
                     SudokuZeichnen(sudokuTest);
-                    Thread.Sleep(5);
+                    Thread.Sleep(1);
                     if (SudokuLös(sudokuTest))
                     {
                         return true;
@@ -69,11 +67,26 @@ class Program
                 return false;
             }
         }
-        return true;
+        return SudokuFertig(sudokuTest);
     }
 
+    private static bool SudokuFertig(int[,] sudokuTest)
+    {
+        for (int y = 0; y < 9; y++)
+        {
+            for (int x = 0; x < 9; x++)
+            {
+                if (sudokuTest[y, x] == 0)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     private static List<int> PossibleNumbers(int[,] sudokuTest, int x, int y, List<int> numbers)
     {
+        numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         for (int i = 0; i < 9; i++)
         {
             if (numbers.Contains(sudokuTest[y, i]))
