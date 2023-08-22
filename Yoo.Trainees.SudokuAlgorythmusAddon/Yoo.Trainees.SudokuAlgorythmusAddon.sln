@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34009.444
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yoo.Trainees.SudokuAlgorythmusAddon", "Yoo.Trainees.SudokuAlgorythmusAddon\Yoo.Trainees.SudokuAlgorythmusAddon.csproj", "{EAFE07FD-1D05-4938-8FB0-D6ADC3BF4128}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EAFE07FD-1D05-4938-8FB0-D6ADC3BF4128}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAFE07FD-1D05-4938-8FB0-D6ADC3BF4128}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAFE07FD-1D05-4938-8FB0-D6ADC3BF4128}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAFE07FD-1D05-4938-8FB0-D6ADC3BF4128}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {878872CB-A596-410D-BA1F-DEC699D8A412}
+	EndGlobalSection
+EndGlobal

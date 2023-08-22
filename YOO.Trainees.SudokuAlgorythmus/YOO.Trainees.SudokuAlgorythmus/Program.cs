@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Collections.Generic;
 
 class Program
 {
@@ -27,6 +30,7 @@ class Program
         if (SudokuLös(array))
         {
             Console.WriteLine("SUDOKU GELÖÖÖST");
+            SudokuZeichnen(array);
         }
         else
         {
@@ -55,10 +59,10 @@ class Program
                 foreach (int number in numbers)
                 {
                     sudokuTest[y, x] = number;
-                    Console.Clear();
+                    /*Console.Clear();
                     SudokuZeichnen(sudokuTest);
-                    Thread.Sleep(1);
-                    if (SudokuLös(sudokuTest))
+                    Thread.Sleep(1);*/
+                    if (SudokuLös(sudokuTest)) 
                     {
                         return true;
                     }
@@ -93,11 +97,11 @@ class Program
             {
                 numbers.Remove(sudokuTest[y, i]);
             }
-            else if (numbers.Contains(sudokuTest[i, x]))
+            if (numbers.Contains(sudokuTest[i, x]))
             {
                 numbers.Remove(sudokuTest[i, x]);
             }
-            else if (numbers.Contains(sudokuTest[y - y % 3 + i / 3, x - x % 3 + i % 3]))
+            if (numbers.Contains(sudokuTest[y - y % 3 + i / 3, x - x % 3 + i % 3]))
             {
                 numbers.Remove(sudokuTest[y - y % 3 + i / 3, x - x % 3 + i % 3]);
             }
