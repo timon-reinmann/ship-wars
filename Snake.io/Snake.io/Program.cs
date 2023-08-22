@@ -10,8 +10,22 @@ namespace Snake.io
     {
         static public void Main(String[] args)
         {
+            replay:
             SnakeIO snake = new SnakeIO();
             snake.RunGame();
+
+            Console.Write("Press enter to replay:");
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey();
+                    if (key.Key == ConsoleKey.Enter)
+                    {
+                        goto replay;
+                    }
+                }
+            }
         }
     }
 }

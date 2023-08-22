@@ -9,6 +9,10 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Windows.Input;
 using System.Runtime.InteropServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Reflection;
+using static Snake.io.SnakeIO;
+using System.Threading.Tasks.Sources;
 
 namespace Snake.io
 {
@@ -27,8 +31,8 @@ namespace Snake.io
         private int Width = 59;
 
         //Schlange
-        private string body = "x";
-        private string head = "o";
+        private string body = "o";
+        private string head = "^";
 
         //Bereich in der die Schlange erstellt wird
         private string[,] board = new string[19, 59];
@@ -45,28 +49,79 @@ namespace Snake.io
         //Gibt die Richtung an in die die Schlange schluss entlich geht
         private Direction direction = Direction.Top;
 
+        private Random rnd = new Random();
+        private string point = "%";
+
+        private bool Points = false;
+
+        private int score = 0;
+
+        private int pointsX = 0;
+        private int pointsY = 0;
+
+
+        private int speed = 400;
 
         public void RunGame()
         {
 
-            WriteBoard();
             InitSnake();
+            checkPoint();
+
+            WriteBoard();
+
 
             var gameOver = false;
             while (!gameOver)
             {
                 PrintSnake();
 
-                Thread.Sleep(300);
+                Thread.Sleep(speed);
 
                 // Todo: check for keys
                 KeyEvent();
-                // Todo: Check for collision
 
-                MoveSnake();
+                // Todo: check for points
+                EatPoints();
+
+                // Todo: Show points
+                Console.SetCursorPosition(61, 1);
+                Console.Write("Score: " + score);
+
+                // Todo: Check for collision
+                if (!MoveSnake())
+                {
+                    gameOver = true;
+                    Console.Clear();
+                    Console.WriteLine("you lost");
+                    Console.WriteLine("Your score was: " + score.ToString());
+
+                }
+
+
             }
         }
 
+        public void SpeedUp()
+        {
+            if (speed > 10)
+            {
+                if (speed > 50)
+                {
+                    if (score % 3 == 0)
+                    {
+                        speed -= 50;
+                    }
+                }
+                else
+                {
+                    if (score % 3 == 0)
+                    {
+                        speed -= 10;
+                    }
+                }
+            }
+        }
         public void KeyEvent()
         {
             if (Console.KeyAvailable)
@@ -75,27 +130,56 @@ namespace Snake.io
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        direction = Direction.Top;
+                        if (direction != Direction.Bottom)
+                        {
+                            direction = Direction.Top;
+                            head = "^";
+                        }
                         break;
                     case ConsoleKey.RightArrow:
-                        direction = Direction.Right;
+                        if (direction != Direction.Left)
+                        {
+                            direction = Direction.Right;
+                            head = ">";
+                        }
                         break;
                     case ConsoleKey.DownArrow:
-                        direction = Direction.Bottom;
+
+                        if (direction != Direction.Top)
+                        {
+                            direction = Direction.Bottom;
+                            head = "v";
+                        }
                         break;
                     case ConsoleKey.LeftArrow:
-                        direction = Direction.Left;
+                        if (direction != Direction.Right)
+                        {
+                            direction = Direction.Left;
+                            head = "<";
+                        }
                         break;
                 }
             }
         }
 
-        public void CheckCollision()
+        public void EatPoints()
         {
 
+            if (wholeBody.First().Item1 == pointsX && wholeBody.First().Item2 == pointsY)
+            {
+                board[pointsX, pointsY] = " ";
+                score++;
+
+                checkPoint();
+                Points = true;
+            }
+            else
+            {
+                Points = false;
+            }
         }
 
-        public void MoveSnake()
+        public bool MoveSnake()
         {
             // Last round head = body
             board[startPositionHeadX, startPositionHeadY] = body;
@@ -103,7 +187,7 @@ namespace Snake.io
             startPositionBodyX = startPositionHeadX;
             startPositionBodyY = startPositionHeadY;
 
-            
+
             //  Move head into correct direction
             if (direction == Direction.Top)
             {
@@ -121,14 +205,32 @@ namespace Snake.io
             {
                 startPositionHeadY -= 2;
             }
-
             board[startPositionHeadX, startPositionHeadY] = head;
 
+            if (wholeBody.First().Item1 == 0 || wholeBody.First().Item2 == 0 || wholeBody.First().Item2 == Width - 2 || wholeBody.First().Item1 == Height)
+            {
+                return false;
+            }
+
+            for (int i = 1; i <= wholeBody.Count - 1; i++)
+            {
+                if (wholeBody.First().Item1 == wholeBody[i].Item1 && wholeBody.First().Item2 == wholeBody[i].Item2)
+                {
+                    return false;
+                }
+            }
             board[wholeBody.Last().Item1, wholeBody.Last().Item2] = null;
 
             // Save new body in list
             wholeBody.Insert(0, new Tuple<int, int>(startPositionHeadX, startPositionHeadY));
-            wholeBody.RemoveAt(wholeBody.Count - 1);
+
+            if (!Points)
+            {
+                wholeBody.RemoveAt(wholeBody.Count - 1);
+            }
+
+
+            return true;
 
         }
         public void PrintSnake()
@@ -144,7 +246,7 @@ namespace Snake.io
                     }
                     else
                     {
-                        Console.SetCursorPosition(j , i);
+                        Console.SetCursorPosition(j, i);
                         Console.Write(' ');
                     }
                 }
@@ -156,10 +258,10 @@ namespace Snake.io
             board[startPositionHeadX, startPositionHeadY] = head;
 
             board[startPositionBodyX, startPositionBodyY] = body;
-            board[startPositionBodyX+1, startPositionBodyY] = body;
-            board[startPositionBodyX+2, startPositionBodyY] = body;
-            board[startPositionBodyX+3, startPositionBodyY] = body;
-            board[startPositionBodyX+4, startPositionBodyY] = body;
+            board[startPositionBodyX + 1, startPositionBodyY] = body;
+            board[startPositionBodyX + 2, startPositionBodyY] = body;
+            board[startPositionBodyX + 3, startPositionBodyY] = body;
+            board[startPositionBodyX + 4, startPositionBodyY] = body;
 
             wholeBody.Add(new Tuple<int, int>(startPositionHeadX, startPositionHeadY));
             wholeBody.Add(new Tuple<int, int>(startPositionBodyX, startPositionBodyY));
@@ -194,6 +296,35 @@ namespace Snake.io
                 Console.SetCursorPosition((Width), i);
                 Console.Write("|");
             }
+        }
+
+        public void checkPoint()
+        {
+            pointsX = rnd.Next(1, 19);
+            pointsY = rnd.Next(1, 59);
+
+            bool test = false;
+
+        again:
+            while (!test)
+            {
+                for (int i = 0; i < wholeBody.Count; i++)
+                {
+                    if (pointsX == wholeBody[i].Item1 && pointsY == wholeBody[i].Item2 || pointsY % 2 != 0)
+                    {
+                        pointsX = rnd.Next(1, 19);
+                        pointsY = rnd.Next(1, 59);
+                        test = false;
+                        goto again;
+                    }
+                    else
+                    {
+                        test = true;
+                    }
+
+                }
+            }
+            board[pointsX, pointsY] = point;
         }
     }
 }
