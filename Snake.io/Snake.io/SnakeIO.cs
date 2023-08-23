@@ -45,6 +45,8 @@
 
         private int speed = 400;
 
+        private int breakup = 0;
+
         public void RunGame()
         {
 
@@ -71,7 +73,7 @@
                 Console.Write("Score: " + score);
 
                 //Check for collision
-                if (!MoveSnake())
+                if (breakup == 1 || !MoveSnake())
                 {
                     gameOver = true;
                     Console.Clear();
@@ -185,7 +187,27 @@
 
             board[startPositionHeadX, startPositionHeadY] = head;
 
-            if (wholeBody.First().Item1 == 0 || wholeBody.First().Item2 == 0 || wholeBody.First().Item2 == Width - 2 || wholeBody.First().Item1 == Height)
+
+
+            if (direction == Direction.Right)
+            {
+                if (wholeBody.First().Item2 + 1 == Width - 2)
+                {
+                    breakup++;
+                }
+            }
+
+            if (direction == Direction.Bottom)
+            {
+                if (wholeBody.First().Item1 == Height - 2)
+                {
+                    breakup++;
+                }
+            }
+
+
+
+            if (wholeBody.First().Item1 == 1 || wholeBody.First().Item2 == 2)
             {
                 return false;
             }
@@ -196,6 +218,7 @@
                 {
                     return false;
                 }
+
             }
             board[wholeBody.Last().Item1, wholeBody.Last().Item2] = null;
 
