@@ -1,20 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
-using System.Windows.Input;
-using System.Runtime.InteropServices;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Reflection;
-using static Snake.io.SnakeIO;
-using System.Threading.Tasks.Sources;
-
-namespace Snake.io
+﻿namespace Snake.io
 {
     public class SnakeIO
     {
@@ -26,16 +10,16 @@ namespace Snake.io
             Left
         }
 
-        //Höhe / Breite des Spielfeldes
-        private int Height = 19;
-        private int Width = 59;
+        //Height/Width from board
+        private const int Height = 19;
+        private const int Width = 59;
 
-        //Schlange
+        //snake
         private string body = "o";
         private string head = "^";
 
-        //Bereich in der die Schlange erstellt wird
-        private string[,] board = new string[19, 59];
+        //Area in witch the snake is created
+        private string[,] board = new string[Height, Width];
 
         private int startPositionHeadX = 10;
         private int startPositionHeadY = 30;
@@ -43,22 +27,21 @@ namespace Snake.io
         private int startPositionBodyX = 11;
         private int startPositionBodyY = 30;
 
-        //Hier werden die Kordinaten der Schlange gespeichert
+        //This is where the coordinates of the snake are stored
         private List<Tuple<int, int>> wholeBody = new List<Tuple<int, int>>();
 
-        //Gibt die Richtung an in die die Schlange schluss entlich geht
+        //Indicates the direction in which the snake will ultimately go
         private Direction direction = Direction.Top;
 
         private Random rnd = new Random();
         private string point = "%";
 
-        private bool Points = false;
+        private bool pointHasBeenEaten = false;
 
         private int score = 0;
 
         private int pointsX = 0;
         private int pointsY = 0;
-
 
         private int speed = 400;
 
@@ -66,10 +49,9 @@ namespace Snake.io
         {
 
             InitSnake();
-            checkPoint();
+            CheckPoint();
 
             WriteBoard();
-
 
             var gameOver = false;
             while (!gameOver)
@@ -79,7 +61,7 @@ namespace Snake.io
                 Thread.Sleep(speed);
 
                 // Todo: check for keys
-                KeyEvent();
+                CheckForKeypress();
 
                 // Todo: check for points
                 EatPoints();
@@ -95,10 +77,7 @@ namespace Snake.io
                     Console.Clear();
                     Console.WriteLine("you lost");
                     Console.WriteLine("Your score was: " + score.ToString());
-
                 }
-
-
             }
         }
 
@@ -122,7 +101,7 @@ namespace Snake.io
                 }
             }
         }
-        public void KeyEvent()
+        public void CheckForKeypress()            
         {
             if (Console.KeyAvailable)
             {
@@ -164,18 +143,17 @@ namespace Snake.io
 
         public void EatPoints()
         {
-
             if (wholeBody.First().Item1 == pointsX && wholeBody.First().Item2 == pointsY)
             {
                 board[pointsX, pointsY] = " ";
                 score++;
 
-                checkPoint();
-                Points = true;
+                CheckPoint();
+                pointHasBeenEaten = true;
             }
             else
             {
-                Points = false;
+                pointHasBeenEaten = false;
             }
         }
 
@@ -186,7 +164,6 @@ namespace Snake.io
 
             startPositionBodyX = startPositionHeadX;
             startPositionBodyY = startPositionHeadY;
-
 
             //  Move head into correct direction
             if (direction == Direction.Top)
@@ -205,6 +182,7 @@ namespace Snake.io
             {
                 startPositionHeadY -= 2;
             }
+
             board[startPositionHeadX, startPositionHeadY] = head;
 
             if (wholeBody.First().Item1 == 0 || wholeBody.First().Item2 == 0 || wholeBody.First().Item2 == Width - 2 || wholeBody.First().Item1 == Height)
@@ -224,15 +202,14 @@ namespace Snake.io
             // Save new body in list
             wholeBody.Insert(0, new Tuple<int, int>(startPositionHeadX, startPositionHeadY));
 
-            if (!Points)
+            if (!pointHasBeenEaten)
             {
                 wholeBody.RemoveAt(wholeBody.Count - 1);
             }
 
-
             return true;
-
         }
+
         public void PrintSnake()
         {
             for (int i = 1; i < Height; i++)
@@ -298,14 +275,14 @@ namespace Snake.io
             }
         }
 
-        public void checkPoint()
+        public void CheckPoint()
         {
             pointsX = rnd.Next(1, 19);
             pointsY = rnd.Next(1, 59);
 
+
             bool test = false;
 
-        again:
             while (!test)
             {
                 for (int i = 0; i < wholeBody.Count; i++)
@@ -315,7 +292,7 @@ namespace Snake.io
                         pointsX = rnd.Next(1, 19);
                         pointsY = rnd.Next(1, 59);
                         test = false;
-                        goto again;
+                        break;
                     }
                     else
                     {
@@ -328,5 +305,3 @@ namespace Snake.io
         }
     }
 }
-
-
