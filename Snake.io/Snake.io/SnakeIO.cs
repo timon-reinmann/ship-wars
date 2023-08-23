@@ -60,17 +60,17 @@
 
                 Thread.Sleep(speed);
 
-                // Todo: check for keys
+                //check for keys
                 CheckForKeypress();
 
-                // Todo: check for points
+                //check for points
                 EatPoints();
 
-                // Todo: Show points
+                //Show points
                 Console.SetCursorPosition(61, 1);
                 Console.Write("Score: " + score);
 
-                // Todo: Check for collision
+                //Check for collision
                 if (!MoveSnake())
                 {
                     gameOver = true;
@@ -277,8 +277,8 @@
 
         public void CheckPoint()
         {
-            pointsX = rnd.Next(1, 19);
-            pointsY = rnd.Next(1, 59);
+            pointsX = rnd.Next(1, Height);
+            pointsY = rnd.Next(1, Width);
 
 
             bool test = false;
@@ -289,8 +289,8 @@
                 {
                     if (pointsX == wholeBody[i].Item1 && pointsY == wholeBody[i].Item2 || pointsY % 2 != 0)
                     {
-                        pointsX = rnd.Next(1, 19);
-                        pointsY = rnd.Next(1, 59);
+                        pointsX = rnd.Next(1, Height);
+                        pointsY = rnd.Next(1, Width);
                         test = false;
                         break;
                     }
