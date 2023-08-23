@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 app.UseCors(
-    options => options.WithOrigins("*").AllowAnyMethod()
+    options => options.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()
 );
 
 //app.UseMvc();

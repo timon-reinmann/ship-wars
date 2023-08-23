@@ -24,16 +24,16 @@ namespace Yoo.Trainees.SudokuAlgorythmusAddon.Controllers
             }
             if (SudokuLös(array))
             {
-                string outPut = string.Empty;
-                for(int j = 0; j < 9; j++)
+                int[][] result = new int[9][];
+                for (int j = 0; j < 9; j++)
                 {
-                    for(int k = 0; k < 9; k++)
+                    result[j] = new int[9];
+                    for (int k = 0; k < 9; k++)
                     {
-                        outPut += array[j, k].ToString();
+                        result[j][k] = array[j, k];
                     }
-                    //outPut += "\n";
                 }
-                return Ok(outPut);
+                return Ok(result);
             }
             else
             {
