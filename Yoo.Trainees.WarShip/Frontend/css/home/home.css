@@ -25,12 +25,12 @@
     margin-bottom: 3rem;
     background-color: rgb(128, 128, 128, 0.5);
     font-size: x-large;
+    transition: all 0.3s ease-in-out;
 }
 .shipwars__buttons:hover {
     margin-bottom: 2rem;
     height: 6rem;
     width: 22rem;
-    font-size: xx-large;
 }
 .buttons a,.buttons a:visited {
     color: #fefefe;
