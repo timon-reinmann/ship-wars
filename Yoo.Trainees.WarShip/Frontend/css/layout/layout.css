@@ -1,0 +1,88 @@
+body {
+    background-image: url(../../img/brait\ -\ Kopie.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    font-family: Brush Script MT, Brush Script Std, cursive;
+    list-style: none;
+    overflow: hidden;
+}
+::selection {
+    background: black;
+}
+.shipwars__logo  {
+    background-image: url(../../img/logo-trans.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 15rem;
+    width: 15rem;
+}
+.shipwars__title {
+    font-family: Brush Script MT, Brush Script Std, cursive;
+    position: relative;
+    left: 50%;
+    top: -10rem;
+    transform: translateX(-14.8%);
+    font-size: xx-large;
+    color: #fefefe;
+    text-shadow: 2px 2px 2px black;
+}
+.navbar__list {
+    position: relative;
+    left: 5%;
+    width: 30%;
+    height: 5rem;
+    background-color: rgb(128, 128, 128, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
+    font-weight: bold;
+    text-shadow: 2px 2px 2px black;
+    margin-bottom: 3rem;
+    border: 1px solid #fefefe;
+    transform: skew(30deg);
+}
+.navbar__list ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    position: absolute;
+    right: 0;
+    top: -45%;
+    width: 100%;
+    height: 100%;
+    transform: skew(-30deg);
+}
+.navbar__list li {
+    margin-right: 4rem;
+    display: table-cell; 
+}
+.navbar__list a {
+    color: #fefefe;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+}
+.navbar__list a:after {    
+    background: none repeat scroll 0 0 transparent;
+    bottom: 0;
+    content: "";
+    display: block;
+    height: 4px;
+    left: 50%;
+    position: absolute;
+    background: #fff;
+    transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    width: 0;
+  }
+.navbar__list a:hover:after { 
+    width: 120%; 
+    left: -10%; 
+  }
+.shipwars__navbar {
+    display: flex;
+    justify-content: space-between;
+}

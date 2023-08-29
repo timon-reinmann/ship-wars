@@ -1,8 +1,4 @@
-a, a:visited {
-    color: #fefefe;
-    text-decoration: none;
-}
-.shipwars__buttons a {
+.shipwars__buttons p {
     transform: skew(30deg);
     opacity: 1;
 }
@@ -21,8 +17,12 @@ a, a:visited {
     font-size: x-large;
 }
 .shipwars__buttons:hover {
-    transform: skew(0deg) translate(-50%, -50%) scale(1.1);
+    margin-bottom: 2rem;
+    height: 6rem;
+    width: 22rem;
+    font-size: xx-large;
 }
-.shipwars__buttons:hover a {
-    transform: skew(0deg); 
+.buttons a,.buttons a:visited {
+    color: #fefefe;
+    text-decoration: none;
 }
