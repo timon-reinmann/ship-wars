@@ -1,0 +1,28 @@
+a, a:visited {
+    color: #fefefe;
+    text-decoration: none;
+}
+.shipwars__buttons a {
+    transform: skew(30deg);
+    opacity: 1;
+}
+.shipwars__buttons {
+    width: 20rem;
+    height: 5rem;
+    transform: skew(-30deg) translate(-50%, -50%);
+    border: 1px solid #fefefe;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    left: 50%;
+    margin-bottom: 3rem;
+    background-color: rgb(128, 128, 128, 0.5);
+    font-size: x-large;
+}
+.shipwars__buttons:hover {
+    transform: skew(0deg) translate(-50%, -50%) scale(1.1);
+}
+.shipwars__buttons:hover a {
+    transform: skew(0deg); 
+}
