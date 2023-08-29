@@ -1,3 +1,9 @@
+@media screen and (width < 760px){
+    .shipwars__logo {
+        height: 10rem !important;
+        width: 10rem !important;
+    }
+}
 body {
     background-image: url(../../img/brait\ -\ Kopie.png);
     background-repeat: no-repeat;
@@ -21,7 +27,7 @@ body {
 .navbar__list {
     position: relative;
     left: 5%;
-    width: 30%;
+    width: 40%;
     height: 5rem;
     background-color: rgb(128, 128, 128, 0.5);
     display: flex;
@@ -36,8 +42,8 @@ body {
 }
 .navbar__list ul {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: space-evenly;
     list-style: none;
     position: absolute;
     right: 0;
@@ -47,7 +53,6 @@ body {
     transform: skew(-30deg);
 }
 .navbar__list li {
-    margin-right: 4rem;
     display: table-cell; 
 }
 .navbar__list a {

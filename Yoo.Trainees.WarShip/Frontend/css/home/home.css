@@ -1,12 +1,15 @@
 .shipwars__title {
     font-family: Brush Script MT, Brush Script Std, cursive;
     position: relative;
-    left: 50%;
+    width: 100%;
     top: -10rem;
-    transform: translateX(-14.8%);
     font-size: xx-large;
     color: #fefefe;
     text-shadow: 2px 2px 2px black;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    gap: 20%;
 }
 .shipwars__buttons p {
     transform: skew(30deg);
