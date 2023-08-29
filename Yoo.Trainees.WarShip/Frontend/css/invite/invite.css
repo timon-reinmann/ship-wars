@@ -8,6 +8,7 @@ body {
     list-style: none;
     overflow: hidden;
 }
+
 ::selection {
     background: black;
 }
