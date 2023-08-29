@@ -1,19 +1,38 @@
 @media screen and (width < 760px){
     .shipwars__logo {
         height: 10rem !important;
-        width: 10rem !important;
+        width: 10rem;
+    }
+}
+@keyframes zoomBackground {
+    0% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
     }
 }
 body {
+    font-family: Brush Script MT, Brush Script Std, cursive;
+    list-style: none;
+    overflow: hidden;
+}        
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Damit der Inhalt darüber angezeigt wird */
     background-image: url(../../img/brait\ -\ Kopie.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
-    font-family: Brush Script MT, Brush Script Std, cursive;
-    list-style: none;
-    overflow: hidden;
-}
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-name: zoomBackground;
+}   
 ::selection {
     background: black;
 }
