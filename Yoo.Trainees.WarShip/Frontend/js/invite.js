@@ -26,7 +26,7 @@ fetch(API_URL, {
     "method": "POST",
 })
 .then(response => response.json())
-.data.then(data => {
+.then(data => {
     console.log("Daten:", data);
 })
 .catch(error => {
