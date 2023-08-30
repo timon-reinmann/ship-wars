@@ -15,6 +15,7 @@ fetch(API_URL, {
 })
 .then(response => response.json())
 .data.then(data => {
+    console.log("Daten:", data);
 })
 .catch(error => {
     console.error("Es gab einen Fehler bei der Anfrage:", error);
