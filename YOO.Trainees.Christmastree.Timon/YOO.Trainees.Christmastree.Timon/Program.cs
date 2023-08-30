@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.Design;
-using System.Drawing;
-using System.Reflection.Metadata.Ecma335;
-using static System.Net.Mime.MediaTypeNames;
-
-public class Program
+﻿public class Program
 {
     static void Main(string[] args)
     {
