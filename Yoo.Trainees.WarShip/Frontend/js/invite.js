@@ -11,7 +11,7 @@ copyText.querySelector("button").addEventListener("click",function(){
 });
 
 'use strict';
-let url = "https://shipwars.ch/";
+let url = "http://127.0.0.1:5500/Frontend/html/";
 let jsonURL = JSON.stringify(url);
 
 const API_URL = 'https://localhost:7118/api/invite';
@@ -35,3 +35,4 @@ fetch(API_URL, {
 .catch(error => {
     console.error("Es gab einen Fehler bei der Anfrage:", error);
 });
+
