@@ -1,3 +1,11 @@
+@keyframes zoomBackground {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 .container-link {
     position: absolute;
     top: 50%;
