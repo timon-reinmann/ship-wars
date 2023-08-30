@@ -24,7 +24,7 @@ body {
     width: 100vw;
     height: 100vh;
     z-index: -1; /* Damit der Inhalt darüber angezeigt wird */
-    background-image: url(../../img/brait\ -\ Kopie.png);
+    background-image: url(../img/brait\ -\ Kopie.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -37,7 +37,7 @@ body {
     background: black;
 }
 .shipwars__logo  {
-    background-image: url(../../img/logo-trans.png);
+    background-image: url(../img/logo-trans.png);
     background-repeat: no-repeat;
     background-size: contain;
     height: 15rem;
