@@ -15,9 +15,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<GameController>/5
+        // GET api/<Game>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string Get(Guid id)
         {
             return "value";
         }
