@@ -11,3 +11,8 @@
     width: 50px;
     border: 1px solid #fefefe;
 }
+#game__board {
+    display: grid;
+    width: 40%;
+    grid-template-columns: repeat(10, 1fr);
+}

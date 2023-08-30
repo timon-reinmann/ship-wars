@@ -11,7 +11,7 @@ copyText.querySelector("button").addEventListener("click",function(){
 });
 
 'use strict';
-let url = "http://127.0.0.1:5500/Frontend/html/";
+let url = "https://localhost:7118/api/Game/";
 let jsonURL = JSON.stringify(url);
 
 const API_URL = 'https://localhost:7118/api/invite';
