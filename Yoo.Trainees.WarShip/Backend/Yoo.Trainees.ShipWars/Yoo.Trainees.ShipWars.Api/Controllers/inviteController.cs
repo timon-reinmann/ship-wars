@@ -12,7 +12,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         public IActionResult Post([FromBody] string value)
         {
             string testc = "holla";
-            return Ok(testc);
+            return Ok(new { response = testc });
         }
     }
 }
