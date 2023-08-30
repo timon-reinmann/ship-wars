@@ -37,7 +37,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         // DELETE api/<GameController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
-        {
+        { 
         }
     }
 }
