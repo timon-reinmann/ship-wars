@@ -11,8 +11,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] string value)
         {
-            string testc = "holla";
-            return Ok(new { response = testc });
+            Guid id = Guid.NewGuid();
+            string url = value + id.ToString();
+            return Ok(new { response = url });
         }
     }
 }
