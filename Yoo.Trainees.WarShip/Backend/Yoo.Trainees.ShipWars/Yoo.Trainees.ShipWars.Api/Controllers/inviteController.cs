@@ -9,9 +9,10 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
     public class inviteController : ControllerBase
     {
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] string value)
         {
-
+            string testc = "holla";
+            return Ok(testc);
         }
     }
 }

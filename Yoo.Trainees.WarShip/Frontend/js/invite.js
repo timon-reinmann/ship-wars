@@ -11,8 +11,9 @@ copyText.querySelector("button").addEventListener("click",function(){
 });
 
 'use strict';
+let url = "https://shipwars.ch/";
 
-const API_URL = 'https://localhost:7118//api/invite';
+const API_URL = 'https://localhost::7118/api/invite';
 fetch(API_URL, {
     "credentials": "omit",
     "headers": {
@@ -22,7 +23,7 @@ fetch(API_URL, {
         "Content-Type": "application/json",
         "Sec-Fetch-Dest": "empty",
     },
-    "body": 'ERSETZTEN',
+    "body": url,
     "method": "POST",
 })
 .then(response => response.json())
