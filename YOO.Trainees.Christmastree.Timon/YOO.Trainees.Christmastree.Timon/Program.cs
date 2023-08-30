@@ -251,9 +251,3 @@
         return intcolorCount;
     }
 }
-
-
-
-
-
-
