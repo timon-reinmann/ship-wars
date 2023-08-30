@@ -1,15 +1,20 @@
+@font-face {
+    font-family: 'walkingdead';
+    src: url(../../../font/BAD\ GRUNGE.ttf);
+}
 .shipwars__title {
-    font-family: Brush Script MT, Brush Script Std, cursive;
+    font-family: 'walkingdead', Brush Script MT, Brush Script Std, cursive;
     position: relative;
+    left: 3cqmin;
     width: 100%;
-    top: -10rem;
-    font-size: xx-large;
+    top: -8rem;
+    font-size: 14rem;
     color: #fefefe;
     text-shadow: 2px 2px 2px black;
     display: flex;
     justify-content: center;
     box-sizing: border-box;
-    gap: 20%;
+    gap: 17%;
 }
 .shipwars__buttons p {
     transform: skew(30deg);

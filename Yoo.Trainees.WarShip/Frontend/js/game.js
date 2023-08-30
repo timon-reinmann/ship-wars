@@ -7,7 +7,7 @@ for (let x = 0; x < 10; x++) {
       div.classList.add(`b${n}`);
       div.setAttribute("data-x", x);
       div.setAttribute("data-y", y);
-      document.body.appendChild(div);
+      game.appendChild(div);
       n+=1;
     }
   }
