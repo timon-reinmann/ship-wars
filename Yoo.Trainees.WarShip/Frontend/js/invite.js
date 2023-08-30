@@ -1,3 +1,14 @@
+let copyText = document.querySelector(".copy-text");
+copyText.querySelector("button").addEventListener("click",function(){
+    let input = copyText.querySelector("input.text");
+    input.select();
+    document.execCommand("copy");
+    copyText.classList.add("active");
+    window.getSelection().removeAllRanges();
+    setTimeout(function(){
+        copyText.classList.remove("active");
+    },2500);
+});
 'use strict';
 
 const API_URL = 'https://localhost:7118//api/invite';
@@ -19,16 +30,4 @@ fetch(API_URL, {
 })
 .catch(error => {
     console.error("Es gab einen Fehler bei der Anfrage:", error);
-});
-
-let copyText = document.querySelector(".copy-text");
-copyText.querySelector("button").addEventListener("click",function(){
-    let input = copyText.querySelector("input.text");
-    input.select();
-    document.execCommand("copy");
-    copyText.classList.add("active");
-    window.getSelection().removeAllRanges();
-    setTimeout(function(){
-        copyText.classList.remove("active");
-    },2500);
 });
