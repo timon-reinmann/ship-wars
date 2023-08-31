@@ -21,6 +21,9 @@
 .ship__selection {
     grid-area: ship;
 }
+.board {
+    background-color: rgba( 128, 128, 128, 0.5);
+}
 #game__board {
     grid-area: player1;
     display: grid;
