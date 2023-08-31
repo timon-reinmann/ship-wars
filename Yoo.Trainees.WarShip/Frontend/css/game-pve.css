@@ -11,8 +11,28 @@
     width: 50px;
     border: 1px solid #fefefe;
 }
-#game__board {
+.middle {
     display: grid;
-    width: 40%;
+    grid-template-areas: 
+        "ship player1 player2 chatbox"
+    ;
+    grid-template-columns: 0.5fr 1fr 1fr 0.5fr;
+}
+.ship__selection {
+    grid-area: ship;
+}
+#game__board {
+    grid-area: player1;
+    display: grid;
+    width: 520px;
     grid-template-columns: repeat(10, 1fr);
+}
+#opponent__board {
+    grid-area: player2;
+    display: grid;
+    width: 520px;
+    grid-template-columns: repeat(10, 1fr);
+}
+.chatbox {
+    grid-area: chatbox;
 }
