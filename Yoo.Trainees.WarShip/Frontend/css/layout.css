@@ -15,7 +15,7 @@
 body {
     font-family: Brush Script MT, Brush Script Std, cursive;
     list-style: none;
-    overflow: hidden;
+    overflow-x: hidden;
 }        
 .background-animation {
     position: fixed;
