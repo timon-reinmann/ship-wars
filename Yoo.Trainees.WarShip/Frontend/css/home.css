@@ -5,7 +5,10 @@
 @media screen and (height < 800px) {
     .shipwars__title{
      top: -12rem !important;
-     left: 6.25% !important;;  
+     left: 4% !important;;  
+    }
+    .shipwars__buttons{
+        top: -4rem !important;
     }
 }
 .shipwars__title {
