@@ -60,17 +60,20 @@
 }
 .warship{
     height: 52px;
-    width: 260px;
+    width: 208px;
 }
 .cruiser {
     height: 52px;
-    width: 208px;
+    width: 156px;
 }
 .destroyer {
     height: 52px;
-    width: 156px;
+    width: 104px;
 }
 .submarine {
     height: 52px;
-    width: 104px;
+    width: 52px;
+}
+.ship.dragging {
+    background-color: rgba(143, 240, 143, 0.25) !important;
 }

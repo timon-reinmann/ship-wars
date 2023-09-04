@@ -4,7 +4,9 @@ for (let x = 0; x < 10; x++) {
   for (let y = 0; y < 10; y++) {
     let div = document.createElement("div");
     div.classList.add("field");
+    div.classList.add("ownField");
     div.classList.add(`b${n}`);
+    div.setAttribute("draggable", "true")
     div.setAttribute("data-x", x);
     div.setAttribute("data-y", y);
     game.appendChild(div);
@@ -24,6 +26,23 @@ for (let x = 0; x < 10; x++) {
     n+=1;
   }
 }
+const draggables = document.querySelectorAll('.ship');
+const containers = document.querySelectorAll('.ownField');
+draggables.forEach(draggable => {
+  draggable.addEventListener('dragstart', () => {
+    draggable.classList.add('dragging');
+  });
+  draggable.addEventListener('dragend', () => {
+    draggable.classList.remove('dragging');
+  });
+});
+containers.forEach(container => {
+  container.addEventListener('dragover', e => {
+    e.preventDefault();
+    const draggable = document.querySelector('.dragging');
+    container.appendChild(draggable);
+  });
+});
 'use strict';
 
 const API_URL = 'https://localhost:7118/api/Game';
