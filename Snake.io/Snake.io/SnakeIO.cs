@@ -105,7 +105,7 @@
         }
         public void CheckForKeypress()            
         {
-            if (Console.KeyAvailable)
+            if (Console.KeyAvailable) 
             {
                 ConsoleKeyInfo key = Console.ReadKey();
                 switch (key.Key)
