@@ -4,6 +4,7 @@
         width: 10rem;
     }
 }
+
 @keyframes zoomBackground {
     0% {
         transform: scale(1.1);

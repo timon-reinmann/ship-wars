@@ -2,6 +2,11 @@
     font-family: 'walkingdead';
     src: url(../../../font/BAD\ GRUNGE.ttf);
 }
+@media screen and (height < 800) {
+    .shipwars__title{
+     top: -15rem   
+    }
+}
 .shipwars__title {
     font-family: 'walkingdead', Brush Script MT, Brush Script Std, cursive;
     position: relative;
