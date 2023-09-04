@@ -10,6 +10,8 @@
     height: 50px;
     width: 50px;
     border: 1px solid #fefefe;
+    z-index: 1;
+    position: relative;
 }
 .middle {
     display: grid;
@@ -57,6 +59,7 @@
     border: 2px solid #fefefe;
     margin: 5px;
     cursor: pointer;
+    z-index: 10;
 }
 .warship{
     height: 52px;
@@ -76,4 +79,7 @@
 }
 .ship.dragging {
     background-color: rgba(143, 240, 143, 0.25) !important;
+}
+.ship.dragging.invalid {
+    background-color: rgba(248, 110, 86, 0.25) !important;
 }
