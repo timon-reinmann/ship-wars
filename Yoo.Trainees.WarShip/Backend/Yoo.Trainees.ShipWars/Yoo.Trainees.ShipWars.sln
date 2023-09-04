@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yoo.Trainees.ShipWars.Api", "Yoo.Trainees.ShipWars.Api\Yoo.Trainees.ShipWars.Api.csproj", "{F680F15D-151D-46A5-AF99-CEF27D22D4F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yoo.Trainees.ShipWars.Api", "Yoo.Trainees.ShipWars.Api\Yoo.Trainees.ShipWars.Api.csproj", "{F680F15D-151D-46A5-AF99-CEF27D22D4F4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AE3AB843-0FEB-42BF-B60C-5565ED687BBD} = {AE3AB843-0FEB-42BF-B60C-5565ED687BBD}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yoo.Trainees.ShipWars.DataBase", "Yoo.Trainees.ShipWars.DataBase\Yoo.Trainees.ShipWars.DataBase.csproj", "{AE3AB843-0FEB-42BF-B60C-5565ED687BBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{F680F15D-151D-46A5-AF99-CEF27D22D4F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F680F15D-151D-46A5-AF99-CEF27D22D4F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F680F15D-151D-46A5-AF99-CEF27D22D4F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE3AB843-0FEB-42BF-B60C-5565ED687BBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE3AB843-0FEB-42BF-B60C-5565ED687BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE3AB843-0FEB-42BF-B60C-5565ED687BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE3AB843-0FEB-42BF-B60C-5565ED687BBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
