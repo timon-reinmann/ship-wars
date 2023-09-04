@@ -2,9 +2,10 @@
     font-family: 'walkingdead';
     src: url(../../../font/BAD\ GRUNGE.ttf);
 }
-@media screen and (height < 800) {
+@media screen and (height < 800px) {
     .shipwars__title{
-     top: -15rem   
+     top: -12rem !important;
+     left: 6.25% !important;;  
     }
 }
 .shipwars__title {
