@@ -10,6 +10,11 @@ copyText.querySelector("button").addEventListener("click",function(){
     },2500);
 });
 
+const submit_button = document.getElementById("penis2");
+submit_button.addEventListener("click", function() {
+    console.log("submit_button:");
+});
+
 'use strict';
 let url = "https://localhost:7118/api/Game/";
 let jsonURL = JSON.stringify(url);
