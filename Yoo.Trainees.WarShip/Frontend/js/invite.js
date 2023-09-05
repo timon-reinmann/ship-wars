@@ -14,7 +14,7 @@ copyText.querySelector("button").addEventListener("click",function(){
 let url = "https://localhost:7118/api/Game/";
 let jsonURL = JSON.stringify(url);
 
-const API_URL = 'https://localhost:7118/api/invite';
+const API_URL = 'https://localhost:7118/api/Game';
 fetch(API_URL, {
     "credentials": "omit",
     "headers": {

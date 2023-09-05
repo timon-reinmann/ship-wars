@@ -36,8 +36,11 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // POST api/<GameController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] string value)
         {
+            Guid id = Guid.NewGuid();
+            string url = value + id.ToString();
+            return Ok(new { response = url });
         }
 
         // PUT api/<GameController>/5
