@@ -1,4 +1,5 @@
 let copyText = document.querySelector(".copy-text");
+
 copyText.querySelector("button").addEventListener("click",function(){
     let input = copyText.querySelector("input.text");
     input.select();
@@ -10,9 +11,9 @@ copyText.querySelector("button").addEventListener("click",function(){
     },2500);
 });
 
-const submit_button = document.getElementById("penis2");
+const submit_button = document.getElementById("lobbyinput");
 submit_button.addEventListener("click", function() {
-    let lobbyName = document.getElementById("penis3").value;
+    let lobbyName = document.getElementById("lobbyname").value;
     lobbyName = JSON.stringify(lobbyName);
 
     'use strict';
@@ -31,11 +32,11 @@ submit_button.addEventListener("click", function() {
         },
         "body": lobbyName,
         "method": "POST",
-    })
+    })  
     .then(response => response.json())
     .then(data => {
         console.log("Daten:", data);
-        document.getElementById('penis').value = "https://localhost:7118/" +  data;
+        document.getElementById('linkoutput').value = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?playerid=" +  data;
     })
     .catch(error => {
         console.error("Es gab einen Fehler bei der Anfrage:", error);

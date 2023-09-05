@@ -1,5 +1,6 @@
 let n = 0;
 let game = document.getElementById("game__board");
+
 for (let y = 0; y < 10; y++) {
   for (let x = 0; x < 10; x++) {
     let div = document.createElement("div");
@@ -12,8 +13,10 @@ for (let y = 0; y < 10; y++) {
     n+=1;
   }
 }
+
 n = 0;
 let gameOpponent = document.getElementById("opponent__board");
+
 for (let x = 0; x < 10; x++) {
   for (let y = 0; y < 10; y++) {
     let div = document.createElement("div");
@@ -25,8 +28,10 @@ for (let x = 0; x < 10; x++) {
     n+=1;
   }
 }
+
 n = 0;
 let gameShip = document.getElementById("ship__board");
+
 for (let x = 0; x < 10; x++) {
   for (let y = 0; y < 10; y++) {
     let div = document.createElement("div");
@@ -38,10 +43,13 @@ for (let x = 0; x < 10; x++) {
     n+=1;
   }
 }
+
 let dragStartX = 0;
 let shipOffsetX = 0;
+
 const draggables = document.querySelectorAll('.ship');
 const containers = document.querySelectorAll('.ownField');
+
 draggables.forEach(draggable => {
   draggable.addEventListener('dragstart', (e) => {
     dragStartX = e.clientX;
@@ -52,6 +60,7 @@ draggables.forEach(draggable => {
     draggable.classList.remove('dragging');
   });
 });
+
 containers.forEach(container => {
   container.addEventListener('dragover', e => {
     e.preventDefault();
@@ -64,10 +73,11 @@ containers.forEach(container => {
     if (currentX + shipSize <= 10) {
       container.appendChild(draggable);
     } else {
-
+    // Todo
     }
   });
 });
+
 'use strict';
 
 const API_URL = 'https://localhost:7118/api/Game';
@@ -83,10 +93,12 @@ fetch(API_URL, {
     "body": 'ERSETZTEN',
     "method": "POST",
 })
+
 .then(response => response.json())
 .data.then(data => {
     console.log("Daten:", data);
 })
+
 .catch(error => {
     console.error("Es gab einen Fehler bei der Anfrage:", error);
 });
