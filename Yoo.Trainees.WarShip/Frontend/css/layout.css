@@ -1,8 +1,12 @@
-@media screen and (width < 760px){
-    .shipwars__logo {
-        height: 10rem !important;
-        width: 10rem;
-    }
+body {
+    font-family: Brush Script MT, Brush Script Std, cursive;
+    list-style: none;
+    overflow-x: hidden;
+}
+
+::selection {
+    background: black;
+    color: #fefefe;
 }
 
 @keyframes zoomBackground {
@@ -13,43 +17,44 @@
         transform: scale(1);
     }
 }
-body {
-    font-family: Brush Script MT, Brush Script Std, cursive;
-    list-style: none;
-    overflow-x: hidden;
-}        
+
 .background-animation {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -1; /* Damit der Inhalt darüber angezeigt wird */
-    background-image: url(../img/brait\ -\ Kopie.png);
-    background-repeat: no-repeat;
+    z-index: -1;
+    background: url(../img/brait\ -\ Kopie.png) no-repeat center fixed;
     background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    animation-duration: 1s;
-    animation-fill-mode: forwards;
-    animation-name: zoomBackground;
-}   
-::selection {
-    background: black;
+    animation: zoomBackground 1s forwards;
 }
-.shipwars__logo  {
-    background-image: url(../img/logo-trans.png);
-    background-repeat: no-repeat;
+
+.shipwars__logo {
+    background: url(../img/logo-trans.png) no-repeat;
     background-size: contain;
     height: 15rem;
     width: 15rem;
 }
+
+@media screen and (max-width: 760px) {
+    .shipwars__logo {
+        height: 10rem !important;
+        width: 10rem;
+    }
+}
+
+.shipwars__navbar {
+    display: flex;
+    justify-content: space-between;
+}
+
 .navbar__list {
     position: relative;
     left: 5%;
     width: 40%;
     height: 5rem;
-    background-color: rgb(128, 128, 128, 0.5);
+    background-color: rgba(128, 128, 128, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -60,6 +65,7 @@ body {
     border: 1px solid #fefefe;
     transform: skew(30deg);
 }
+
 .navbar__list ul {
     display: flex;
     align-items: center;
@@ -72,32 +78,30 @@ body {
     height: 100%;
     transform: skew(-30deg);
 }
+
 .navbar__list li {
     display: table-cell; 
 }
+
 .navbar__list a {
     color: #fefefe;
     text-decoration: none;
     display: inline-block;
     position: relative;
 }
-.navbar__list a:after {    
-    background: none repeat scroll 0 0 transparent;
-    bottom: 0;
+
+.navbar__list a:after {
     content: "";
-    display: block;
-    height: 4px;
-    left: 50%;
     position: absolute;
-    background: #fff;
-    transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    bottom: 0;
+    left: 50%;
     width: 0;
-  }
-.navbar__list a:hover:after { 
-    width: 120%; 
-    left: -10%; 
-  }
-.shipwars__navbar {
-    display: flex;
-    justify-content: space-between;
+    height: 4px;
+    background: #fff;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.navbar__list a:hover:after {
+    width: 120%;
+    left: -10%;
 }
