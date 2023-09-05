@@ -1,4 +1,4 @@
-let copyText = document.querySelector(".copy-text");
+let copyText = document.querySelector(".copy__text");
 copyText.querySelector("button").addEventListener("click",function(){
     let input = copyText.querySelector("input.text");
     input.select();

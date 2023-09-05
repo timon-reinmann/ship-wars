@@ -11,6 +11,7 @@
         top: -4rem !important;
     }
 }
+/*--------------TITLE----------------*/
 .shipwars__title {
     font-family: 'walkingdead', Brush Script MT, Brush Script Std, cursive;
     position: relative;
@@ -25,10 +26,7 @@
     box-sizing: border-box;
     gap: 9%;
 }
-.shipwars__buttons p {
-    transform: skew(30deg);
-    opacity: 1;
-}
+/*--------------BUTTONS----------------*/
 .shipwars__buttons {
     width: 20rem;
     height: 5rem;
@@ -45,6 +43,11 @@
     font-size: x-large;
     transition: all 0.3s ease-in-out;
 }
+.shipwars__buttons p {
+    transform: skew(30deg);
+    opacity: 1;
+}
+/*--------------BUTTONS HOVER----------------*/
 .shipwars__buttons:hover {
     margin-bottom: 2rem;
     height: 6rem;

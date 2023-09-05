@@ -6,19 +6,23 @@
         transform: scale(1);
     }
 }
-.container-link {
+/*--------------Container for Future styling----------------*/
+.container__link {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+/*--------------Copied Icon----------------*/
 .icon {
     position:absolute;
     bottom: 15%;
     left: 30%;
 }
 
-.copy-text {
+/*--------------Copy Text----------------*/
+.copy__text {
     position: relative;
     padding: 5px;
     padding-left: 10px;
@@ -27,7 +31,7 @@
     border-radius: 10px;
     display: flex;
 }
-.copy-text input.text {
+.copy__text input.text {
     padding: 10px;
     font-size: 18px;
     color: #555;
@@ -35,7 +39,7 @@
     border: none;
     outline: none;
 }
-.copy-text button {
+.copy__text button {
     padding: 20px;
     width: 20px;
     height: 20px;
@@ -49,10 +53,10 @@
     position: absolute;
     right: 1%;
 }
-.copy-text button:active {
+.copy__text button:active {
     background: #709c4c;
 }
-.copy-text button:before {
+.copy__text button:before {
     content: "Copied";
     position: absolute;
     top: -45px;
@@ -63,7 +67,7 @@
     font-size: 15px;
     display: none;
 }
-.copy-text button:after {
+.copy__text button:after {
     content: "";
     position: absolute;
     top : -20px;
@@ -74,7 +78,7 @@
     transform: rotate(45deg);
     display: none;
 }
-.copy-text.active button:before,
-.copy-text.active button:after {
+.copy__text.active button:before,
+.copy__text.active button:after {
     display: block;
 }

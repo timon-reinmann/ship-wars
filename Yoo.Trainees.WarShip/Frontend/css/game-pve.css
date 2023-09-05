@@ -32,6 +32,7 @@
     margin: 1rem 4rem 1rem 1rem;
     padding: 1rem;
 }
+
 .board {
     background-color: rgba( 128, 128, 128, 0.5);
     border: 2px solid #fefefe;
@@ -44,22 +45,27 @@
     position: relative;
     /*box-shadow: 0px 0px 5px 7px rgba(255,255,255,0.25);*/
 }
+/*--------------PLAYER----------------*/
+.player1 {
+    grid-area: player1;
+    background-color: rgba( 128, 128, 128, 0.25);
+    box-shadow: inset 0px 0px 10px 10px rgba( 128, 128, 128, 0.35);
+}
 #game__board {
     grid-area: player1;
     z-index: 100;
 }
-.player1 {
-    grid-area: player1;
-}
+
+/*--------------OPPONENT----------------*/
 #opponent__board {
     grid-area: player2;
 }
-#ship__board {
 
-}
+/*--------------CHATBOX----------------*/
 .chatbox {
     grid-area: chatbox;
 }
+
 /*--------------SHIPS----------------*/
 .ship {
     background-color: rgba( 128, 128, 128, 0.75);
