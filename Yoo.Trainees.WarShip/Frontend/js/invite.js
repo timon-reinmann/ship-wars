@@ -13,7 +13,8 @@ copyText.querySelector("button").addEventListener("click",function(){
 const submit_button = document.getElementById("penis2");
 submit_button.addEventListener("click", function() {
     let lobbyName = document.getElementById("penis3").value;
-    console.log(lobbyName);
+    lobbyName = JSON.stringify(lobbyName);
+
     'use strict';
     let url = "https://localhost:7118/api/Game/";
     let jsonURL = JSON.stringify(url);
@@ -28,7 +29,7 @@ submit_button.addEventListener("click", function() {
             "Content-Type": "application/json",
             "Sec-Fetch-Dest": "empty",
         },
-        "body": jsonURL,
+        "body": lobbyName,
         "method": "POST",
     })
     .then(response => response.json())
