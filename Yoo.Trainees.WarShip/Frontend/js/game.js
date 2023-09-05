@@ -25,6 +25,19 @@ for (let x = 0; x < 10; x++) {
     n+=1;
   }
 }
+n = 0;
+let gameShip = document.getElementById("ship__board");
+for (let x = 0; x < 10; x++) {
+  for (let y = 0; y < 10; y++) {
+    let div = document.createElement("div");
+    div.classList.add("field");
+    div.classList.add(`b${n}`);
+    div.setAttribute("data-x", x);
+    div.setAttribute("data-y", y);
+    gameShip.appendChild(div);
+    n+=1;
+  }
+}
 let dragStartX = 0;
 let shipOffsetX = 0;
 const draggables = document.querySelectorAll('.ship');

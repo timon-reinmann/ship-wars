@@ -21,9 +21,6 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            applicationDbContext.Games.Add(new Game());
-            applicationDbContext.SaveChanges();
-
             return new string[] { "value1", "value2" };
         }
 
@@ -36,11 +33,13 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // POST api/<GameController>
         [HttpPost]
-        public IActionResult Post([FromBody] string value)
+        public Guid Post([FromBody] string value)
         {
-            Guid id = Guid.NewGuid();
-            string url = value + id.ToString();
-            return Ok(new { response = url });
+            Guid Id = Guid.NewGuid();
+            Guid player2Id = Guid.NewGuid();
+            applicationDbContext.Games.Add(new Game(Id, player2Id, "hans", new DateTime());
+            applicationDbContext.SaveChanges();
+            return player2Id;
         }
 
         // PUT api/<GameController>/5
