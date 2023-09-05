@@ -30,7 +30,7 @@ fetch(API_URL, {
 .then(response => response.json())
 .then(data => {
     console.log("Daten:", data);
-    document.getElementById('penis').value = data.response;
+    document.getElementById('penis').value = "https://localhost:7118/" +  data;
 })
 .catch(error => {
     console.error("Es gab einen Fehler bei der Anfrage:", error);

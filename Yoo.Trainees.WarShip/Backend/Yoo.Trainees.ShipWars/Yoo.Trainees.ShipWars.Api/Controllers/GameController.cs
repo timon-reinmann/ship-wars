@@ -37,7 +37,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         {
             Guid Id = Guid.NewGuid();
             Guid player2Id = Guid.NewGuid();
-            applicationDbContext.Games.Add(new Game(Id, player2Id, "hans", new DateTime());
+            applicationDbContext.Games.Add(new Game(Id, player2Id, "hans"));
             applicationDbContext.SaveChanges();
             return player2Id;
         }
