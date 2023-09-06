@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Player</title>
+    <title>Game</title>
     <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/game-pve.css">
     <link rel="icon" href="../img/favicon.ico" type="image/x-icon" sizes="32x32">
 </head>
 <body>
@@ -19,6 +20,33 @@
                 </ul>
             </div>
         </nav>
+
+        <!-- Alle Schiffe werden implementiert -->
+        <div class="middle">
+            <div class="ship__selection" droppable="true">
+                <div class="ship warship" data-direction="horizontal" data-size="4" draggable="true"></div>
+                <div class="ship cruiser" data-direction="horizontal" data-size="3" draggable="true"></div>
+                <div class="ship cruiser" data-direction="horizontal" data-size="3" draggable="true"></div>
+                <div class="ship destroyer" data-direction="horizontal" data-size="2" draggable="true"></div>
+                <div class="ship destroyer" data-direction="horizontal" data-size="2" draggable="true"></div>
+                <div class="ship destroyer" data-direction="horizontal" data-size="2" draggable="true"></div>
+                <div class="ship submarine" data-direction="horizontal" data-size="1" draggable="true"></div>
+                <div class="ship submarine" data-direction="horizontal" data-size="1" draggable="true"></div>
+                <div class="ship submarine" data-direction="horizontal" data-size="1" draggable="true"></div>
+                <div class="ship submarine" data-direction="horizontal" data-size="1" draggable="true"></div>
+            </div>
+
+            <div id="game__board" class="board" droppable="true">
+            </div>
+
+            <div id="opponent__board" class="board">
+            </div>
+
+            <div class="chatbox">
+            </div>
+
+            <script src="../js/game.js"></script>
+        </div>
     </div>
 </body>
 </html>

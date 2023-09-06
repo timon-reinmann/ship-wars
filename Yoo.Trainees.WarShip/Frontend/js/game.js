@@ -1,3 +1,6 @@
+// URL AUSLESEn
+const urlParams = new URLSearchParams(window.location.search);
+console.log(urlParams.get('playerid'));
 let n = 0;
 let game = document.getElementById("game__board");
 

@@ -31,6 +31,9 @@ namespace Yoo.Trainees.ShipWars.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            //SignalR
+            builder.Services.AddSignalR();
+
             var app = builder.Build();
 
             app.UseCors(
@@ -50,6 +53,12 @@ namespace Yoo.Trainees.ShipWars.Api
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 db.Database.Migrate();
             }
+
+            //SignalR ChatHub
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ChatHub>("/chat");
+            });
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
