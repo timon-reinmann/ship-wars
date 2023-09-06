@@ -17,12 +17,14 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             this.applicationDbContext = applicationDbContext;
         }
 
-        // GET: api/<GameController>
+        // GET: api/Game
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
+
+        //[Route("FinishedGames")]
 
         // GET api/<Game>/5
         [HttpGet("{id}")]
