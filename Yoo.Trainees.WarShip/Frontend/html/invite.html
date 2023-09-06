@@ -28,15 +28,22 @@
             <input type="text" class="text" id="linkoutput"
             placeholder="https://shipwars.ch/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" readonly />
             <button>
-                <span class="icon"><ion-icon name="copy"></ion-icon></span>
+                <span class="icon_link"><ion-icon name="copy"></ion-icon></span>
             </button>
         </div>
     </div>
 
     <!-- Einfügen von Lobbyname Label plus Button zum submiten -->
     <!--Timon tags wie input am Schluss immer /> bitte-->
-    <input type="text" class="text" placeholder="lobbyname" id="lobbyname" /><br>
-    <input type="submit" value="Submit" id="lobbyinput" />
+    <div class="container__lobbyname">
+        <div class="submit__lobbyname">
+            <input type="text" class="text" placeholder="lobbyname" id="lobbyname" /><br>
+            <button>
+                <span class="icon_create" id="lobbyinput" type="submit"><ion-icon name="create"></ion-icon></span>
+            </button>
+        </div>
+    </div>
+
     <script src="../js/invite.js"></script>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>

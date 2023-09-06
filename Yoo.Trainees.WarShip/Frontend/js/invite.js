@@ -10,8 +10,16 @@ copyText.querySelector("button").addEventListener("click",function(){
     },2500);
 });
 
+
 const submit_button = document.getElementById("lobbyinput");
 submit_button.addEventListener("click", function() {
+
+    
+    let createGame = document.querySelector(".submit__lobbyname");
+    createGame.classList.add("active");
+    setTimeout(function(){
+        createGame.classList.remove("active");
+    },2500);
 
     let lobbyName = JSON.stringify(document.getElementById("lobbyname").value);
 
@@ -37,5 +45,6 @@ submit_button.addEventListener("click", function() {
     .catch(error => {
         console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
+
 });
 
