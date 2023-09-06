@@ -1,4 +1,6 @@
 let copyText = document.querySelector(".copy__text");
+let lobbyName = null;
+let link = null;
 copyText.querySelector("button").addEventListener("click",function(){
     let input = copyText.querySelector("input.text");
     input.select();
@@ -32,14 +34,6 @@ iconClose.addEventListener('click', ()=> {
     wrapper.classList.remove('active-popup');
 });
 
-
-const send_email = document.getElementById("email");
-email.addEventListener("click",function(){
-
-let email = document.getElementById("email-input").value;
-console.log(email);
-});
-
 const submit_button = document.getElementById("lobbyinput");
 submit_button.addEventListener("click", async function() {
 
@@ -50,8 +44,7 @@ submit_button.addEventListener("click", async function() {
         createGame.classList.remove("active");
     },2500);
 
-    let lobbyName = JSON.stringify(document.getElementById("lobbyname").value);
-    let link = null;
+    lobbyName = JSON.stringify(document.getElementById("lobbyname").value);
     'use strict';
     const API_URL = 'https://localhost:7118/api/Game';
     await fetch(API_URL, {
@@ -75,14 +68,19 @@ submit_button.addEventListener("click", async function() {
     .catch(error => {
         console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
+});
+
+const send_email = document.getElementById("email");
+email.addEventListener("click", function() {
+    let email = document.getElementById("email-input").value;
 
     // ----------------------EMAIL------------------------------------
-        let data = {
+    let daten = {
         gameName: lobbyName,
         email: email,
         link: link
     };
-    data = JSON.stringify(data);
+    daten = JSON.stringify(daten);
     'use strict';
 
     const API_URL_Email = 'https://localhost:7118/api/Game/Email';
@@ -95,7 +93,7 @@ submit_button.addEventListener("click", async function() {
             "Content-Type": "application/json",
             "Sec-Fetch-Dest": "empty",
         },
-        "body": data,
+        "body": daten,
         "method": "POST",
     })  
     .then(response => response.json())
@@ -105,6 +103,4 @@ submit_button.addEventListener("click", async function() {
     .catch(error => {
         console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
-    
-
 });
