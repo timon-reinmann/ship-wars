@@ -46,6 +46,8 @@ for (let x = 0; x < 10; x++) {
 
 let dragStartX = 0;
 let shipOffsetX = 0;
+let zIndexChange = 1;
+let currentField = null;
 
 const draggables = document.querySelectorAll('.ship');
 const containers = document.querySelectorAll('.ownField');
@@ -58,9 +60,10 @@ draggables.forEach(draggable => {
   });
   draggable.addEventListener('dragend', () => {
     draggable.classList.remove('dragging');
+    currentField.style.zIndex = zIndexChange;
+    zIndexChange++;
   });
 });
-
 containers.forEach(container => {
   container.addEventListener('dragover', e => {
     e.preventDefault();
@@ -72,6 +75,7 @@ containers.forEach(container => {
 
     if (currentX + shipSize <= 10) {
       container.appendChild(draggable);
+      currentField = container;
     } else {
     // Todo
     }
