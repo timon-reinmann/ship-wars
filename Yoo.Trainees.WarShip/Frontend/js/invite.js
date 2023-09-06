@@ -40,7 +40,7 @@ submit_button.addEventListener("click", function() {
     .then(response => response.json())
     .then(data => {
         console.log("Daten:", data);
-        document.getElementById('linkoutput').value = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?playerid=" +  data;
+        document.getElementById('linkoutput').value = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?playerid=" +  data.id;
     })
     .catch(error => {
         console.error("Es gab einen Fehler bei der Anfrage:", error);

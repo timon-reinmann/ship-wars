@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase;
 
 namespace Yoo.Trainees.ShipWars.Api
@@ -27,12 +28,11 @@ namespace Yoo.Trainees.ShipWars.Api
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer("name=ConnectionStrings:Database"));
 
+            builder.Services.AddScoped<IGameLogic, GameLogic>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-            //SignalR
-            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -53,12 +53,6 @@ namespace Yoo.Trainees.ShipWars.Api
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 db.Database.Migrate();
             }
-
-            //SignalR ChatHub
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<ChatHub>("/chat");
-            });
 
             app.UseHttpsRedirection();
             app.UseAuthorization();

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Yoo.Trainees.ShipWars.DataBase;
+using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,11 +10,11 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
     [ApiController]
     public class GameController : ControllerBase
     {
-        private readonly ApplicationDbContext applicationDbContext;
+        private readonly IGameLogic gameLogic;
 
-        public GameController(ApplicationDbContext applicationDbContext)
+        public GameController(IGameLogic gameLogic)
         {
-            this.applicationDbContext = applicationDbContext;
+            this.gameLogic = gameLogic;
         }
 
         // GET: api/Game
@@ -35,13 +35,11 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // POST api/<GameController>
         [HttpPost]
-        public Guid Post([FromBody] string value)
+        public Game Post([FromBody] string name)
         {
-            Guid Id = Guid.NewGuid();
-            Guid player2Id = Guid.NewGuid();
-            applicationDbContext.Games.Add(new Game(Id, player2Id, value));
-            applicationDbContext.SaveChanges();
-            return player2Id;
+            var createdGame = gameLogic.CreateGame(name);
+
+            return createdGame;
         }
 
         // PUT api/<GameController>/5
