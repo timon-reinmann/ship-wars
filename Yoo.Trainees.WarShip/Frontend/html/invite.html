@@ -32,20 +32,55 @@
         </div>
     </div>
 
-    <!-- Einfügen von Link Label plus Button zum kopieren -->
-    <div class="container__link">
-        <div class="copy__text">
-            <input type="text" class="text" id="linkoutput"
-            placeholder="https://shipwars.ch/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" readonly />
-            <button>
-                <span class="icon_link"><ion-icon name="copy"></ion-icon></span>
-            </button>
+
+    <button class="btnLogin-popup">Link for friend</button>
+
+    <div class="wrapper">
+        <span class="icon-close"><ion-icon name="close"></ion-icon></span>
+        <div class="form-box login">
+            <h2 class="Link-h2">Link</h2>
+            
+                <!-- Einfügen von Link Label plus Button zum kopieren -->
+                <div class="copy__text">
+                    <input type="text" class="text" id="linkoutput"
+                    placeholder="https://shipwars.ch/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" readonly />
+                    <button>
+                        <span class="icon_link"><ion-icon name="copy"></ion-icon></span>
+                    </button>
+                </div>
+
+            <form action="#">
+                    <div class="link-email">
+                        <p>Click to <a href="#" class="register-link">send Email</a></p>
+                    </div>
+            </form>
+        </div>
+
+        <div class="form-box register">
+            <h2 class="email-h2">Send E-mail</h2>
+            <form action="#">
+
+                <input type="email" class="email-input" placeholder="E-mail" id="email-input" /><br>
+                <button type="submit" id="email" class="btn">Send link</button>
+
+                    <div class="link-email">
+                        <p>Click to <a href="#" class="login-link">copy link</a></p>
+                    </div>
+            </form>
         </div>
     </div>
+
+
 
     <script src="../js/invite.js"></script>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
+
+
+
+
 </body>
 </html>
