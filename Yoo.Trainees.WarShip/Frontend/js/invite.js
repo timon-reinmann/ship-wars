@@ -12,13 +12,10 @@ copyText.querySelector("button").addEventListener("click",function(){
 
 const submit_button = document.getElementById("lobbyinput");
 submit_button.addEventListener("click", function() {
-    let lobbyName = document.getElementById("lobbyname").value;
-    lobbyName = JSON.stringify(lobbyName);
+
+    let lobbyName = JSON.stringify(document.getElementById("lobbyname").value);
 
     'use strict';
-    let url = "https://localhost:7118/api/Game/";
-    let jsonURL = JSON.stringify(url);
-
     const API_URL = 'https://localhost:7118/api/Game';
     fetch(API_URL, {
         "credentials": "omit",

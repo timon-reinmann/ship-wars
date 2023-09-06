@@ -29,20 +29,20 @@ for (let x = 0; x < 10; x++) {
   }
 }
 
-n = 0;
-let gameShip = document.getElementById("ship__board");
+// n = 0;
+// let gameShip = document.getElementById("ship__board");
 
-for (let x = 0; x < 10; x++) {
-  for (let y = 0; y < 10; y++) {
-    let div = document.createElement("div");
-    div.classList.add("field");
-    div.classList.add(`b${n}`);
-    div.setAttribute("data-x", x);
-    div.setAttribute("data-y", y);
-    gameShip.appendChild(div);
-    n+=1;
-  }
-}
+// for (let x = 0; x < 10; x++) {
+//   for (let y = 0; y < 10; y++) {
+//     let div = document.createElement("div");
+//     div.classList.add("field");
+//     div.classList.add(`b${n}`);
+//     div.setAttribute("data-x", x);
+//     div.setAttribute("data-y", y);
+//     gameShip.appendChild(div);
+//     n+=1;
+//   }
+// }    POTENTIAL FUTURE FEATURE
 
 let dragStartX = 0;
 let shipOffsetX = 0;
@@ -96,7 +96,6 @@ fetch(API_URL, {
 
 .then(response => response.json())
 .data.then(data => {
-    console.log("Daten:", data);
 })
 
 .catch(error => {
