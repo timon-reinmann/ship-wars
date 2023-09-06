@@ -10,6 +10,9 @@ namespace Yoo.Trainees.ShipWars.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            // Email
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+
             builder.Services.AddCors();
             //builder.Services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

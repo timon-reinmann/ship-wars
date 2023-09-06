@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices.JavaScript;
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
@@ -11,10 +12,12 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
     public class GameController : ControllerBase
     {
         private readonly IGameLogic gameLogic;
+        private readonly IEmailSender _emailSender;
 
-        public GameController(IGameLogic gameLogic)
+        public GameController(IGameLogic gameLogic, IEmailSender emailSender)
         {
             this.gameLogic = gameLogic;
+            this._emailSender = emailSender;
         }
 
         // GET: api/Game
@@ -38,8 +41,18 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         public Game Post([FromBody] string name)
         {
             var createdGame = gameLogic.CreateGame(name);
-
             return createdGame;
+        }
+        [Route("Email")]
+        [HttpPost]
+        public async Task<IActionResult> NotifyGameAsync([FromBody] TdoEmail body)
+        {
+            await _emailSender.SendEmailAsync(
+                body.email,
+                "Neues Spiel erstellt",
+                $"Ein neues Spiel namens {body.gameName} wurde erstellt! Link zum Spiel: {body.link}"
+            );
+            return Ok();
         }
 
         // PUT api/<GameController>/5
