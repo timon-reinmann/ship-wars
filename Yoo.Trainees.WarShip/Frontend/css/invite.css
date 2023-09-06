@@ -4,6 +4,12 @@
     }
 }
 
+.container__link {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 .container__lobbyname {
     position: absolute;
     top: 37%;
@@ -113,9 +119,6 @@
 .submit__lobbyname.active button:after {
     display: block;
 }
-
-
-
 .btnLogin-popup {
     width: 130px;
     height: 50px;
@@ -276,3 +279,9 @@
     padding-left: 10px;
     min-width: 300px;
 }
+
+
+
+
+
+
