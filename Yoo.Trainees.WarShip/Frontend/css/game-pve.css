@@ -39,6 +39,9 @@
     margin: 1rem 4rem 1rem 1rem;
     padding: 1rem;
 }
+.ship__selection .ship {
+    margin: 5px;
+}
 
 .board {
     background-color: rgba( 128, 128, 128, 0.5);
@@ -67,16 +70,33 @@
     background-color: rgba( 128, 128, 128, 0.75);
     box-shadow: 0px 0px 5px 5px rgba( 128, 128, 128, 0.25);
     border: 2px solid #fefefe;
-    margin: 5px;
     cursor: pointer;
 }
 .warship {
     height: 52px;
     width: 208px;
+    background-color: rgba( 128, 128, 128, 0);
+    background-image: url(../img/grösste.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 95% 250%;
+    border: 0px;
+    box-shadow: none;
+    overflow: visible;
+    border-radius: 250%;
 }
 .cruiser {
     height: 52px;
     width: 156px;
+    background-color: rgba( 128, 128, 128, 0);
+    background-image: url(../img/pixil-frame-0\ \(1\).png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 95% 250%;
+    border: 0px;
+    box-shadow: none;
+    overflow: visible;
+    border-radius: 250%;
 }
 .destroyer {
     height: 52px;

@@ -153,22 +153,23 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    transform: scale(0);
+    transform: scale(0) translate(-50%, -50%);
     transition: transform .5s ease, height .2s ease;
     position: absolute;
-    top: 30%;
-    left: 27%;
+    top: 50%;
+    left: 50%;
 }
 
 .wrapper.active-popup {
-    transform: scale(1);
+    transform: scale(1) translate(-50%, -50%);
 }
 
 .wrapper.active {
     height: 440px;
     width: 700px;
     position: absolute;
-    left:32%;
+    left:50%;
+    top:50%;
 }
 
 .wrapper .form-box {

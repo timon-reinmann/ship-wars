@@ -32,21 +32,6 @@ for (let x = 0; x < 10; x++) {
   }
 }
 
-// n = 0;
-// let gameShip = document.getElementById("ship__board");
-
-// for (let x = 0; x < 10; x++) {
-//   for (let y = 0; y < 10; y++) {
-//     let div = document.createElement("div");
-//     div.classList.add("field");
-//     div.classList.add(`b${n}`);
-//     div.setAttribute("data-x", x);
-//     div.setAttribute("data-y", y);
-//     gameShip.appendChild(div);
-//     n+=1;
-//   }
-// }    POTENTIAL FUTURE FEATURE
-
 let dragStartX = 0;
 let shipOffsetX = 0;
 let zIndexChange = 1;
@@ -54,6 +39,7 @@ let currentField = null;
 
 const draggables = document.querySelectorAll('.ship');
 const containers = document.querySelectorAll('.ownField');
+const shipSelection = document.querySelector('.ship__selection');
 
 draggables.forEach(draggable => {
   draggable.addEventListener('dragstart', (e) => {
@@ -63,7 +49,16 @@ draggables.forEach(draggable => {
   });
   draggable.addEventListener('dragend', () => {
     draggable.classList.remove('dragging');
-    currentField.style.zIndex = zIndexChange;
+    currentField.style.zIndex = zIndexChange+1;
+    const currentX = parseInt(currentField.getAttribute("data-x"));
+    const currentY = parseInt(currentField.getAttribute("data-y"));
+    const shipSize = parseInt(draggable.getAttribute("data-size"));
+    for(let i = 1; i < shipSize; i++) {
+      const adjustFields = document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY}"]`);
+      if(adjustFields) {
+        adjustFields.style.zIndex = zIndexChange;
+      }
+    }
     zIndexChange++;
   });
 });
@@ -79,10 +74,17 @@ containers.forEach(container => {
     if (currentX + shipSize <= 10) {
       container.appendChild(draggable);
       currentField = container;
+      draggable.classList.remove('invalid');
     } else {
-    // Todo
+      draggable.classList.add('invalid');
     }
   });
+});
+shipSelection.addEventListener('dragover', e => {
+  e.preventDefault();
+  const draggable = document.querySelector('.dragging');
+  shipSelection.appendChild(draggable);
+  currentField = null;
 });
 
 'use strict';
