@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Numerics;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Yoo.Trainees.ShipWars.DataBase.Entities
 {

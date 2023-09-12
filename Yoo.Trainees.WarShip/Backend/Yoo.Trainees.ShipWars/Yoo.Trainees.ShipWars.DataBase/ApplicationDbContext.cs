@@ -10,8 +10,13 @@ namespace Yoo.Trainees.ShipWars.DataBase
         {
         }
 
-        public virtual DbSet<Game> Games { get; set; }
-        public virtual DbSet<GamePlayer> GamePlayers { get; set; }
-        public virtual DbSet<Player> Players { get; set; }
+        public virtual DbSet<Game> Game { get; set; }
+        public virtual DbSet<GamePlayer> GamePlayer { get; set; }
+        public virtual DbSet<Player> Player { get; set; }
+        public virtual DbSet<Message> Message { get; set; }
+        public virtual DbSet<Ship> Ship { get; set; }
+        public virtual DbSet<ShipPosition> ShipPosition { get; set; }
+        public virtual DbSet<Shot> Shot { get; set; }
+
     }
 }
