@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase;
 
@@ -11,6 +12,9 @@ namespace Yoo.Trainees.ShipWars.Api
         {
             var builder = WebApplication.CreateBuilder(args);
             // Email
+
+            var configuration = builder.Configuration;
+            builder.Services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             builder.Services.AddCors();
@@ -26,8 +30,12 @@ namespace Yoo.Trainees.ShipWars.Api
                 .SetBasePath(currentDirectory)
                 .AddJsonFile("appsettings.json", false, true)
                 .AddJsonFile($"appsettings.{environmentName}.json", true, true)
-                .AddJsonFile("EmailSettings.json", false, true)
+                .AddJsonFile("EmailConfig.json", false, true)
                 .AddEnvironmentVariables();
+
+            configuration = builder.Configuration;
+            builder.Services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer("name=ConnectionStrings:Database"));
