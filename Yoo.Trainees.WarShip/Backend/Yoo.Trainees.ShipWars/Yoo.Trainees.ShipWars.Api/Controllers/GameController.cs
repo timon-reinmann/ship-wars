@@ -45,12 +45,12 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
         [Route("Email")]
         [HttpPost]
-        public async Task<IActionResult> NotifyGameAsync([FromBody] TdoEmail body)
+        public async Task<IActionResult> NotifyGameAsync([FromBody] EmailDto body)
         {
             await _emailSender.SendEmailAsync(
-                body.email,
+                body.Email,
                 "Neues Spiel erstellt",
-                $"Du wurdest zu einem Spiel namens {body.gameName} eingeladen! Link zum Spiel: {body.link}"
+                $"Du wurdest zu einem Spiel namens {body.GameName} eingeladen! Link zum Spiel: {body.Link}"
             );
             return Ok();
         }
