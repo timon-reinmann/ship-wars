@@ -99,10 +99,28 @@
 .destroyer {
   height: 52px;
   width: 104px;
+  background-color: rgba(128, 128, 128, 0);
+  background-image: url(../img/destroyer.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 95% 100%;
+  border: 0px;
+  box-shadow: none;
+  overflow: visible;
+  border-radius: 250%;
 }
 .submarine {
   height: 52px;
   width: 52px;
+  background-color: rgba(128, 128, 128, 0);
+  background-image: url(../img/submarine.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 90% 140%;
+  border: 0px;
+  box-shadow: none;
+  overflow: visible;
+  border-radius: 250%;
 }
 .ship.dragging {
   background-color: rgba(143, 240, 143, 0.25);

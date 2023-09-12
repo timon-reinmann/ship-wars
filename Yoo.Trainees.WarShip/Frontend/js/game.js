@@ -64,30 +64,72 @@ draggables.forEach((draggable) => {
     zIndexChange++;
   });
 });
+
+// containers.forEach((container) => {
+//   container.addEventListener("dragover", (e) => {
+//     e.preventDefault();
+
+//     const draggable = document.querySelector(".dragging");
+//     const shipSize = parseInt(draggable.getAttribute("data-size"));
+
+//     const currentX = parseInt(container.getAttribute("data-x"));
+
+//     if (currentX + shipSize <= 10) {
+//       container.appendChild(draggable);
+//       currentField = container;
+//       draggable.classList.remove("invalid");
+//     } else {
+//       draggable.classList.add("invalid");
+//     }
+//   });
+// });
+
+// ...
+
 containers.forEach((container) => {
   container.addEventListener("dragover", (e) => {
     e.preventDefault();
 
     const draggable = document.querySelector(".dragging");
+    if (!draggable) return;
+
     const shipSize = parseInt(draggable.getAttribute("data-size"));
-
     const currentX = parseInt(container.getAttribute("data-x"));
+    const currentY = parseInt(container.getAttribute("data-y"));
 
-    if (currentX + shipSize <= 10) {
+    // Überprüfen, ob genug Platz für das Schiff vorhanden ist
+    let isPlacementValid = true;
+    for (let i = -2; i < shipSize; i++) {
+      const checkField = document.querySelector(
+        `[data-x="${currentX + i}"][data-y="${currentY}"]`
+      );
+      if (!checkField || checkField.querySelector(".ship")) {
+        // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
+        isPlacementValid = false;
+        break;
+      }
+    }
+
+    if (isPlacementValid) {
+      // Das Schiff kann platziert werden
       container.appendChild(draggable);
       currentField = container;
       draggable.classList.remove("invalid");
     } else {
+      // Das Schiff kann nicht platziert werden
       draggable.classList.add("invalid");
     }
   });
 });
+
 shipSelection.addEventListener("dragover", (e) => {
   e.preventDefault();
   const draggable = document.querySelector(".dragging");
   shipSelection.appendChild(draggable);
   currentField = null;
 });
+
+// ...
 
 ("use strict");
 
