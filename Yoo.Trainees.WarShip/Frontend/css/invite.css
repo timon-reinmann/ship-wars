@@ -39,19 +39,12 @@
   display: flex;
 }
 
-.copy__text input.text {
-  padding: 10px;
-  font-size: 18px;
-  color: #555;
-  min-width: 800px;
-  border: none;
-  outline: none;
-}
+.copy__text input.text,
 .submit__lobbyname input.text {
   padding: 10px;
   font-size: 18px;
   color: #555;
-  min-width: 300px;
+  min-width: 800px;
   border: none;
   outline: none;
 }
