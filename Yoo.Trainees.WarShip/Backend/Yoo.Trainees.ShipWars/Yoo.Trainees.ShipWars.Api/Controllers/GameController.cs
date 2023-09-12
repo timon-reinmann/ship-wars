@@ -50,7 +50,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             await _emailSender.SendEmailAsync(
                 body.Email,
                 "Neues Spiel erstellt",
-                $"Du wurdest zu einem Spiel namens {body.GameName} eingeladen! Link zum Spiel: {body.Link}"
+                $"Du wurdest zu einem Spiel namens {body.LobbyName} eingeladen! Link zum Spiel: {body.Link}"
             );
             return Ok();
         }
