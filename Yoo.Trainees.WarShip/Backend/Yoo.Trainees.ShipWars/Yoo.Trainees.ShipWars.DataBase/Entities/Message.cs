@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Yoo.Trainees.ShipWars.DataBase.Entities
 {
-    internal class Message
+    public class Message
     {
         public Guid Id { get; set; }
 

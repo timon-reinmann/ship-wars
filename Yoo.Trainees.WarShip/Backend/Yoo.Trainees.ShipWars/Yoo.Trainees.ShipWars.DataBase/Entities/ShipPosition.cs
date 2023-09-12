@@ -4,11 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Yoo.Trainees.ShipWars.DataBase.Entities
 {
-    internal class ShipPosition
+    public class ShipPosition
     {
         public Guid Id { get; set; }
+        
+        public Guid GamePlayerId { get; set; }
 
-        public Ship ShipId { get; set; }
+        public Guid ShipId { get; set; }
 
         public int Life { get; set; }       
 
@@ -19,5 +21,9 @@ namespace Yoo.Trainees.ShipWars.DataBase.Entities
         public int Z { get; set; }
 
         public Boolean Direction { get; set; }
+
+        public Ship Ship { get; set; }
+
+        public GamePlayer GamePlayer { get; set; }
     }
 }

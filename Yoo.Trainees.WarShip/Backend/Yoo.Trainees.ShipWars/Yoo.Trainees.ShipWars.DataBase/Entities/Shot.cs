@@ -1,7 +1,7 @@
 ﻿
 namespace Yoo.Trainees.ShipWars.DataBase.Entities
 {
-    internal class Shot
+    public class Shot
     {
         public Guid Id { get; set; }
 

@@ -49,7 +49,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             };
 
 
-            applicationDbContext.Games.Add(game);
+            applicationDbContext.Game.Add(game);
             applicationDbContext.SaveChanges();
 
             return game;
