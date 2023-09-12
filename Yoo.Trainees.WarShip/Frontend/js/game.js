@@ -2,7 +2,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 console.log(urlParams.get("playerid"));
 let countingFields = 0;
-let gameBoardElement = document.getElementById("game__board");
+let gameBoard = document.getElementById("game__board");
 
 for (let y = 0; y < 10; y++) {
   for (let x = 0; x < 10; x++) {
@@ -12,7 +12,7 @@ for (let y = 0; y < 10; y++) {
     div.classList.add(`b${countingFields}`);
     div.setAttribute("data-x", x);
     div.setAttribute("data-y", y);
-    gameBoardElement.appendChild(div);
+    gameBoard.appendChild(div);
     countingFields += 1;
   }
 }
