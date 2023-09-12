@@ -33,10 +33,6 @@ namespace Yoo.Trainees.ShipWars.Api
                 .AddJsonFile("EmailConfig.json", false, true)
                 .AddEnvironmentVariables();
 
-            configuration = builder.Configuration;
-            builder.Services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
-            builder.Services.AddTransient<IEmailSender, EmailSender>();
-
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer("name=ConnectionStrings:Database"));
 

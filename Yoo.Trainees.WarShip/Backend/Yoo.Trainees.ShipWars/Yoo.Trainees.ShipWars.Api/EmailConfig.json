@@ -1,8 +1,0 @@
-{
-  "EmailSettings": {
-    "SmtpServer": "smtp-mail.outlook.com",
-    "SmtpPort": 587,
-    "Email": "ShipWars@outlook.com",
-    "Password": "Sh!pWars"
-  }
-}

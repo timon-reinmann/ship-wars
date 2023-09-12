@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 
 namespace Yoo.Trainees.ShipWars.Api
@@ -16,16 +15,16 @@ namespace Yoo.Trainees.ShipWars.Api
         public async Task SendEmailAsync(string email, string subject, string message)
         {
 
-            var client = new SmtpClient(configuration["SmtpClient:Host"], int.Parse(configuration["SmtpClient:Port"]))
+            var client = new SmtpClient(configuration["EmailSettings:SmtpClient:Host"], int.Parse(configuration["EmailSettings:SmtpClient:Port"]))
             {
                 EnableSsl = true,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(configuration["NetworkCredential:UserName"], configuration["NetworkCredential:Password"])
+                Credentials = new NetworkCredential(configuration["EmailSettings:NetworkCredential:serName"], configuration["EmailSettings:NetworkCredential:password"])
             };
 
             await client.SendMailAsync(
                 new MailMessage(
-                    from: configuration["NetworkCredential:UserName"],
+                    from: configuration["EmailSettings:NetworkCredential:userName"],
                     to: email,
                     subject,
                     message
