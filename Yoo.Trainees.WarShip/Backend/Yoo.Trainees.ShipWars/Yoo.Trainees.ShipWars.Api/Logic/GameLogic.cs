@@ -14,10 +14,40 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         public Game CreateGame(string name)
         {
-            var Player1Id = Guid.NewGuid();
-            var player2Id = Guid.NewGuid();
+            var gamePlayers = new List<GamePlayer>();
+            var player1 = new Player
+            {
+                Id = Guid.NewGuid(), 
+                Name = "Hans"
+            };
+            var player2 = new Player
+            {
+                Id = Guid.NewGuid(),
+                Name = "Peter"
+            };
+            var gameId = Guid.NewGuid();
 
-            var game = new Game(Player1Id, player2Id, name);
+            gamePlayers.Add(new GamePlayer
+            {
+                Id = Guid.NewGuid(),
+                GameId = gameId, 
+                PlayerId = player1.Id 
+            });
+            gamePlayers.Add(new GamePlayer
+            {
+                Id = Guid.NewGuid(),
+                GameId = gameId,
+                PlayerId = player2.Id
+            });
+
+            var game = new Game
+            {
+                Id = gameId,
+                Name = name,
+                GameStatus = "TODO",
+                GamePlayers = gamePlayers
+            };
+
 
             applicationDbContext.Games.Add(game);
             applicationDbContext.SaveChanges();

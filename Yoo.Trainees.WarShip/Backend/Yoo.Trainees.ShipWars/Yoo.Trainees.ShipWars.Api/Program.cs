@@ -13,8 +13,6 @@ namespace Yoo.Trainees.ShipWars.Api
             var builder = WebApplication.CreateBuilder(args);
             // Email
 
-            var configuration = builder.Configuration;
-            builder.Services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             builder.Services.AddCors();
@@ -30,7 +28,6 @@ namespace Yoo.Trainees.ShipWars.Api
                 .SetBasePath(currentDirectory)
                 .AddJsonFile("appsettings.json", false, true)
                 .AddJsonFile($"appsettings.{environmentName}.json", true, true)
-                .AddJsonFile("EmailConfig.json", false, true)
                 .AddEnvironmentVariables();
 
             builder.Services.AddDbContext<ApplicationDbContext>(
