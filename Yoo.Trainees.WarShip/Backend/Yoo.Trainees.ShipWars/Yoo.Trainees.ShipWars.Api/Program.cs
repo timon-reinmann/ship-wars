@@ -26,6 +26,7 @@ namespace Yoo.Trainees.ShipWars.Api
                 .SetBasePath(currentDirectory)
                 .AddJsonFile("appsettings.json", false, true)
                 .AddJsonFile($"appsettings.{environmentName}.json", true, true)
+                .AddJsonFile("EmailSettings.json", false, true)
                 .AddEnvironmentVariables();
 
             builder.Services.AddDbContext<ApplicationDbContext>(
