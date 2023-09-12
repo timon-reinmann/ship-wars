@@ -6,24 +6,26 @@ namespace Yoo.Trainees.ShipWars.Api
 {
     public class EmailSender : IEmailSender
     {
-        private readonly EmailSettings _emailSettings;
+        private readonly IConfiguration configuration;
 
-        public EmailSender(IOptions<EmailSettings> emailSettings)
+        public EmailSender(IConfiguration configuration)
         {
-            _emailSettings = emailSettings.Value;
+            this.configuration = configuration;
         }
-        public Task SendEmailAsync(string email, string subject, string message)
+
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
-            var client = new SmtpClient(_emailSettings.SmtpServer, _emailSettings.SmtpPort)
+
+            var client = new SmtpClient(configuration["SmtpClient:Host"], int.Parse(configuration["SmtpClient:Port"]))
             {
                 EnableSsl = true,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(_emailSettings.Email, _emailSettings.Password)
+                Credentials = new NetworkCredential(configuration["NetworkCredential:UserName"], configuration["NetworkCredential:Password"])
             };
 
-            return client.SendMailAsync(
+            await client.SendMailAsync(
                 new MailMessage(
-                    from: _emailSettings.Email,
+                    from: configuration["NetworkCredential:UserName"],
                     to: email,
                     subject,
                     message
