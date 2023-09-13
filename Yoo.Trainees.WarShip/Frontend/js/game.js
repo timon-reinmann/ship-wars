@@ -5,6 +5,8 @@ let countingFields = 0;
 let gameBoard = document.getElementById("game__board");
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
+let currentX = null;
+let currentY = null;
 
 for (let y = 0; y < 10; y++) {
   for (let x = 0; x < 10; x++) {
@@ -37,8 +39,6 @@ for (let x = 0; x < 10; x++) {
   }
 }
 
-let dragStartX = 0;
-let shipOffsetX = 0;
 let zIndexChange = 1;
 let currentField = null;
 
@@ -47,17 +47,24 @@ const containers = document.querySelectorAll(".ownField");
 const shipSelection = document.querySelector(".ship__selection");
 
 draggables.forEach((draggable) => {
+  draggable.addEventListener("click", e => {
+    draggable.setAttribute("data-direction", "vertical");
+    draggable.classList.toggle("vertical");
+  });
   draggable.addEventListener("dragstart", (e) => {
     originField = draggable.parentNode; 
-    dragStartX = e.clientX;
-    shipOffsetX = dragStartX - draggable.getBoundingClientRect().left;
     draggable.classList.add("dragging");
   });
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
     currentField.style.zIndex = zIndexChange + 1;
-    const currentX = parseInt(currentField.getAttribute("data-x"));
-    const currentY = parseInt(currentField.getAttribute("data-y"));
+    if(draggable.classList.contains("vertical")) {
+      currentY = parseInt(currentField.getAttribute("data-x"));
+      currentX = parseInt(currentField.getAttribute("data-y"));
+    } else {
+      currentX = parseInt(currentField.getAttribute("data-x"));
+      currentY = parseInt(currentField.getAttribute("data-y"));
+    }
     const shipSize = parseInt(draggable.getAttribute("data-size"));
     for (let i = 1; i < shipSize; i++) {
       const adjustFields = document.querySelector(
@@ -91,8 +98,8 @@ containers.forEach((container) => {
     if (!draggable) return;
 
     const shipSize = parseInt(draggable.getAttribute("data-size"));
-    const currentX = parseInt(container.getAttribute("data-x"));
-    const currentY = parseInt(container.getAttribute("data-y"));
+    currentX = parseInt(container.getAttribute("data-x"));
+    currentY = parseInt(container.getAttribute("data-y"));
     let shipCheck = 0;
     
     const checkField = document.querySelector(
