@@ -5,6 +5,7 @@ let countingFields = 0;
 let gameBoard = document.getElementById("game__board");
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 
+
 for (let y = 0; y < 10; y++) {
   for (let x = 0; x < 10; x++) {
     let div = document.createElement("div");
@@ -65,14 +66,14 @@ draggables.forEach((draggable) => {
         adjustFields.style.zIndex = zIndexChange;
       }
     }
-    for (let i = 0; i < shipSize; i++) {
-      const field = document.querySelector(
-        `[data-x="${currentX + i}"][data-y="${currentY}"]`
-      );
-      if (field) {
-        field.setAttribute("data-size", shipSize);
+      for (let i = 0; i < shipSize; i++) {
+        const field = document.querySelector(
+          `[data-x="${currentX + i}"][data-y="${currentY}"]`
+        );
+        if (field) {
+          field.setAttribute("data-size", shipSize);
+        }
       }
-    }
     zIndexChange++;
   });
 });
@@ -111,16 +112,14 @@ containers.forEach((container) => {
     const currentX = parseInt(container.getAttribute("data-x"));
     const currentY = parseInt(container.getAttribute("data-y"));
     let shipCheck = 0;
-    for (let i = currentX - 1; i >= 0; i--) {
-      const checkField = document.querySelector(
-        `[data-x="${i}"][data-y="${currentY}"]`
-      );
-      if (checkField) {
-        const dataCheck = parseInt(checkField.getAttribute("data-size"));
-        if (!isNaN(dataCheck)) {
-          shipCheck = dataCheck;
-          console.log(shipCheck + "Hallo");
-        }
+    
+    const checkField = document.querySelector(
+      `[data-x="${currentX}"][data-y="${currentY}"]`
+    );
+    if (checkField) {
+      const dataCheck = parseInt(checkField.getAttribute("data-size"));
+      if (!isNaN(dataCheck)) {
+        shipCheck = dataCheck;
       }
     }
     // Überprüfen, ob genug Platz für das Schiff vorhanden ist
@@ -130,8 +129,9 @@ containers.forEach((container) => {
       const checkField = document.querySelector(
         `[data-x="${currentX + i}"][data-y="${currentY}"]`
       );
+      
       if (
-        !checkField ||
+        !checkField || 
         (checkField.querySelector(".ship") &&
           draggable.id != checkField.querySelector(".ship").id)
       ) {
@@ -139,29 +139,32 @@ containers.forEach((container) => {
         isPlacementValid = false;
         break;
       }
-    }
+      if (shipCheck > 0) {
+        isPlacementValid = false;
+      } 
+    }    
+
 
     if (isPlacementValid) {
-      // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf
-      const oldField = document.querySelector(`[data-new="true"]`);
-      const oldShipSize = parseInt(currentField.getAttribute("data-size"));
-      const oldX = parseInt(currentField.getAttribute("data-x"));
-      const oldY = parseInt(currentField.getAttribute("data-y"));
-      if (oldField) {
-        for(let i = 0; i < oldShipSize; i++) {
-        
+      // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf 0
+      
+      if(container.querySelectorAll(`[data-new="true"]`)) {
+        const oldX = parseInt(container.getAttribute("data-x"));
+        const oldY = parseInt(container.getAttribute("data-y"));
+        const oldShipSize = parseInt(container.getAttribute("data-size"));
+        for (let i = 0; i < oldShipSize; i++) {
+          const oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY}"]`);
+          if (oldField) {
+            oldField.setAttribute("data-size", 0);
+          }
         }
-        // for (let i = 0; i < oldShipSize; i++) {
-        //   const oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY}"]`);
-        //   if (oldField) {
-        //     oldField.setAttribute("data-size", 0);
-        //   }
-        // }
+        container.setAttribute("data-new", "false");
+        container.setAttribute("data-size", 0);
       }
-
+      
       // Platziere das Schiff und setze data-size für alle belegten Felder
       container.appendChild(draggable);
-      currentField = container; // Aktualisiere das aktuelle linke Feld
+      currentField = container;  // Aktualisiere das aktuelle linke Feld
       draggable.classList.remove("invalid");
     } else {
       // Das Schiff kann nicht platziert werden
