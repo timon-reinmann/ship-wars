@@ -119,7 +119,7 @@ containers.forEach((container) => {
         `[data-x="${currentX + i}"][data-y="${currentY}"]`
       );
       if (
-        !checkField || 
+        !checkField && 
         (checkField.querySelector(".ship") &&
           draggable.id != checkField.querySelector(".ship").id)
       ) {
