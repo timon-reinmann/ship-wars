@@ -66,38 +66,19 @@ draggables.forEach((draggable) => {
         adjustFields.style.zIndex = zIndexChange;
       }
     }
-      for (let i = 0; i < shipSize; i++) {
-        const field = document.querySelector(
-          `[data-x="${currentX + i}"][data-y="${currentY}"]`
-        );
-        if (field) {
-          field.setAttribute("data-size", shipSize);
+      for (let i = -1; i <= shipSize; i++) {
+        for(let j = -1; j < 2; j++) {
+          const field = document.querySelector(
+            `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
+          );
+          if (field) {
+            field.setAttribute("data-size", shipSize);
+          }
         }
       }
     zIndexChange++;
   });
 });
-
-// containers.forEach((container) => {
-//   container.addEventListener("dragover", (e) => {
-//     e.preventDefault();
-
-//     const draggable = document.querySelector(".dragging");
-//     const shipSize = parseInt(draggable.getAttribute("data-size"));
-
-//     const currentX = parseInt(container.getAttribute("data-x"));
-
-//     if (currentX + shipSize <= 10) {
-//       container.appendChild(draggable);
-//       currentField = container;
-//       draggable.classList.remove("invalid");
-//     } else {
-//       draggable.classList.add("invalid");
-//     }
-//   });
-// });
-
-// ...
 
 containers.forEach((container) => {
   container.addEventListener("dragstart", (e) => {
@@ -157,7 +138,8 @@ containers.forEach((container) => {
       draggable.classList.add("invalid");
     }
   });
-  container.addEventListener("drag", (e) => {
+  // Komischer Weise geht das auch mit drag anstatt drop
+  container.addEventListener("drop", (e) => {
     if(container.querySelectorAll(`[data-new="true"]`)) {
       const oldX = parseInt(container.getAttribute("data-x"));
       const oldY = parseInt(container.getAttribute("data-y"));
