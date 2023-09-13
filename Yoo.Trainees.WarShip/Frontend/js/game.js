@@ -146,21 +146,7 @@ containers.forEach((container) => {
 
 
     if (isPlacementValid) {
-      // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf 0
-      
-      if(container.querySelectorAll(`[data-new="true"]`)) {
-        const oldX = parseInt(container.getAttribute("data-x"));
-        const oldY = parseInt(container.getAttribute("data-y"));
-        const oldShipSize = parseInt(container.getAttribute("data-size"));
-        for (let i = 0; i < oldShipSize; i++) {
-          const oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY}"]`);
-          if (oldField) {
-            oldField.setAttribute("data-size", 0);
-          }
-        }
-        container.setAttribute("data-new", "false");
-        container.setAttribute("data-size", 0);
-      }
+      // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf 
       
       // Platziere das Schiff und setze data-size für alle belegten Felder
       container.appendChild(draggable);
@@ -169,6 +155,21 @@ containers.forEach((container) => {
     } else {
       // Das Schiff kann nicht platziert werden
       draggable.classList.add("invalid");
+    }
+  });
+  container.addEventListener("drag", (e) => {
+    if(container.querySelectorAll(`[data-new="true"]`)) {
+      const oldX = parseInt(container.getAttribute("data-x"));
+      const oldY = parseInt(container.getAttribute("data-y"));
+      const oldShipSize = parseInt(container.getAttribute("data-size"));
+      for (let i = 0; i < oldShipSize; i++) {
+        const oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY}"]`);
+        if (oldField) {
+          oldField.setAttribute("data-size", 0);
+          container.setAttribute("data-new", "false");
+        }
+      }
+      container.setAttribute("data-size", 0);
     }
   });
 });
