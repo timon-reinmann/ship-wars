@@ -4,7 +4,7 @@ console.log(urlParams.get("playerid"));
 let countingFields = 0;
 let gameBoard = document.getElementById("game__board");
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
-
+let originField = null;
 
 for (let y = 0; y < 10; y++) {
   for (let x = 0; x < 10; x++) {
@@ -48,6 +48,7 @@ const shipSelection = document.querySelector(".ship__selection");
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("dragstart", (e) => {
+    originField = draggable.parentNode; 
     dragStartX = e.clientX;
     shipOffsetX = dragStartX - draggable.getBoundingClientRect().left;
     draggable.classList.add("dragging");
@@ -113,8 +114,10 @@ containers.forEach((container) => {
       
       if (
         !checkField || 
+        (checkField.getAttribute("data-size") > 0 && 
+        draggable.id != checkField.querySelector(".ship").id) || 
         (checkField.querySelector(".ship") &&
-          draggable.id != checkField.querySelector(".ship").id)
+        draggable.id != checkField.querySelector(".ship").id)
       ) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
         isPlacementValid = false;
@@ -140,15 +143,18 @@ containers.forEach((container) => {
   });
   // Komischer Weise geht das auch mit drag anstatt drop
   container.addEventListener("drop", (e) => {
-    if(container.querySelectorAll(`[data-new="true"]`)) {
-      const oldX = parseInt(container.getAttribute("data-x"));
-      const oldY = parseInt(container.getAttribute("data-y"));
-      const oldShipSize = parseInt(container.getAttribute("data-size"));
-      for (let i = 0; i < oldShipSize; i++) {
-        const oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY}"]`);
-        if (oldField) {
-          oldField.setAttribute("data-size", 0);
-          container.setAttribute("data-new", "false");
+    e.preventDefault();
+    if(originField) {
+      const oldX = parseInt(originField.getAttribute("data-x"));
+      const oldY = parseInt(originField.getAttribute("data-y"));
+      const oldShipSize = parseInt(originField.getAttribute("data-size"));
+      for (let i = -1; i <= oldShipSize; i++) {
+        for(let j = -1; j < 2; j++) {
+          const oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY + j}"]`);
+          if (oldField) {
+            oldField.setAttribute("data-size", 0);
+            oldField.setAttribute("data-new", "false");
+          }
         }
       }
       container.setAttribute("data-size", 0);
