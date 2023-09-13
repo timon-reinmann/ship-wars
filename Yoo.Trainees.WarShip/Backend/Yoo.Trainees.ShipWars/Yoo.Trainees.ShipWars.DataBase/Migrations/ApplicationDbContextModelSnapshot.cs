@@ -132,10 +132,13 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.Property<bool>("Direction")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("GamePlayerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Life")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ShipIdId")
+                    b.Property<Guid>("ShipId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("X")
@@ -144,12 +147,11 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.Property<int>("Y")
                         .HasColumnType("int");
 
-                    b.Property<int>("Z")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ShipIdId");
+                    b.HasIndex("GamePlayerId");
+
+                    b.HasIndex("ShipId");
 
                     b.ToTable("ShipPosition");
                 });
@@ -212,13 +214,21 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 
             modelBuilder.Entity("Yoo.Trainees.ShipWars.DataBase.Entities.ShipPosition", b =>
                 {
-                    b.HasOne("Yoo.Trainees.ShipWars.DataBase.Entities.Ship", "ShipId")
+                    b.HasOne("Yoo.Trainees.ShipWars.DataBase.Entities.GamePlayer", "GamePlayer")
                         .WithMany()
-                        .HasForeignKey("ShipIdId")
+                        .HasForeignKey("GamePlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ShipId");
+                    b.HasOne("Yoo.Trainees.ShipWars.DataBase.Entities.Ship", "Ship")
+                        .WithMany("Positions")
+                        .HasForeignKey("ShipId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GamePlayer");
+
+                    b.Navigation("Ship");
                 });
 
             modelBuilder.Entity("Yoo.Trainees.ShipWars.DataBase.Entities.Shot", b =>
@@ -240,6 +250,11 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
             modelBuilder.Entity("Yoo.Trainees.ShipWars.DataBase.Entities.Player", b =>
                 {
                     b.Navigation("GamePlayers");
+                });
+
+            modelBuilder.Entity("Yoo.Trainees.ShipWars.DataBase.Entities.Ship", b =>
+                {
+                    b.Navigation("Positions");
                 });
 #pragma warning restore 612, 618
         }

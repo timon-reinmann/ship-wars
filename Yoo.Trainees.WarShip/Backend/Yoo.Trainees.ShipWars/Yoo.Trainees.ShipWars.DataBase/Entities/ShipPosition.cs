@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Yoo.Trainees.ShipWars.DataBase.Entities
+﻿namespace Yoo.Trainees.ShipWars.DataBase.Entities
 {
     public class ShipPosition
     {
@@ -18,9 +14,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Entities
 
         public int Y { get; set; }
 
-        public int Z { get; set; }
-
-        public Boolean Direction { get; set; }
+        public bool Direction { get; set; }
 
         public Ship Ship { get; set; }
 
