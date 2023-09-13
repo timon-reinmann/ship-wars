@@ -10,6 +10,7 @@ for (let y = 0; y < 10; y++) {
     div.classList.add("field");
     div.classList.add("ownField");
     div.classList.add(`b${countingFields}`);
+    div.setAttribute("id", `box ${countingFields}`);
     div.setAttribute("data-x", x);
     div.setAttribute("data-y", y);
     gameBoard.appendChild(div);
@@ -96,18 +97,30 @@ containers.forEach((container) => {
     const shipSize = parseInt(draggable.getAttribute("data-size"));
     const currentX = parseInt(container.getAttribute("data-x"));
     const currentY = parseInt(container.getAttribute("data-y"));
-
+    let shipCheck = 0;
+    for (let i = currentX - 1; i >= 0; i--) {
+      const checkField = document.querySelector(
+        `[data-x="${i}"][data-y="${currentY}"]`
+      );
+      if (checkField) {
+        const dataCheck = parseInt(checkField.getAttribute("data-size"));
+        if (!isNaN(dataCheck)) {
+          shipCheck = dataCheck;
+          console.log(shipCheck + "Hallo");
+        }
+      }
+    }
     // Überprüfen, ob genug Platz für das Schiff vorhanden ist
     let isPlacementValid = true;
-    for (let i = 0; i < shipSize; i++) {
+
+    for (let i = 0 - shipCheck; i < shipSize; i++) {
       const checkField = document.querySelector(
         `[data-x="${currentX + i}"][data-y="${currentY}"]`
       );
-      console.log(draggable.id);
-      console.log(checkField.id);
       if (
         !checkField ||
-        (checkField.querySelector(".ship") && draggable.id != checkField.id)
+        (checkField.querySelector(".ship") &&
+          draggable.id != checkField.querySelector(".ship").id)
       ) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
         isPlacementValid = false;
