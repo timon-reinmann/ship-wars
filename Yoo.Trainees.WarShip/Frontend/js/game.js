@@ -99,11 +99,16 @@ containers.forEach((container) => {
 
     // Überprüfen, ob genug Platz für das Schiff vorhanden ist
     let isPlacementValid = true;
-    for (let i = -2; i < shipSize; i++) {
+    for (let i = 0; i < shipSize; i++) {
       const checkField = document.querySelector(
         `[data-x="${currentX + i}"][data-y="${currentY}"]`
       );
-      if (!checkField || checkField.querySelector(".ship")) {
+      console.log(draggable.id);
+      console.log(checkField.id);
+      if (
+        !checkField ||
+        (checkField.querySelector(".ship") && draggable.id != checkField.id)
+      ) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
         isPlacementValid = false;
         break;
