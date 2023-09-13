@@ -3,6 +3,8 @@ const urlParams = new URLSearchParams(window.location.search);
 console.log(urlParams.get("playerid"));
 let countingFields = 0;
 let gameBoard = document.getElementById("game__board");
+let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
+
 
 for (let y = 0; y < 10; y++) {
   for (let x = 0; x < 10; x++) {
@@ -90,7 +92,6 @@ draggables.forEach((draggable) => {
 containers.forEach((container) => {
   container.addEventListener("dragover", (e) => {
     e.preventDefault();
-
     const draggable = document.querySelector(".dragging");
     if (!draggable) return;
 
@@ -113,12 +114,12 @@ containers.forEach((container) => {
     // Überprüfen, ob genug Platz für das Schiff vorhanden ist
     let isPlacementValid = true;
 
-    for (let i = 0 - shipCheck; i < shipSize; i++) {
+    for (let i = 0; i < shipSize; i++) {
       const checkField = document.querySelector(
         `[data-x="${currentX + i}"][data-y="${currentY}"]`
       );
       if (
-        !checkField ||
+        !checkField || 
         (checkField.querySelector(".ship") &&
           draggable.id != checkField.querySelector(".ship").id)
       ) {
@@ -126,12 +127,33 @@ containers.forEach((container) => {
         isPlacementValid = false;
         break;
       }
-    }
+    }    
 
     if (isPlacementValid) {
       // Das Schiff kann platziert werden
+      
+      // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf 0
+      if (currentField) {
+        const oldX = parseInt(currentField.getAttribute("data-x"));
+        const oldY = parseInt(currentField.getAttribute("data-y"));
+        const oldShipSize = parseInt(currentField.getAttribute("data-size"));
+        for (let i = 0; i < oldShipSize; i++) {
+          const oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY}"]`);
+          if (oldField) {
+            oldField.setAttribute("data-size", 0);
+          }
+        }
+      }
+      
+      // Platziere das Schiff und setze data-size für alle belegten Felder
       container.appendChild(draggable);
-      currentField = container;
+      for (let i = 0; i < shipSize; i++) {
+        const field = document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY}"]`);
+        if (field) {
+          field.setAttribute("data-size", shipSize);
+        }
+      }
+      currentField = container;  // Aktualisiere das aktuelle linke Feld
       draggable.classList.remove("invalid");
     } else {
       // Das Schiff kann nicht platziert werden
