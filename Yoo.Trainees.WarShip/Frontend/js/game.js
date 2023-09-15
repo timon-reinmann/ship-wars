@@ -5,8 +5,6 @@ let countingFields = 0;
 let gameBoard = document.getElementById("game__board");
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
-let currentX = null;
-let currentY = null;
 
 for (let y = 0; y < 10; y++) {
   for (let x = 0; x < 10; x++) {
@@ -49,6 +47,45 @@ const shipSelection = document.querySelector(".ship__selection");
 draggables.forEach((draggable) => {
   draggable.addEventListener("click", e => {
     draggable.setAttribute("data-direction", "vertical");
+    let currenShip = draggable.parentNode;
+    const currentX = parseInt(currenShip.getAttribute("data-x"));
+    const currentY = parseInt(currenShip.getAttribute("data-y"));
+    const shipSize = parseInt(currenShip.getAttribute("data-size"));
+    for (let i = -1; i <= shipSize; i++) {
+      for(let j = -1; j < 2; j++) {
+        let field = null;
+        if(!currenShip.classList.contains(".vertical")) {
+        field = document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY + j}"]`);
+        } else {
+          field = document.querySelector(`[data-x="${currentX + j}"][data-y="${currentY + i}"]`);
+         }
+        if (field) {
+          field.setAttribute("data-size", 0);
+          console.log(currentX, currentY);
+          console.log(field);
+        }
+      }
+    }
+
+    for (let i = -1; i <= shipSize; i++) {
+      for(let j = -1; j < 2; j++) {
+        let field = null;
+        if(!currenShip.classList.contains(".vertical")) {
+          field = document.querySelector(
+          `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
+        );
+        } else { 
+            field = document.querySelector(
+            `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
+          );
+        }
+        if (field) {
+          field.setAttribute("data-size", shipSize);
+          console.log(currentX, currentY);
+          console.log(field);
+        }
+      }
+    }
     draggable.classList.toggle("vertical");
   });
   draggable.addEventListener("dragstart", (e) => {
@@ -58,13 +95,8 @@ draggables.forEach((draggable) => {
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
     currentField.style.zIndex = zIndexChange + 1;
-    if(draggable.classList.contains("vertical")) {
-      currentY = parseInt(currentField.getAttribute("data-x"));
-      currentX = parseInt(currentField.getAttribute("data-y"));
-    } else {
-      currentX = parseInt(currentField.getAttribute("data-x"));
-      currentY = parseInt(currentField.getAttribute("data-y"));
-    }
+    const currentX = parseInt(currentField.getAttribute("data-x"));
+    const currentY = parseInt(currentField.getAttribute("data-y"));
     const shipSize = parseInt(draggable.getAttribute("data-size"));
     for (let i = 1; i < shipSize; i++) {
       const adjustFields = document.querySelector(
@@ -98,8 +130,8 @@ containers.forEach((container) => {
     if (!draggable) return;
 
     const shipSize = parseInt(draggable.getAttribute("data-size"));
-    currentX = parseInt(container.getAttribute("data-x"));
-    currentY = parseInt(container.getAttribute("data-y"));
+    const currentX = parseInt(container.getAttribute("data-x"));
+    const currentY = parseInt(container.getAttribute("data-y"));
     let shipCheck = 0;
     
     const checkField = document.querySelector(
