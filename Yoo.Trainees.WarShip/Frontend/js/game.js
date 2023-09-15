@@ -5,6 +5,7 @@ let countingFields = 0;
 let gameBoard = document.getElementById("game__board");
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
+let toggle = false;
 
 for (let y = 0; y < 10; y++) {
   for (let x = 0; x < 10; x++) {
@@ -47,46 +48,14 @@ const shipSelection = document.querySelector(".ship__selection");
 draggables.forEach((draggable) => {
   draggable.addEventListener("click", e => {
     draggable.setAttribute("data-direction", "vertical");
+    toggle = draggable.classList.toggle("vertical");
+
     let currenShip = draggable.parentNode;
     const currentX = parseInt(currenShip.getAttribute("data-x"));
     const currentY = parseInt(currenShip.getAttribute("data-y"));
     const shipSize = parseInt(currenShip.getAttribute("data-size"));
-    for (let i = -1; i <= shipSize; i++) {
-      for(let j = -1; j < 2; j++) {
-        let field = null;
-        if(!currenShip.classList.contains(".vertical")) {
-        field = document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY + j}"]`);
-        } else {
-          field = document.querySelector(`[data-x="${currentX + j}"][data-y="${currentY + i}"]`);
-         }
-        if (field) {
-          field.setAttribute("data-size", 0);
-          console.log(currentX, currentY);
-          console.log(field);
-        }
-      }
-    }
-
-    for (let i = -1; i <= shipSize; i++) {
-      for(let j = -1; j < 2; j++) {
-        let field = null;
-        if(!currenShip.classList.contains(".vertical")) {
-          field = document.querySelector(
-          `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
-        );
-        } else { 
-            field = document.querySelector(
-            `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
-          );
-        }
-        if (field) {
-          field.setAttribute("data-size", shipSize);
-          console.log(currentX, currentY);
-          console.log(field);
-        }
-      }
-    }
-    draggable.classList.toggle("vertical");
+    boardHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
+    boardHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
   });
   draggable.addEventListener("dragstart", (e) => {
     originField = draggable.parentNode; 
@@ -108,9 +77,16 @@ draggables.forEach((draggable) => {
     }
       for (let i = -1; i <= shipSize; i++) {
         for(let j = -1; j < 2; j++) {
-          const field = document.querySelector(
+          let field = null;
+          if(!toggle) {
+            field = document.querySelector(
             `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
           );
+          } else {
+            field = document.querySelector(
+              `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
+            );
+          }
           if (field) {
             field.setAttribute("data-size", shipSize);
           }
@@ -126,6 +102,8 @@ containers.forEach((container) => {
   });
   container.addEventListener("dragover", (e) => {
     e.preventDefault();
+
+
     const draggable = document.querySelector(".dragging");
     if (!draggable) return;
 
@@ -147,15 +125,19 @@ containers.forEach((container) => {
     let isPlacementValid = true;
 
     for (let i = 0; i < shipSize; i++) {
-      const checkField = document.querySelector(
-        `[data-x="${currentX + i}"][data-y="${currentY}"]`
-      );
-      
+      let checkField = null;
+      if(!toggle) {
+        checkField = document.querySelector(
+          `[data-x="${currentX + i}"][data-y="${currentY}"]`
+        );
+      } else {
+        checkField = document.querySelector(
+          `[data-x="${currentX}"][data-y="${currentY + i}"]`
+        );
+      }
       if (
         !checkField || 
         (checkField.getAttribute("data-size") > 0 && 
-        draggable.id != checkField.querySelector(".ship").id) || 
-        (checkField.querySelector(".ship") &&
         draggable.id != checkField.querySelector(".ship").id)
       ) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
@@ -184,12 +166,17 @@ containers.forEach((container) => {
   container.addEventListener("drop", (e) => {
     e.preventDefault();
     if(originField) {
+      let oldField = null;
       const oldX = parseInt(originField.getAttribute("data-x"));
       const oldY = parseInt(originField.getAttribute("data-y"));
       const oldShipSize = parseInt(originField.getAttribute("data-size"));
       for (let i = -1; i <= oldShipSize; i++) {
         for(let j = -1; j < 2; j++) {
-          const oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY + j}"]`);
+          if(toggle) {
+             oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY + j}"]`);
+          } else {
+             oldField = document.querySelector(`[data-x="${oldX + j}"][data-y="${oldY + i}"]`);
+          }
           if (oldField) {
             oldField.setAttribute("data-size", 0);
             oldField.setAttribute("data-new", "false");
@@ -204,9 +191,36 @@ containers.forEach((container) => {
 shipSelection.addEventListener("dragover", (e) => {
   e.preventDefault();
   const draggable = document.querySelector(".dragging");
+  draggable.classList.remove("invalid");
+  draggable.classList.remove("vertical");
   shipSelection.appendChild(draggable);
   currentField = null;
 });
+
+function boardHitBoxOnClick(toggleOnClick, currentX, currentY, shipSize, fieldSize) {
+  for (let i = -1; i <= shipSize; i++) {
+    for(let j = -1; j < 2; j++) {
+      let field = null;
+      if(!toggleOnClick) {
+        field = document.querySelector(
+        `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
+      );
+      } else { 
+        field = document.querySelector(
+          `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
+        );
+      }
+      if (field) {
+        field.setAttribute("data-size", fieldSize);
+        if(toggleOnClick){
+          field.setAttribute("data-direction", "vertical");
+        } else {
+          field.setAttribute("data-direction", "horizontal");
+        }
+      }
+    }
+  }
+}
 
 // ...
 
