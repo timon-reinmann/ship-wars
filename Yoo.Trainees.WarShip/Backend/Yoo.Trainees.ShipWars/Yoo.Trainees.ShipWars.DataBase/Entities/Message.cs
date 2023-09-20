@@ -7,7 +7,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Entities
     {
         public Guid Id { get; set; }
 
-        public string text { get; set; }
+        public string Text { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         public DateTime Date { get; set; }

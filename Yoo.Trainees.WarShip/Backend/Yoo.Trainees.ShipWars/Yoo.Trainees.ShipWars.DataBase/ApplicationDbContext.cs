@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
+using static System.Net.WebRequestMethods;
 
 namespace Yoo.Trainees.ShipWars.DataBase
 {
@@ -18,5 +19,30 @@ namespace Yoo.Trainees.ShipWars.DataBase
         public virtual DbSet<ShipPosition> ShipPosition { get; set; }
         public virtual DbSet<Shot> Shot { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Ship>().HasData(
+            new Ship
+            {
+                Id = Guid.NewGuid(),
+                Length = 1,
+                Name = "Submarine"
+            }, new Ship
+            {
+                Id = Guid.NewGuid(),
+                Length = 2,
+                Name = "Destroyer"
+            }, new Ship
+            {
+                Id = Guid.NewGuid(),
+                Length = 3,
+                Name = "Cruiser"
+            }, new Ship
+            {
+                Id = Guid.NewGuid(),
+                Length = 4,
+                Name = "Warship"
+            });
+        }
     }
 }

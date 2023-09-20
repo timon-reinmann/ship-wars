@@ -9,8 +9,6 @@ namespace Yoo.Trainees.ShipWars.DataBase.Entities
 
         public int Y { get; set; }
 
-        public string Result { get; set; }
-
         public GamePlayer Player { get; set; }
     }
 }

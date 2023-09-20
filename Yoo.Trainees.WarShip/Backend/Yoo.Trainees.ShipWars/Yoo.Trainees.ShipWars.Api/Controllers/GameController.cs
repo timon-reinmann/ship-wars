@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices.JavaScript;
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
@@ -43,6 +42,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             var createdGame = gameLogic.CreateGame(name);
             return createdGame;
         }
+
         [Route("Email")]
         [HttpPost]
         public async Task<IActionResult> NotifyGameAsync([FromBody] EmailDto body)

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 {
     /// <inheritdoc />
@@ -80,7 +82,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<DateTime>(type: "smalldatetime", nullable: false),
                     GamePlayersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -102,7 +104,6 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GamePlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ShipId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Life = table.Column<int>(type: "int", nullable: false),
                     X = table.Column<int>(type: "int", nullable: false),
                     Y = table.Column<int>(type: "int", nullable: false),
                     Direction = table.Column<bool>(type: "bit", nullable: false)
@@ -131,7 +132,6 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     X = table.Column<int>(type: "int", nullable: false),
                     Y = table.Column<int>(type: "int", nullable: false),
-                    Result = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -143,6 +143,17 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                         principalTable: "GamePlayer",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Ship",
+                columns: new[] { "Id", "Length", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("10e2c00c-deea-4b2c-a78c-9e62276ffca8"), 2, "Destroyer" },
+                    { new Guid("42a682dd-ae1b-4727-8d7c-25ee54863de1"), 4, "Warship" },
+                    { new Guid("4fcea8f9-4422-45af-84c5-0ffcddcd6206"), 3, "Cruiser" },
+                    { new Guid("7509a1ad-67e8-4c4c-9d5e-b60195014bec"), 1, "Submarine" }
                 });
 
             migrationBuilder.CreateIndex(

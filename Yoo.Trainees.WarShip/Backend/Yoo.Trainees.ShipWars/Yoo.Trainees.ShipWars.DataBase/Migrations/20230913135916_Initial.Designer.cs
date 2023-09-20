@@ -12,7 +12,7 @@ using Yoo.Trainees.ShipWars.DataBase;
 namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230913064538_Initial")]
+    [Migration("20230913135916_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -82,7 +82,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.Property<Guid>("GamePlayersId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("text")
+                    b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -124,6 +124,32 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Ship");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("7509a1ad-67e8-4c4c-9d5e-b60195014bec"),
+                            Length = 1,
+                            Name = "Submarine"
+                        },
+                        new
+                        {
+                            Id = new Guid("10e2c00c-deea-4b2c-a78c-9e62276ffca8"),
+                            Length = 2,
+                            Name = "Destroyer"
+                        },
+                        new
+                        {
+                            Id = new Guid("4fcea8f9-4422-45af-84c5-0ffcddcd6206"),
+                            Length = 3,
+                            Name = "Cruiser"
+                        },
+                        new
+                        {
+                            Id = new Guid("42a682dd-ae1b-4727-8d7c-25ee54863de1"),
+                            Length = 4,
+                            Name = "Warship"
+                        });
                 });
 
             modelBuilder.Entity("Yoo.Trainees.ShipWars.DataBase.Entities.ShipPosition", b =>
@@ -137,9 +163,6 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 
                     b.Property<Guid>("GamePlayerId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Life")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("ShipId")
                         .HasColumnType("uniqueidentifier");
@@ -167,10 +190,6 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 
                     b.Property<Guid>("PlayerId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Result")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("X")
                         .HasColumnType("int");

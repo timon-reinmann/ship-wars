@@ -6,9 +6,7 @@
         
         public Guid GamePlayerId { get; set; }
 
-        public Guid ShipId { get; set; }
-
-        public int Life { get; set; }       
+        public Guid ShipId { get; set; }     
 
         public int X { get; set; }
 
