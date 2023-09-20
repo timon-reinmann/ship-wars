@@ -1,4 +1,4 @@
-let copyText = document.querySelector(".copy__text");
+const copyText = document.querySelector(".copy__text");
 let lobbyName = null;
 let link = null;
 copyText.querySelector("button").addEventListener("click", function () {
@@ -58,11 +58,12 @@ submit_button.addEventListener("click", async function () {
     body: lobbyName,
     method: "POST",
   })
-    .then((response) => response.json())
+    .then((response) => response.text())
     .then((data) => {
+      debugger;
       console.log("Daten:", data);
       link =
-        "http://127.0.0.1:5500/Frontend/html/game-pvp.html?playerid=" + data.id;
+        "http://127.0.0.1:5500/Frontend/html/game-pvp.html?playerid=" + data;
       document.getElementById("linkoutput").value = link;
     })
     .catch((error) => {
