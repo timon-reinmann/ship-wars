@@ -13,11 +13,11 @@ for (let y = 0; y < 10; y++) {
     div.classList.add("field");
     div.classList.add("ownField");
     div.classList.add(`b${countingFields}`);
-    div.setAttribute("id", `box ${countingFields}`);
+    div.setAttribute("id", `box${countingFields}`);
     div.setAttribute("data-x", x);
     div.setAttribute("data-y", y);
-    div.setAttribute("data-size", 0);
     div.setAttribute("data-new", "false");
+    div.setAttribute("data-ships", 0);
     gameBoard.appendChild(div);
     countingFields += 1;
   }
@@ -50,10 +50,10 @@ draggables.forEach((draggable) => {
     draggable.setAttribute("data-direction", "vertical");
     toggle = draggable.classList.toggle("vertical");
 
-    let currenShip = draggable.parentNode;
-    const currentX = parseInt(currenShip.getAttribute("data-x"));
-    const currentY = parseInt(currenShip.getAttribute("data-y"));
-    const shipSize = parseInt(currenShip.getAttribute("data-size"));
+    let currentShip = draggable.parentNode;
+    const currentX = parseInt(currentShip.getAttribute("data-x"));
+    const currentY = parseInt(currentShip.getAttribute("data-y"));
+    const shipSize = parseInt(currentShip.firstChild.getAttribute("data-size"));
     boardHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
     boardHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
   });
@@ -90,7 +90,7 @@ draggables.forEach((draggable) => {
             );
           }
           if (field) {
-            field.setAttribute("data-size", shipSize);
+            field.setAttribute("data-ships", parseInt(field.getAttribute("data-ships")) + 1);
           }
         }
       }
@@ -127,19 +127,19 @@ containers.forEach((container) => {
     let isPlacementValid = true;
 
     for (let i = 0; i < shipSize; i++) {
-      let checkField = null;
+      let freeField = null;
       if(draggable.getAttribute("data-direction") !== "vertical") {
-        checkField = document.querySelector(
+        freeField = document.querySelector(
           `[data-x="${currentX + i}"][data-y="${currentY}"]`
         );
       } else {
-        checkField = document.querySelector(
+        freeField = document.querySelector(
           `[data-x="${currentX}"][data-y="${currentY + i}"]`
         );
       }
       if (
-        !checkField || 
-        checkField.getAttribute("data-size") > 0
+        !freeField || 
+        freeField.getAttribute("data-ships") > 0
       ) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
         isPlacementValid = false;
@@ -147,7 +147,7 @@ containers.forEach((container) => {
       }
       if (shipCheck > 0) {
         isPlacementValid = false;
-      } 
+      }
     }    
 
 
@@ -166,7 +166,6 @@ containers.forEach((container) => {
   // Komischer Weise geht das auch mit drag anstatt drop
   container.addEventListener("drop", (e) => {
     e.preventDefault();
-    deleteShipHitBox(container);
   });
 });
 
@@ -183,7 +182,7 @@ function deleteShipHitBox(container){
     let oldField = null;
     const oldX = parseInt(originField.getAttribute("data-x"));
     const oldY = parseInt(originField.getAttribute("data-y"));
-    const oldShipSize = parseInt(originField.getAttribute("data-size"));
+    const oldShipSize = parseInt(originField.firstChild.getAttribute("data-size"));
     for (let i = -1; i <= oldShipSize; i++) {
       for(let j = -1; j < 2; j++) {
         if(container.firstChild.getAttribute("data-direction") !== "vertical") {
@@ -192,12 +191,13 @@ function deleteShipHitBox(container){
            oldField = document.querySelector(`[data-x="${oldX + j}"][data-y="${oldY + i}"]`);
         }
         if (oldField) {
-          oldField.setAttribute("data-size", 0);
+          let currentShips = parseInt(oldField.getAttribute("data-ships"), 10) || 0;
+          currentShips = Math.max(0, currentShips - 1);
+          oldField.setAttribute("data-ships", currentShips);
           oldField.setAttribute("data-new", "false");
         }
       }
     }
-    container.setAttribute("data-size", 0);
   }
 }
 
@@ -206,20 +206,28 @@ function boardHitBoxOnClick(toggleOnClick, currentX, currentY, shipSize, fieldSi
     for(let j = -1; j < 2; j++) {
       let field = null;
       if(!toggleOnClick) {
-        field = document.querySelector(
-        `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
-      );
+        field = document.querySelector(`[data-x="${currentX + j}"][data-y="${currentY + i}"]`);
       } else { 
-        field = document.querySelector(
-          `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
-        );
+        field = document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY + j}"]`);
       }
       if (field) {
-        field.setAttribute("data-size", fieldSize);
-        if(toggleOnClick){
-          field.setAttribute("data-direction", "vertical");
+        let currentShips = parseInt(field.getAttribute("data-ships"), 10) || 0;
+
+        if(fieldSize > 0) {
+          currentShips += 1;
         } else {
-          field.setAttribute("data-direction", "horizontal");
+          currentShips = Math.max(0, currentShips - 1);
+        }
+
+        field.setAttribute("data-ships", currentShips);
+        if(fieldSize > 0) {
+          if(!toggleOnClick){
+            if(field.firstChild)
+              field.firstChild.setAttribute("data-direction", "vertical");
+          } else {
+            if(field.firstChild)
+              field.firstChild.setAttribute("data-direction", "horizontal");
+          } 
         }
       }
     }
