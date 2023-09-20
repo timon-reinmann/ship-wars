@@ -30,8 +30,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             gamePlayers.Add(new GamePlayer
             {
                 Id = Guid.NewGuid(),
-                GameId = gameId, 
-                PlayerId = player1.Id 
+                GameId = gameId,
+                PlayerId = player1.Id
             });
             gamePlayers.Add(new GamePlayer
             {
@@ -45,10 +45,13 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 Id = gameId,
                 Name = name,
                 GameStatus = "TODO",
-                GamePlayers = gamePlayers
+                GamePlayers = gamePlayers,
+                Date = DateTime.Now
             };
 
 
+            applicationDbContext.Player.Add(player1);
+            applicationDbContext.Player.Add(player2);
             applicationDbContext.Game.Add(game);
             applicationDbContext.SaveChanges();
 

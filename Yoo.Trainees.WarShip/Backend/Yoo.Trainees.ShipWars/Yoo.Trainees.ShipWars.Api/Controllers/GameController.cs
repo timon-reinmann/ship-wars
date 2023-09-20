@@ -37,10 +37,10 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // POST api/<GameController>
         [HttpPost]
-        public Game Post([FromBody] string name)
+        public String Post([FromBody] string name)
         {
             var createdGame = gameLogic.CreateGame(name);
-            return createdGame;
+            return createdGame.Id.ToString();
         }
 
         [Route("Email")]
