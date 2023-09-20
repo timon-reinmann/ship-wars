@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Any;
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
@@ -42,6 +43,15 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             var createdGame = gameLogic.CreateGame(name);
             return createdGame.Id.ToString();
         }
+
+        // Post api/<Game>/5/SaveShips
+        [HttpPost("{id}/SaveShips")]
+            public void Post([FromBody] SaveShipsDto Ships)
+        {
+            var createdBoard = gameLogic.CreateBoard(Ships);
+        }
+
+        
 
         [Route("Email")]
         [HttpPost]
