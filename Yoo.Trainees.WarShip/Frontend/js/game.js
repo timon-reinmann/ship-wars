@@ -47,15 +47,17 @@ const shipSelection = document.querySelector(".ship__selection");
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("click", e => {
-    draggable.setAttribute("data-direction", "vertical");
-    toggle = draggable.classList.toggle("vertical");
-
     let currentShip = draggable.parentNode;
     const currentX = parseInt(currentShip.getAttribute("data-x"));
     const currentY = parseInt(currentShip.getAttribute("data-y"));
     const shipSize = parseInt(currentShip.firstChild.getAttribute("data-size"));
-    boardHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
-    boardHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
+    const isValid = canChangeDirection(draggable, parseInt(currentField.getAttribute("data-x")), parseInt(currentField.getAttribute("data-y")), parseInt(draggable.getAttribute("data-size")));
+    if(isValid) {
+      draggable.setAttribute("data-direction", "vertical");
+      toggle = draggable.classList.toggle("vertical");
+      boardHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
+      boardHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
+    }
   });
   draggable.addEventListener("dragstart", (e) => {
     originField = draggable.parentNode; 
@@ -234,6 +236,23 @@ function boardHitBoxOnClick(toggleOnClick, currentX, currentY, shipSize, fieldSi
   }
 }
 
+function canChangeDirection(draggable, currentX, currentY, shipSize) {
+  let isValid = true;
+  for (let i = 0; i < shipSize; i++) {
+    let futureField = null;
+    if(draggable.getAttribute("data-direction") !== "vertical") {
+      futureField = document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY}"]`);
+    } else {
+      futureField = document.querySelector(`[data-x="${currentX}"][data-y="${currentY + i}"]`);
+    }
+    if (!futureField || futureField.getAttribute("data-ships") > 0) {
+      isValid = false;
+      break;
+    }
+  }
+  
+  return isValid;
+}
 // ...
 
 ("use strict");
