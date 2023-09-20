@@ -60,6 +60,8 @@ draggables.forEach((draggable) => {
   draggable.addEventListener("dragstart", (e) => {
     originField = draggable.parentNode; 
     draggable.classList.add("dragging");
+    let draggableParentDiv = draggable.parentNode;
+    deleteShipHitBox(draggableParentDiv);
   });
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
@@ -78,7 +80,7 @@ draggables.forEach((draggable) => {
       for (let i = -1; i <= shipSize; i++) {
         for(let j = -1; j < 2; j++) {
           let field = null;
-          if(!toggle) {
+          if(draggable.getAttribute("data-direction") !== "vertical") {
             field = document.querySelector(
             `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
           );
@@ -126,7 +128,7 @@ containers.forEach((container) => {
 
     for (let i = 0; i < shipSize; i++) {
       let checkField = null;
-      if(!toggle) {
+      if(draggable.getAttribute("data-direction") !== "vertical") {
         checkField = document.querySelector(
           `[data-x="${currentX + i}"][data-y="${currentY}"]`
         );
@@ -137,8 +139,7 @@ containers.forEach((container) => {
       }
       if (
         !checkField || 
-        (checkField.getAttribute("data-size") > 0 && 
-        draggable.id != checkField.querySelector(".ship").id)
+        checkField.getAttribute("data-size") > 0
       ) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
         isPlacementValid = false;
@@ -165,26 +166,7 @@ containers.forEach((container) => {
   // Komischer Weise geht das auch mit drag anstatt drop
   container.addEventListener("drop", (e) => {
     e.preventDefault();
-    if(originField) {
-      let oldField = null;
-      const oldX = parseInt(originField.getAttribute("data-x"));
-      const oldY = parseInt(originField.getAttribute("data-y"));
-      const oldShipSize = parseInt(originField.getAttribute("data-size"));
-      for (let i = -1; i <= oldShipSize; i++) {
-        for(let j = -1; j < 2; j++) {
-          if(toggle) {
-             oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY + j}"]`);
-          } else {
-             oldField = document.querySelector(`[data-x="${oldX + j}"][data-y="${oldY + i}"]`);
-          }
-          if (oldField) {
-            oldField.setAttribute("data-size", 0);
-            oldField.setAttribute("data-new", "false");
-          }
-        }
-      }
-      container.setAttribute("data-size", 0);
-    }
+    deleteShipHitBox(container);
   });
 });
 
@@ -196,6 +178,28 @@ shipSelection.addEventListener("dragover", (e) => {
   shipSelection.appendChild(draggable);
   currentField = null;
 });
+function deleteShipHitBox(container){
+  if(originField) {
+    let oldField = null;
+    const oldX = parseInt(originField.getAttribute("data-x"));
+    const oldY = parseInt(originField.getAttribute("data-y"));
+    const oldShipSize = parseInt(originField.getAttribute("data-size"));
+    for (let i = -1; i <= oldShipSize; i++) {
+      for(let j = -1; j < 2; j++) {
+        if(container.firstChild.getAttribute("data-direction") !== "vertical") {
+           oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY + j}"]`);
+        } else {
+           oldField = document.querySelector(`[data-x="${oldX + j}"][data-y="${oldY + i}"]`);
+        }
+        if (oldField) {
+          oldField.setAttribute("data-size", 0);
+          oldField.setAttribute("data-new", "false");
+        }
+      }
+    }
+    container.setAttribute("data-size", 0);
+  }
+}
 
 function boardHitBoxOnClick(toggleOnClick, currentX, currentY, shipSize, fieldSize) {
   for (let i = -1; i <= shipSize; i++) {
