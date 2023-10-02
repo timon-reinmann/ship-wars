@@ -16,7 +16,6 @@ namespace Yoo.Trainees.ShipWars.Api
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             builder.Services.AddCors();
-            //builder.Services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -45,7 +44,6 @@ namespace Yoo.Trainees.ShipWars.Api
                 options => options.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()
             );
 
-            //app.UseMvc();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
