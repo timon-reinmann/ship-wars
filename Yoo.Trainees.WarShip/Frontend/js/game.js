@@ -1,33 +1,40 @@
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 console.log(urlParams.get("playerid"));
+let countingFields = 0;
+let gameBoard = document.getElementById("game__board");
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
-const myBoard = document.getElementById("game__board");
-const gameOpponent = document.getElementById("opponent__board");
 
-createBoard(myBoard, true);
-createBoard(gameOpponent, false);
+for (let y = 0; y < 10; y++) {
+  for (let x = 0; x < 10; x++) {
+    let div = document.createElement("div");
+    div.classList.add("field");
+    div.classList.add("ownField");
+    div.classList.add(`b${countingFields}`);
+    div.setAttribute("id", `box${countingFields}`);
+    div.setAttribute("data-x", x);
+    div.setAttribute("data-y", y);
+    div.setAttribute("data-new", "false");
+    div.setAttribute("data-ships", 0);
+    gameBoard.appendChild(div);
+    countingFields += 1;
+  }
+}
 
-function createBoard(gameBoard, isMyBoard) {
-  let countingFields = 0;
+countingFields = 0;
+let gameOpponent = document.getElementById("opponent__board");
+
+for (let x = 0; x < 10; x++) {
   for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      const div = document.createElement("div");
-      div.classList.add("field");
-      div.classList.add(`b${countingFields}`);
-      div.setAttribute("data-x", x);
-      div.setAttribute("data-y", y);
-      if (isMyBoard) {
-        div.classList.add("ownField");
-        div.setAttribute("id", `box ${countingFields}`);
-        div.setAttribute("data-size", 0);
-        div.setAttribute("data-new", "false");
-      }
-      gameBoard.appendChild(div);
-      countingFields++;
-    }
+    let div = document.createElement("div");
+    div.classList.add("field");
+    div.classList.add(`b${countingFields}`);
+    div.setAttribute("data-x", x);
+    div.setAttribute("data-y", y);
+    gameOpponent.appendChild(div);
+    countingFields += 1;
   }
 }
 
@@ -53,7 +60,7 @@ draggables.forEach((draggable) => {
     }
   });
   draggable.addEventListener("dragstart", (e) => {
-    originField = draggable.parentNode;
+    originField = draggable.parentNode; 
     draggable.classList.add("dragging");
     let draggableParentDiv = draggable.parentNode;
     deleteShipHitBox(draggableParentDiv);
@@ -72,11 +79,11 @@ draggables.forEach((draggable) => {
         adjustFields.style.zIndex = zIndexChange;
       }
     }
-    for (let i = -1; i <= shipSize; i++) {
-      for (let j = -1; j < 2; j++) {
-        let field = null;
-        if (draggable.getAttribute("data-direction") !== "vertical") {
-          field = document.querySelector(
+      for (let i = -1; i <= shipSize; i++) {
+        for(let j = -1; j < 2; j++) {
+          let field = null;
+          if(draggable.getAttribute("data-direction") !== "vertical") {
+            field = document.querySelector(
             `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
           );
           } else {
@@ -89,7 +96,6 @@ draggables.forEach((draggable) => {
           }
         }
       }
-    }
     zIndexChange++;
   });
 });
@@ -101,6 +107,7 @@ containers.forEach((container) => {
   container.addEventListener("dragover", (e) => {
     e.preventDefault();
 
+
     const draggable = document.querySelector(".dragging");
     if (!draggable) return;
 
@@ -108,7 +115,7 @@ containers.forEach((container) => {
     const currentX = parseInt(container.getAttribute("data-x"));
     const currentY = parseInt(container.getAttribute("data-y"));
     let shipCheck = 0;
-
+    
     const checkField = document.querySelector(
       `[data-x="${currentX}"][data-y="${currentY}"]`
     );
@@ -143,14 +150,15 @@ containers.forEach((container) => {
       if (shipCheck > 0) {
         isPlacementValid = false;
       }
-    }
+    }    
+
 
     if (isPlacementValid) {
-      // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf
-
+      // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf 
+      
       // Platziere das Schiff und setze data-size für alle belegten Felder
       container.appendChild(draggable);
-      currentField = container; // Aktualisiere das aktuelle linke Feld
+      currentField = container;  // Aktualisiere das aktuelle linke Feld
       draggable.classList.remove("invalid");
     } else {
       // Das Schiff kann nicht platziert werden
@@ -171,24 +179,18 @@ shipSelection.addEventListener("dragover", (e) => {
   shipSelection.appendChild(draggable);
   currentField = null;
 });
-function deleteShipHitBox(container) {
-  if (originField) {
+function deleteShipHitBox(container){
+  if(originField) {
     let oldField = null;
     const oldX = parseInt(originField.getAttribute("data-x"));
     const oldY = parseInt(originField.getAttribute("data-y"));
     const oldShipSize = parseInt(originField.firstChild.getAttribute("data-size"));
     for (let i = -1; i <= oldShipSize; i++) {
-      for (let j = -1; j < 2; j++) {
-        if (
-          container.firstChild.getAttribute("data-direction") !== "vertical"
-        ) {
-          oldField = document.querySelector(
-            `[data-x="${oldX + i}"][data-y="${oldY + j}"]`
-          );
+      for(let j = -1; j < 2; j++) {
+        if(container.firstChild.getAttribute("data-direction") !== "vertical") {
+           oldField = document.querySelector(`[data-x="${oldX + i}"][data-y="${oldY + j}"]`);
         } else {
-          oldField = document.querySelector(
-            `[data-x="${oldX + j}"][data-y="${oldY + i}"]`
-          );
+           oldField = document.querySelector(`[data-x="${oldX + j}"][data-y="${oldY + i}"]`);
         }
         if (oldField) {
           let currentShips = parseInt(oldField.getAttribute("data-ships"), 10) || 0;
@@ -201,15 +203,9 @@ function deleteShipHitBox(container) {
   }
 }
 
-function boardHitBoxOnClick(
-  toggleOnClick,
-  currentX,
-  currentY,
-  shipSize,
-  fieldSize
-) {
+function boardHitBoxOnClick(toggleOnClick, currentX, currentY, shipSize, fieldSize) {
   for (let i = -1; i <= shipSize; i++) {
-    for (let j = -1; j < 2; j++) {
+    for(let j = -1; j < 2; j++) {
       let field = null;
       if(!toggleOnClick) {
         field = document.querySelector(`[data-x="${currentX + j}"][data-y="${currentY + i}"]`);
@@ -259,16 +255,10 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
 }
 // ...
 
-let ShipPosition = {
-  Y: currentY,
-  X: currentX,
-  Direction: 1,
-};
-daten = JSON.stringify(ShipPositions);
 ("use strict");
 
-const API_URL_Email = "https://localhost:7118/api/Game/SaveShips";
-fetch(API_URL_Email, {
+const API_URL = "https://localhost:7118/api/Game";
+fetch(API_URL, {
   credentials: "omit",
   headers: {
     "User-Agent":
@@ -278,13 +268,12 @@ fetch(API_URL_Email, {
     "Content-Type": "application/json",
     "Sec-Fetch-Dest": "empty",
   },
-  body: ShipPositions,
+  body: "ERSETZTEN",
   method: "POST",
 })
   .then((response) => response.json())
-  .then((data) => {
-    console.log("Daten");
-  })
+  .data.then((data) => {})
+
   .catch((error) => {
     console.error("Es gab einen Fehler bei der Anfrage:", error);
   });
