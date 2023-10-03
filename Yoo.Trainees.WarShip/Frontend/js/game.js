@@ -6,7 +6,6 @@ let originField = null;
 let toggle = false;
 let myBoard = document.getElementById("game__board");
 let gameOpponent = document.getElementById("opponent__board");
-
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
 
@@ -278,6 +277,23 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
 
   return isValid;
 }
+// ...
+let commit_button = document.getElementById("commit_button");
+commit_button.addEventListener("click", () => {
+  // let finish = document.querySelector("");
+  let board = document.querySelector(".board");
+
+  let ship_selector = document.querySelector(".ship__selection");
+  if (ship_selector.children.length == 0) {
+    console.log("All ships are placed!!");
+    board.classList.add("active");
+  } else {
+    console.log("All ships aren't placed!!");
+  }
+  setTimeout(function () {
+    board.classList.remove("active");
+  }, 2500);
+});
 // ...
 
 ("use strict");

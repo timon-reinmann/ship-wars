@@ -55,7 +55,11 @@
   grid-template-columns: repeat(10, 1fr);
   align-self: center;
   position: relative;
-  /*box-shadow: 0px 0px 5px 7px rgba(255,255,255,0.25);*/
+  /* box-shadow: 0px 0px 5px 7px rgba(255, 255, 255, 0.25); */
+}
+
+.board.active {
+  border: 10px solid red;
 }
 
 /*------------- PLAYER & OPPONENT --------------*/
