@@ -19,11 +19,16 @@ function createBoard(gameBoard, isMyBoard) {
       div.classList.add(`b${countingFields}`);
       div.setAttribute("data-x", x);
       div.setAttribute("data-y", y);
+      gameBoard.appendChild(div);
+      countingFields += 1;
       if (isMyBoard) {
         div.classList.add("ownField");
-        div.setAttribute("id", `box ${countingFields}`);
-        div.setAttribute("data-size", 0);
+        div.setAttribute("id", `box${countingFields}`);
         div.setAttribute("data-new", "false");
+        div.setAttribute("data-ships", 0);
+        myBoard.appendChild(div);
+      } else {
+        gameOpponent.appendChild(div);
       }
       gameBoard.appendChild(div);
       countingFields++;
