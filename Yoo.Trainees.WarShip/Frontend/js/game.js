@@ -4,8 +4,8 @@ console.log(urlParams.get("playerid"));
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
-const myBoard = document.getElementById("game__board");
-const gameOpponent = document.getElementById("opponent__board");
+let myBoard = document.getElementById("game__board");
+let gameOpponent = document.getElementById("opponent__board");
 
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
@@ -17,15 +17,21 @@ function createBoard(gameBoard, isMyBoard) {
       let div = document.createElement("div");
       div.classList.add("field");
       div.classList.add(`b${countingFields}`);
-      div.setAttribute("data-x", x);
-      div.setAttribute("data-y", y);
+      gameBoard.appendChild(div);
+      countingFields += 1;
       if (isMyBoard) {
         div.classList.add("ownField");
         div.setAttribute("id", `box${countingFields}`);
+        div.setAttribute("data-x", x);
+        div.setAttribute("data-y", y);
         div.setAttribute("data-new", "false");
         div.setAttribute("data-ships", 0);
+        myBoard.appendChild(div);
+      } else {
+        div.setAttribute("data-x", y);
+        div.setAttribute("data-y", x);
+        gameOpponent.appendChild(div);
       }
-      gameBoard.appendChild(div);
       countingFields += 1;
     }
   }
@@ -40,15 +46,22 @@ const shipSelection = document.querySelector(".ship__selection");
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("click", (e) => {
-    draggable.setAttribute("data-direction", "vertical");
-    toggle = draggable.classList.toggle("vertical");
-
-    let currenShip = draggable.parentNode;
-    const currentX = parseInt(currenShip.getAttribute("data-x"));
-    const currentY = parseInt(currenShip.getAttribute("data-y"));
-    const shipSize = parseInt(currenShip.getAttribute("data-size"));
-    boardHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
-    boardHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
+    let currentShip = draggable.parentNode;
+    const currentX = parseInt(currentShip.getAttribute("data-x"));
+    const currentY = parseInt(currentShip.getAttribute("data-y"));
+    const shipSize = parseInt(currentShip.firstChild.getAttribute("data-size"));
+    const isValid = canChangeDirection(
+      draggable,
+      parseInt(currentField.getAttribute("data-x")),
+      parseInt(currentField.getAttribute("data-y")),
+      parseInt(draggable.getAttribute("data-size"))
+    );
+    if (isValid) {
+      draggable.setAttribute("data-direction", "vertical");
+      toggle = draggable.classList.toggle("vertical");
+      boardHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
+      boardHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
+    }
   });
   draggable.addEventListener("dragstart", (e) => {
     originField = draggable.parentNode;
@@ -83,7 +96,10 @@ draggables.forEach((draggable) => {
           );
         }
         if (field) {
-          field.setAttribute("data-size", shipSize);
+          field.setAttribute(
+            "data-ships",
+            parseInt(field.getAttribute("data-ships")) + 1
+          );
         }
       }
     }
@@ -119,17 +135,17 @@ containers.forEach((container) => {
     let isPlacementValid = true;
 
     for (let i = 0; i < shipSize; i++) {
-      let checkField = null;
+      let freeField = null;
       if (draggable.getAttribute("data-direction") !== "vertical") {
-        checkField = document.querySelector(
+        freeField = document.querySelector(
           `[data-x="${currentX + i}"][data-y="${currentY}"]`
         );
       } else {
-        checkField = document.querySelector(
+        freeField = document.querySelector(
           `[data-x="${currentX}"][data-y="${currentY + i}"]`
         );
       }
-      if (!checkField || checkField.getAttribute("data-size") > 0) {
+      if (!freeField || freeField.getAttribute("data-ships") > 0) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
         isPlacementValid = false;
         break;
@@ -154,7 +170,6 @@ containers.forEach((container) => {
   // Komischer Weise geht das auch mit drag anstatt drop
   container.addEventListener("drop", (e) => {
     e.preventDefault();
-    deleteShipHitBox(container);
   });
 });
 
@@ -171,7 +186,9 @@ function deleteShipHitBox(container) {
     let oldField = null;
     const oldX = parseInt(originField.getAttribute("data-x"));
     const oldY = parseInt(originField.getAttribute("data-y"));
-    const oldShipSize = parseInt(originField.getAttribute("data-size"));
+    const oldShipSize = parseInt(
+      originField.firstChild.getAttribute("data-size")
+    );
     for (let i = -1; i <= oldShipSize; i++) {
       for (let j = -1; j < 2; j++) {
         if (
@@ -186,12 +203,14 @@ function deleteShipHitBox(container) {
           );
         }
         if (oldField) {
-          oldField.setAttribute("data-size", 0);
+          let currentShips =
+            parseInt(oldField.getAttribute("data-ships"), 10) || 0;
+          currentShips = Math.max(0, currentShips - 1);
+          oldField.setAttribute("data-ships", currentShips);
           oldField.setAttribute("data-new", "false");
         }
       }
     }
-    container.setAttribute("data-size", 0);
   }
 }
 
@@ -215,31 +234,56 @@ function boardHitBoxOnClick(
         );
       }
       if (field) {
-        field.setAttribute("data-size", fieldSize);
-        if (toggleOnClick) {
-          field.setAttribute("data-direction", "vertical");
+        let currentShips = parseInt(field.getAttribute("data-ships"), 10) || 0;
+
+        if (fieldSize > 0) {
+          currentShips += 1;
         } else {
-          field.setAttribute("data-direction", "horizontal");
+          currentShips = Math.max(0, currentShips - 1);
+        }
+
+        field.setAttribute("data-ships", currentShips);
+        if (fieldSize > 0) {
+          if (!toggleOnClick) {
+            if (field.firstChild)
+              field.firstChild.setAttribute("data-direction", "vertical");
+          } else {
+            if (field.firstChild)
+              field.firstChild.setAttribute("data-direction", "horizontal");
+          }
         }
       }
     }
   }
 }
 
-//..
+function canChangeDirection(draggable, currentX, currentY, shipSize) {
+  let isValid = true;
+  for (let i = 0; i < shipSize; i++) {
+    let futureField = null;
+    if (draggable.getAttribute("data-direction") !== "vertical") {
+      futureField = document.querySelector(
+        `[data-x="${currentX + i}"][data-y="${currentY}"]`
+      );
+    } else {
+      futureField = document.querySelector(
+        `[data-x="${currentX}"][data-y="${currentY + i}"]`
+      );
+    }
+    if (!futureField || futureField.getAttribute("data-ships") > 0) {
+      isValid = false;
+      break;
+    }
+  }
 
-//..
+  return isValid;
+}
+// ...
 
-let ShipPosition = {
-  Y: currentY,
-  X: currentX,
-  Direction: 1,
-};
-daten = JSON.stringify(ShipPosition);
 ("use strict");
 
-const API_ShipPosition = "https://localhost:7118/api/Game//SaveShips";
-fetch(API_ShipPosition, {
+const API_URL = "https://localhost:7118/api/Game";
+fetch(API_URL, {
   credentials: "omit",
   headers: {
     "User-Agent":
@@ -249,10 +293,12 @@ fetch(API_ShipPosition, {
     "Content-Type": "application/json",
     "Sec-Fetch-Dest": "empty",
   },
-  body: ShipPosition,
+  body: "ERSETZTEN",
   method: "POST",
 })
   .then((response) => response.json())
-  .then((data) => {
-    console.log("Daten");
+  .data.then((data) => {})
+
+  .catch((error) => {
+    console.error("Es gab einen Fehler bei der Anfrage:", error);
   });
