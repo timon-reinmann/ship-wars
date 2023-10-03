@@ -144,10 +144,9 @@
   padding: 2px 50px;
   background-color: rgba(128, 128, 128, 0.75);
   box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
-  border: 3px white solid;
   position: absolute;
-  top: 75%;
-  left: 17%;
+  border: 3px white solid;
+  margin: 650px 344px;
   cursor: pointer;
 }
 
