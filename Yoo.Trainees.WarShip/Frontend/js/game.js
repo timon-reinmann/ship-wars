@@ -39,18 +39,13 @@ const containers = document.querySelectorAll(".ownField");
 const shipSelection = document.querySelector(".ship__selection");
 
 draggables.forEach((draggable) => {
-  draggable.addEventListener("click", (e) => {
+  draggable.addEventListener("click", e => {
     let currentShip = draggable.parentNode;
     const currentX = parseInt(currentShip.getAttribute("data-x"));
     const currentY = parseInt(currentShip.getAttribute("data-y"));
     const shipSize = parseInt(currentShip.firstChild.getAttribute("data-size"));
-    const isValid = canChangeDirection(
-      draggable,
-      parseInt(currentField.getAttribute("data-x")),
-      parseInt(currentField.getAttribute("data-y")),
-      parseInt(draggable.getAttribute("data-size"))
-    );
-    if (isValid) {
+    const isValid = canChangeDirection(draggable, parseInt(currentField.getAttribute("data-x")), parseInt(currentField.getAttribute("data-y")), parseInt(draggable.getAttribute("data-size")));
+    if(isValid) {
       draggable.setAttribute("data-direction", "vertical");
       toggle = draggable.classList.toggle("vertical");
       boardHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
@@ -63,45 +58,40 @@ draggables.forEach((draggable) => {
     let draggableParentDiv = draggable.parentNode;
     deleteShipHitBox(draggableParentDiv);
   });
-  draggable.addEventListener(
-    "dragend",
-    () => {
-      draggable.classList.remove("dragging");
-      currentField.style.zIndex = zIndexChange + 1;
-      const currentX = parseInt(currentField.getAttribute("data-x"));
-      const currentY = parseInt(currentField.getAttribute("data-y"));
-      const shipSize = parseInt(draggable.getAttribute("data-size"));
-      for (let i = 1; i < shipSize; i++) {
-        const adjustFields = document.querySelector(
-          `[data-x="${currentX + i}"][data-y="${currentY}"]`
-        );
-        if (adjustFields) {
-          adjustFields.style.zIndex = zIndexChange;
-        }
+  draggable.addEventListener("dragend", () => {
+    draggable.classList.remove("dragging");
+    currentField.style.zIndex = zIndexChange + 1;
+    const currentX = parseInt(currentField.getAttribute("data-x"));
+    const currentY = parseInt(currentField.getAttribute("data-y"));
+    const shipSize = parseInt(draggable.getAttribute("data-size"));
+    for (let i = 1; i < shipSize; i++) {
+      const adjustFields = document.querySelector(
+        `[data-x="${currentX + i}"][data-y="${currentY}"]`
+      );
+      if (adjustFields) {
+        adjustFields.style.zIndex = zIndexChange;
       }
-      for (let i = -1; i <= shipSize; i++) {
-        for (let j = -1; j < 2; j++) {
-          let field = null;
-          if (draggable.getAttribute("data-direction") !== "vertical") {
-            field = document.querySelector(
-              `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
-            );
+    }
+    for (let i = -1; i <= shipSize; i++) {
+      for (let j = -1; j < 2; j++) {
+        let field = null;
+        if (draggable.getAttribute("data-direction") !== "vertical") {
+          field = document.querySelector(
+            `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
+          );
           } else {
             field = document.querySelector(
               `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
             );
           }
           if (field) {
-            field.setAttribute(
-              "data-ships",
-              parseInt(field.getAttribute("data-ships")) + 1
-            );
+            field.setAttribute("data-ships", parseInt(field.getAttribute("data-ships")) + 1);
           }
         }
       }
-    },
-    zIndexChange++
-  );
+    }
+    zIndexChange++;
+  });
 });
 
 containers.forEach((container) => {
@@ -133,7 +123,7 @@ containers.forEach((container) => {
 
     for (let i = 0; i < shipSize; i++) {
       let freeField = null;
-      if (draggable.getAttribute("data-direction") !== "vertical") {
+      if(draggable.getAttribute("data-direction") !== "vertical") {
         freeField = document.querySelector(
           `[data-x="${currentX + i}"][data-y="${currentY}"]`
         );
@@ -142,7 +132,10 @@ containers.forEach((container) => {
           `[data-x="${currentX}"][data-y="${currentY + i}"]`
         );
       }
-      if (!freeField || freeField.getAttribute("data-ships") > 0) {
+      if (
+        !freeField || 
+        freeField.getAttribute("data-ships") > 0
+      ) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
         isPlacementValid = false;
         break;
@@ -150,7 +143,8 @@ containers.forEach((container) => {
       if (shipCheck > 0) {
         isPlacementValid = false;
       }
-    }
+    }    
+
 
     if (isPlacementValid) {
       // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf
@@ -183,9 +177,7 @@ function deleteShipHitBox(container) {
     let oldField = null;
     const oldX = parseInt(originField.getAttribute("data-x"));
     const oldY = parseInt(originField.getAttribute("data-y"));
-    const oldShipSize = parseInt(
-      originField.firstChild.getAttribute("data-size")
-    );
+    const oldShipSize = parseInt(originField.firstChild.getAttribute("data-size"));
     for (let i = -1; i <= oldShipSize; i++) {
       for (let j = -1; j < 2; j++) {
         if (
@@ -200,8 +192,7 @@ function deleteShipHitBox(container) {
           );
         }
         if (oldField) {
-          let currentShips =
-            parseInt(oldField.getAttribute("data-ships"), 10) || 0;
+          let currentShips = parseInt(oldField.getAttribute("data-ships"), 10) || 0;
           currentShips = Math.max(0, currentShips - 1);
           oldField.setAttribute("data-ships", currentShips);
           oldField.setAttribute("data-new", "false");
@@ -221,33 +212,29 @@ function boardHitBoxOnClick(
   for (let i = -1; i <= shipSize; i++) {
     for (let j = -1; j < 2; j++) {
       let field = null;
-      if (!toggleOnClick) {
-        field = document.querySelector(
-          `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
-        );
-      } else {
-        field = document.querySelector(
-          `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
-        );
+      if(!toggleOnClick) {
+        field = document.querySelector(`[data-x="${currentX + j}"][data-y="${currentY + i}"]`);
+      } else { 
+        field = document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY + j}"]`);
       }
       if (field) {
         let currentShips = parseInt(field.getAttribute("data-ships"), 10) || 0;
 
-        if (fieldSize > 0) {
+        if(fieldSize > 0) {
           currentShips += 1;
         } else {
           currentShips = Math.max(0, currentShips - 1);
         }
 
         field.setAttribute("data-ships", currentShips);
-        if (fieldSize > 0) {
-          if (!toggleOnClick) {
-            if (field.firstChild)
+        if(fieldSize > 0) {
+          if(!toggleOnClick){
+            if(field.firstChild)
               field.firstChild.setAttribute("data-direction", "vertical");
           } else {
-            if (field.firstChild)
+            if(field.firstChild)
               field.firstChild.setAttribute("data-direction", "horizontal");
-          }
+          } 
         }
       }
     }
@@ -258,21 +245,17 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
   let isValid = true;
   for (let i = 0; i < shipSize; i++) {
     let futureField = null;
-    if (draggable.getAttribute("data-direction") !== "vertical") {
-      futureField = document.querySelector(
-        `[data-x="${currentX + i}"][data-y="${currentY}"]`
-      );
+    if(draggable.getAttribute("data-direction") !== "vertical") {
+      futureField = document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY}"]`);
     } else {
-      futureField = document.querySelector(
-        `[data-x="${currentX}"][data-y="${currentY + i}"]`
-      );
+      futureField = document.querySelector(`[data-x="${currentX}"][data-y="${currentY + i}"]`);
     }
     if (!futureField || futureField.getAttribute("data-ships") > 0) {
       isValid = false;
       break;
     }
   }
-
+  
   return isValid;
 }
 // ...
