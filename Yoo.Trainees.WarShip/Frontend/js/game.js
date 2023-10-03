@@ -14,24 +14,19 @@ function createBoard(gameBoard, isMyBoard) {
   let countingFields = 0;
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
-      const div = document.createElement("div");
+      let div = document.createElement("div");
       div.classList.add("field");
       div.classList.add(`b${countingFields}`);
       div.setAttribute("data-x", x);
       div.setAttribute("data-y", y);
-      gameBoard.appendChild(div);
-      countingFields += 1;
       if (isMyBoard) {
         div.classList.add("ownField");
         div.setAttribute("id", `box${countingFields}`);
         div.setAttribute("data-new", "false");
         div.setAttribute("data-ships", 0);
-        myBoard.appendChild(div);
-      } else {
-        gameOpponent.appendChild(div);
       }
       gameBoard.appendChild(div);
-      countingFields++;
+      countingFields += 1;
     }
   }
 }
@@ -260,7 +255,4 @@ fetch(API_ShipPosition, {
   .then((response) => response.json())
   .then((data) => {
     console.log("Daten");
-  })
-  .catch((error) => {
-    console.error("Es gab einen Fehler bei der Anfrage:", error);
   });
