@@ -228,16 +228,18 @@ function boardHitBoxOnClick(
 
 //..
 
+//..
+
 let ShipPosition = {
   Y: currentY,
   X: currentX,
   Direction: 1,
 };
-daten = JSON.stringify(ShipPositions);
+daten = JSON.stringify(ShipPosition);
 ("use strict");
 
-const API_URL_Email = "https://localhost:7118/api/Game/SaveShips";
-fetch(API_URL_Email, {
+const API_ShipPosition = "https://localhost:7118/api/Game//SaveShips";
+fetch(API_ShipPosition, {
   credentials: "omit",
   headers: {
     "User-Agent":
@@ -247,7 +249,7 @@ fetch(API_URL_Email, {
     "Content-Type": "application/json",
     "Sec-Fetch-Dest": "empty",
   },
-  body: ShipPositions,
+  body: ShipPosition,
   method: "POST",
 })
   .then((response) => response.json())

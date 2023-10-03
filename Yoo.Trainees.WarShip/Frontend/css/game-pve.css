@@ -6,6 +6,10 @@
     transform: scale(1.1);
   }
 }
+@font-face {
+  font-family: "walkingdead";
+  src: url(../../font/BAD\ GRUNGE.ttf);
+}
 
 .field {
   height: 50px;
@@ -132,4 +136,22 @@
 }
 .ship.dragging.invalid {
   background-color: rgba(248, 110, 86, 0.25);
+}
+.commit_button {
+  font-family: walkingdead;
+  font-size: 50px;
+  color: #fefefe;
+  padding: 2px 50px;
+  background-color: rgba(128, 128, 128, 0.75);
+  box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
+  border: 3px white solid;
+  position: absolute;
+  top: 75%;
+  left: 17%;
+  cursor: pointer;
+}
+
+.commit_button:hover {
+  background: white;
+  color: black;
 }
