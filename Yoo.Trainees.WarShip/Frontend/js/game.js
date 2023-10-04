@@ -252,8 +252,21 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
   return isValid;
 }
 // ...
+let commit_button = document.querySelector(".commit-button");
+commit_button.addEventListener("click", () => {
+  // let finish = document.querySelector("");
+  let finishField = document.querySelector(".finish");
 
-("use strict");
+  let ship_selector = document.querySelector(".ship__selection");
+  if (ship_selector.children.length == 0) {
+    console.log("All ships are placed!!");
+    finishField.classList.add("active-popup");
+    commit_button.classList.add("commit-button--active");
+    commitShips();
+  } else {
+    console.log("All ships aren't placed!!");
+  }
+});
 
 function sendShips(Ships) {
   let GamePlayerId = "382DE87E-D0BE-4AEA-B0A8-115F08465439"; //ToDo: No hardcoding!!!
