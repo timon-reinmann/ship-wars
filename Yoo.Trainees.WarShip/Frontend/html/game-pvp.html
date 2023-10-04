@@ -35,6 +35,7 @@
             data-size="4"
             draggable="true"
             id="Warship1"
+            data-ShipId="42A682DD-AE1B-4727-8D7C-25EE54863DE1"
           ></div>
           <div
             class="ship cruiser"
@@ -42,6 +43,7 @@
             data-size="3"
             draggable="true"
             id="cruiser1"
+            data-ShipId="4FCEA8F9-4422-45AF-84C5-0FFCDDCD6206"
           ></div>
           <div
             class="ship cruiser"
@@ -49,6 +51,7 @@
             data-size="3"
             draggable="true"
             id="cruiser2"
+            data-ShipId="4FCEA8F9-4422-45AF-84C5-0FFCDDCD6206"
           ></div>
           <div
             class="ship destroyer"
@@ -56,6 +59,7 @@
             data-size="2"
             draggable="true"
             id="destroyer1"
+            data-ShipId="10E2C00C-DEEA-4B2C-A78C-9E62276FFCA8"
           ></div>
           <div
             class="ship destroyer"
@@ -63,6 +67,7 @@
             data-size="2"
             draggable="true"
             id="destroyer2"
+            data-ShipId="10E2C00C-DEEA-4B2C-A78C-9E62276FFCA8"
           ></div>
           <div
             class="ship destroyer"
@@ -70,6 +75,7 @@
             data-size="2"
             draggable="true"
             id="destroyer3"
+            data-ShipId="10E2C00C-DEEA-4B2C-A78C-9E62276FFCA8"
           ></div>
           <div
             class="ship submarine"
@@ -77,6 +83,7 @@
             data-size="1"
             draggable="true"
             id="submarine1"
+            data-ShipId="7509A1AD-67E8-4C4C-9D5E-B60195014BEC"
           ></div>
           <div
             class="ship submarine"
@@ -84,6 +91,7 @@
             data-size="1"
             draggable="true"
             id="submarine2"
+            data-ShipId="7509A1AD-67E8-4C4C-9D5E-B60195014BEC"
           ></div>
           <div
             class="ship submarine"
@@ -91,6 +99,7 @@
             data-size="1"
             draggable="true"
             id="submarine3"
+            data-ShipId="7509A1AD-67E8-4C4C-9D5E-B60195014BEC"
           ></div>
           <div
             class="ship submarine"
@@ -98,16 +107,28 @@
             data-size="1"
             draggable="true"
             id="submarine4"
+            data-ShipId="7509A1AD-67E8-4C4C-9D5E-B60195014BEC"
           ></div>
         </div>
 
-        <div id="game__board" class="board" droppable="true"></div>
+        <button class="commit-button" id="commit_button">Commit</button>
+
+        <div id="game__board" class="board" droppable="true">
+          <div class="finish">
+            <Wait>Your finish!!! Wait of player 2</p>
+          </div>
+        </div>
 
         <div id="opponent__board" class="board"></div>
 
         <div class="chatbox"></div>
 
+        <div class="error-popup">
+          <i class="fa-sharp fa-solid fa-circle-exclamation fa-beat-fade"></i>
+        </div>
+
         <script src="../js/game.js"></script>
+        <script src="https://kit.fontawesome.com/35470b0449.js" crossorigin="anonymous"></script>
       </div>
     </div>
   </body>
