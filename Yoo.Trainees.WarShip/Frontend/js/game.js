@@ -254,24 +254,32 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
 // ...
 let commit_button = document.querySelector(".commit-button");
 commit_button.addEventListener("click", () => {
-  // let finish = document.querySelector("");
-  let finishField = document.querySelector(".finish");
-
   let ship_selector = document.querySelector(".ship__selection");
   if (ship_selector.children.length == 0) {
-    console.log("All ships are placed!!");
-    finishField.classList.add("active-popup");
-    commit_button.classList.add("commit-button--active");
-    commitShips();
+    commitShips(commit_button);
   } else {
     console.log("All ships aren't placed!!");
+    error_popup(commit_button);
   }
 });
 
-function sendShips(Ships) {
+let error_popup__wmark = document.querySelector(".error-popup__xmark-icon");
+error_popup__wmark.addEventListener("click", () => {
+  let error_popup__screen_blocker = document.querySelector(
+    ".error-popup__screen-blocker"
+  );
+  let error_popup = document.querySelector(".error-popup");
+  error_popup.classList.remove("error-popup--active");
+  error_popup__screen_blocker.classList.remove(
+    "error-popup__screen-blocker--active"
+  );
+  commit_button.classList.remove("commit-button--active");
+});
+
+async function sendShips(Ships) {
   let GamePlayerId = "382DE87E-D0BE-4AEA-B0A8-115F08465439"; //ToDo: No hardcoding!!!
   const API_URL = "https://localhost:7118/api/Game/" + gameId + "/SaveShips";
-  fetch(API_URL, {
+  await fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -283,13 +291,7 @@ function sendShips(Ships) {
     },
     body: JSON.stringify({ Ships, GamePlayerId }),
     method: "POST",
-  })
-    .then((response) => response.json())
-    .data.then((data) => {})
-
-    .catch((error) => {
-      console.error("Es gab einen Fehler bei der Anfrage:", error);
-    });
+  });
 }
 
 function createBoard(gameBoard, isMyBoard) {
@@ -313,7 +315,7 @@ function createBoard(gameBoard, isMyBoard) {
   }
 }
 
-function commitShips() {
+async function commitShips(commit_button) {
   const ships = document.getElementsByClassName("ship");
   let ship_positions = [];
   for (let i = 0; i < ships.length; i++) {
@@ -327,13 +329,26 @@ function commitShips() {
     };
     ship_positions[i] = ship;
   }
+  let finishField = document.querySelector(".finish");
   try {
-    sendShips(ship_positions);
+    await sendShips(ship_positions);
+    console.log("All ships are placed!!");
+    finishField.classList.add("active-popup");
+    commit_button.classList.add("commit-button--active");
   } catch (error) {
-    console.error("failed to send ships");
+    console.error("failed to send ships", error);
+    error_popup(commit_button);
   }
 }
 
-function error_popup() {
-  //ToDo: Error popup
+function error_popup(commit_button) {
+  let error_popup__screen_blocker = document.querySelector(
+    ".error-popup__screen-blocker"
+  );
+  let error_popup = document.querySelector(".error-popup");
+  error_popup.classList.add("error-popup--active");
+  error_popup__screen_blocker.classList.add(
+    "error-popup__screen-blocker--active"
+  );
+  commit_button.classList.add("commit-button--active");
 }

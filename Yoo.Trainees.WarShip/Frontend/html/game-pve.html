@@ -115,8 +115,9 @@
 
         <div id="game__board" class="board" droppable="true">
           <div class="finish">
-            <Wait>Your finish!!! Wait of player 2</p>
+            <p>You're finished!!! Waiting for player 2</p>
           </div>
+          <div class="error-popup__screen-blocker"></div>
         </div>
 
         <div id="opponent__board" class="board"></div>
@@ -124,11 +125,20 @@
         <div class="chatbox"></div>
 
         <div class="error-popup">
-          <i class="fa-sharp fa-solid fa-circle-exclamation fa-beat-fade"></i>
+          <i
+            class="fa-sharp fa-solid fa-circle-exclamation fa-beat-fade fa-2xl"
+          ></i>
+          <p class="error-popup__text">failed to save ships</p>
+          <div class="error-popup__xmark-icon">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
         </div>
 
         <script src="../js/game.js"></script>
-        <script src="https://kit.fontawesome.com/35470b0449.js" crossorigin="anonymous"></script>
+        <script
+          src="https://kit.fontawesome.com/d6df3707cf.js"
+          crossorigin="anonymous"
+        ></script>
       </div>
     </div>
   </body>
