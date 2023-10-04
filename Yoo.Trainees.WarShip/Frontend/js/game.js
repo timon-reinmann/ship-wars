@@ -299,21 +299,15 @@ function createBoard(gameBoard, isMyBoard) {
       let div = document.createElement("div");
       div.classList.add("field");
       div.classList.add(`b${countingFields}`);
-      gameBoard.appendChild(div);
-      countingFields += 1;
+      div.setAttribute("data-x", x);
+      div.setAttribute("data-y", y);
       if (isMyBoard) {
         div.classList.add("ownField");
         div.setAttribute("id", `box${countingFields}`);
-        div.setAttribute("data-x", x);
-        div.setAttribute("data-y", y);
         div.setAttribute("data-new", "false");
         div.setAttribute("data-ships", 0);
-        myBoard.appendChild(div);
-      } else {
-        div.setAttribute("data-x", y);
-        div.setAttribute("data-y", x);
-        gameOpponent.appendChild(div);
       }
+      gameBoard.appendChild(div);
       countingFields += 1;
     }
   }
