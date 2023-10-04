@@ -1,40 +1,14 @@
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
-console.log(urlParams.get("playerid"));
+const gameId = urlParams.get("playerid");
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
 let myBoard = document.getElementById("game__board");
 let gameOpponent = document.getElementById("opponent__board");
+
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
-
-function createBoard(gameBoard, isMyBoard) {
-  let countingFields = 0;
-  for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      let div = document.createElement("div");
-      div.classList.add("field");
-      div.classList.add(`b${countingFields}`);
-      gameBoard.appendChild(div);
-      countingFields += 1;
-      if (isMyBoard) {
-        div.classList.add("ownField");
-        div.setAttribute("id", `box${countingFields}`);
-        div.setAttribute("data-x", x);
-        div.setAttribute("data-y", y);
-        div.setAttribute("data-new", "false");
-        div.setAttribute("data-ships", 0);
-        myBoard.appendChild(div);
-      } else {
-        div.setAttribute("data-x", y);
-        div.setAttribute("data-y", x);
-        gameOpponent.appendChild(div);
-      }
-      countingFields += 1;
-    }
-  }
-}
 
 let zIndexChange = 1;
 let currentField = null;
@@ -287,6 +261,7 @@ commit_button.addEventListener("click", () => {
   if (ship_selector.children.length == 0) {
     console.log("All ships are placed!!");
     board.classList.add("active");
+    commitShips();
   } else {
     console.log("All ships aren't placed!!");
   }
@@ -294,27 +269,71 @@ commit_button.addEventListener("click", () => {
     board.classList.remove("active");
   }, 2500);
 });
-// ...
 
-("use strict");
+function sendShips(Ships) {
+  let GamePlayerId = "382DE87E-D0BE-4AEA-B0A8-115F08465439";
+  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/SaveShips";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    body: JSON.stringify({ Ships, GamePlayerId }),
+    method: "POST",
+  })
+    .then((response) => response.json())
+    .data.then((data) => {})
 
-const API_URL = "https://localhost:7118/api/Game";
-fetch(API_URL, {
-  credentials: "omit",
-  headers: {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-    Accept: "*/*",
-    "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-    "Content-Type": "application/json",
-    "Sec-Fetch-Dest": "empty",
-  },
-  body: "ERSETZTEN",
-  method: "POST",
-})
-  .then((response) => response.json())
-  .data.then((data) => {})
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
 
-  .catch((error) => {
-    console.error("Es gab einen Fehler bei der Anfrage:", error);
-  });
+function createBoard(gameBoard, isMyBoard) {
+  let countingFields = 0;
+  for (let y = 0; y < 10; y++) {
+    for (let x = 0; x < 10; x++) {
+      let div = document.createElement("div");
+      div.classList.add("field");
+      div.classList.add(`b${countingFields}`);
+      gameBoard.appendChild(div);
+      countingFields += 1;
+      if (isMyBoard) {
+        div.classList.add("ownField");
+        div.setAttribute("id", `box${countingFields}`);
+        div.setAttribute("data-x", x);
+        div.setAttribute("data-y", y);
+        div.setAttribute("data-new", "false");
+        div.setAttribute("data-ships", 0);
+        myBoard.appendChild(div);
+      } else {
+        div.setAttribute("data-x", y);
+        div.setAttribute("data-y", x);
+        gameOpponent.appendChild(div);
+      }
+      countingFields += 1;
+    }
+  }
+}
+
+function commitShips() {
+  const ships = document.getElementsByClassName("ship");
+  let ship_positions = [];
+  for (let i = 0; i < ships.length; i++) {
+    ship_positions[i] =
+      document.getElementsByClassName("ship")[i]?.parentElement;
+    const ship = {
+      ShipType: ships[i]?.dataset.name,
+      X: ships[i]?.parentNode.dataset.x,
+      Y: ships[i]?.parentNode.dataset.y,
+      Direction: ships[i]?.dataset.direction,
+    };
+    ship_positions[i] = ship;
+  }
+  sendShips(ship_positions);
+}

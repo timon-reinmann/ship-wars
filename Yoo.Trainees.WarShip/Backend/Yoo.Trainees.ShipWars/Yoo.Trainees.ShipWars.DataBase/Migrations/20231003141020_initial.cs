@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -106,7 +106,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     ShipId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     X = table.Column<int>(type: "int", nullable: false),
                     Y = table.Column<int>(type: "int", nullable: false),
-                    Direction = table.Column<bool>(type: "bit", nullable: false)
+                    Direction = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -150,10 +150,10 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 columns: new[] { "Id", "Length", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("10e2c00c-deea-4b2c-a78c-9e62276ffca8"), 2, "Destroyer" },
-                    { new Guid("42a682dd-ae1b-4727-8d7c-25ee54863de1"), 4, "Warship" },
-                    { new Guid("4fcea8f9-4422-45af-84c5-0ffcddcd6206"), 3, "Cruiser" },
-                    { new Guid("7509a1ad-67e8-4c4c-9d5e-b60195014bec"), 1, "Submarine" }
+                    { new Guid("8831f278-dd26-4a4d-9383-52f5033ee3d6"), 4, "Warship" },
+                    { new Guid("b8fc8f94-546c-4269-85d2-397352646c9b"), 2, "Destroyer" },
+                    { new Guid("c1cbbd7e-4fd0-4f51-ae7e-90bdf3207e0a"), 3, "Cruiser" },
+                    { new Guid("e06c39ee-1b10-4d5e-ab6f-b25e4562ae25"), 1, "Submarine" }
                 });
 
             migrationBuilder.CreateIndex(

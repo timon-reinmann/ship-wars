@@ -5,6 +5,6 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     public interface IGameLogic
     {
         Game CreateGame(string name);
-        ShipPosition CreateBoard(SaveShipsDto Ships);
+        String CreateBoard(SaveShipsDto Ships);
     }
 }
