@@ -10,33 +10,6 @@ let gameOpponent = document.getElementById("opponent__board");
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
 
-function createBoard(gameBoard, isMyBoard) {
-  let countingFields = 0;
-  for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      let div = document.createElement("div");
-      div.classList.add("field");
-      div.classList.add(`b${countingFields}`);
-      gameBoard.appendChild(div);
-      countingFields += 1;
-      if (isMyBoard) {
-        div.classList.add("ownField");
-        div.setAttribute("id", `box${countingFields}`);
-        div.setAttribute("data-x", x);
-        div.setAttribute("data-y", y);
-        div.setAttribute("data-new", "false");
-        div.setAttribute("data-ships", 0);
-        myBoard.appendChild(div);
-      } else {
-        div.setAttribute("data-x", y);
-        div.setAttribute("data-y", x);
-        gameOpponent.appendChild(div);
-      }
-      countingFields += 1;
-    }
-  }
-}
-
 let zIndexChange = 1;
 let currentField = null;
 
@@ -302,3 +275,24 @@ fetch(API_URL, {
   .catch((error) => {
     console.error("Es gab einen Fehler bei der Anfrage:", error);
   });
+
+function createBoard(gameBoard, isMyBoard) {
+  let countingFields = 0;
+  for (let y = 0; y < 10; y++) {
+    for (let x = 0; x < 10; x++) {
+      let div = document.createElement("div");
+      div.classList.add("field");
+      div.classList.add(`b${countingFields}`);
+      div.setAttribute("data-x", x);
+      div.setAttribute("data-y", y);
+      if (isMyBoard) {
+        div.classList.add("ownField");
+        div.setAttribute("id", `box${countingFields}`);
+        div.setAttribute("data-new", "false");
+        div.setAttribute("data-ships", 0);
+      }
+      gameBoard.appendChild(div);
+      countingFields += 1;
+    }
+  }
+}
