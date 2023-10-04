@@ -252,22 +252,20 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
   return isValid;
 }
 // ...
-let commit_button = document.getElementById("commit_button");
+let commit_button = document.querySelector(".commit-button");
 commit_button.addEventListener("click", () => {
   // let finish = document.querySelector("");
-  let board = document.querySelector(".board");
+  let finishField = document.querySelector(".finish");
 
   let ship_selector = document.querySelector(".ship__selection");
   if (ship_selector.children.length == 0) {
     console.log("All ships are placed!!");
-    board.classList.add("active");
+    finishField.classList.add("active-popup");
+    commit_button.classList.add("commit-button--active");
     commitShips();
   } else {
     console.log("All ships aren't placed!!");
   }
-  setTimeout(function () {
-    board.classList.remove("active");
-  }, 2500);
 });
 
 function sendShips(Ships) {
@@ -335,5 +333,13 @@ function commitShips() {
     };
     ship_positions[i] = ship;
   }
-  sendShips(ship_positions);
+  try {
+    sendShips(ship_positions);
+  } catch (error) {
+    console.error("failed to send ships");
+  }
+}
+
+function error_popup() {
+  //ToDo: Error popup
 }

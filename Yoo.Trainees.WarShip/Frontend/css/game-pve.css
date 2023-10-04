@@ -58,8 +58,24 @@
   /* box-shadow: 0px 0px 5px 7px rgba(255, 255, 255, 0.25); */
 }
 
-.board.active {
-  border: 10px solid red;
+.finish {
+  background-color: rgba(128, 128, 128, 0.9);
+  box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
+  width: 476px;
+  height: 396px;
+  display: grid;
+  align-self: center;
+  position: absolute;
+  transform: scale(0);
+  z-index: 100;
+  font-family: walkingdead;
+  font-size: 90px;
+  padding-left: 45px;
+  padding-top: 125px;
+}
+
+.finish.active-popup {
+  transform: scale(1);
 }
 
 /*------------- PLAYER & OPPONENT --------------*/
@@ -141,7 +157,7 @@
 .ship.dragging.invalid {
   background-color: rgba(248, 110, 86, 0.25);
 }
-.commit_button {
+.commit-button {
   font-family: walkingdead;
   font-size: 50px;
   color: #fefefe;
@@ -152,9 +168,20 @@
   border: 3px white solid;
   margin: 650px 344px;
   cursor: pointer;
+  transform: scale(1);
 }
 
-.commit_button:hover {
+.commit-button:hover {
   background: white;
   color: black;
+}
+
+.commit-button--active {
+  transform: scale(0);
+}
+
+.error-popup {
+  position: absolute;
+  top: 50px;
+  left: 50px;
 }
