@@ -279,21 +279,8 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
   return isValid;
 }
 // ...
-let commit_button = document.querySelector(".commit-button");
-commit_button.addEventListener("click", () => {
-  // let finish = document.querySelector("");
-  let finishField = document.querySelector(".finish");
 
-  let ship_selector = document.querySelector(".ship__selection");
-  if (ship_selector.children.length == 0) {
-    console.log("All ships are placed!!");
-    finishField.classList.add("active-popup");
-    commit_button.classList.add("commit-button--active");
-    commitShips();
-  } else {
-    console.log("All ships aren't placed!!");
-  }
-});
+("use strict");
 
 const API_URL = "https://localhost:7118/api/Game";
 fetch(API_URL, {
@@ -312,59 +299,6 @@ fetch(API_URL, {
   .then((response) => response.json())
   .data.then((data) => {})
 
-    .catch((error) => {
-      console.error("Es gab einen Fehler bei der Anfrage:", error);
-    });
-}
-
-function createBoard(gameBoard, isMyBoard) {
-  let countingFields = 0;
-  for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      let div = document.createElement("div");
-      div.classList.add("field");
-      div.classList.add(`b${countingFields}`);
-      gameBoard.appendChild(div);
-      countingFields += 1;
-      if (isMyBoard) {
-        div.classList.add("ownField");
-        div.setAttribute("id", `box${countingFields}`);
-        div.setAttribute("data-x", x);
-        div.setAttribute("data-y", y);
-        div.setAttribute("data-new", "false");
-        div.setAttribute("data-ships", 0);
-        myBoard.appendChild(div);
-      } else {
-        div.setAttribute("data-x", y);
-        div.setAttribute("data-y", x);
-        gameOpponent.appendChild(div);
-      }
-      countingFields += 1;
-    }
-  }
-}
-
-function commitShips() {
-  const ships = document.getElementsByClassName("ship");
-  let ship_positions = [];
-  for (let i = 0; i < ships.length; i++) {
-    ship_positions[i] =
-      document.getElementsByClassName("ship")[i]?.parentElement;
-    const ship = {
-      ShipType: ships[i]?.dataset.name,
-      X: ships[i]?.parentNode.dataset.x,
-      Y: ships[i]?.parentNode.dataset.y,
-      Direction: ships[i]?.dataset.direction,
-    };
-    ship_positions[i] = ship;
-  }
-  try {
-    sendShips(ship_positions);
-  } catch (error) {
-    console.error("failed to send ships");
-  }
-}
-
-function error_popup() {
-  //ToDo: Error popup
-}
+  .catch((error) => {
+    console.error("Es gab einen Fehler bei der Anfrage:", error);
+  });
