@@ -269,7 +269,7 @@ commit_button.addEventListener("click", () => {
 });
 
 function sendShips(Ships) {
-  let GamePlayerId = "382DE87E-D0BE-4AEA-B0A8-115F08465439";
+  let GamePlayerId = "382DE87E-D0BE-4AEA-B0A8-115F08465439"; //ToDo: No hardcoding!!!
   const API_URL = "https://localhost:7118/api/Game/" + gameId + "/SaveShips";
   fetch(API_URL, {
     credentials: "omit",
