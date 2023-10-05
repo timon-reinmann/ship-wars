@@ -59,8 +59,6 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         }
         public String CreateBoard(SaveShipsDto SwaggerData)
         {
-
-            string hallo = "hallo";
             for(var i = 0;i < SwaggerData.Ships.Length; i++)
             {
                 var Ship = SwaggerData.Ships[i];
@@ -78,7 +76,6 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
              applicationDbContext.ShipPosition.Add(ShipPositio);
              applicationDbContext.SaveChanges();
             }
-            return hallo;
         }
     }
 }
