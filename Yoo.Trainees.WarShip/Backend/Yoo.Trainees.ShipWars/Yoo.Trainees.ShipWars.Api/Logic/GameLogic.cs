@@ -57,7 +57,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return game;
         }
-        public String CreateBoard(SaveShipsDto SwaggerData)
+        public void CreateBoard(SaveShipsDto SwaggerData)
         {
             for(var i = 0;i < SwaggerData.Ships.Length; i++)
             {

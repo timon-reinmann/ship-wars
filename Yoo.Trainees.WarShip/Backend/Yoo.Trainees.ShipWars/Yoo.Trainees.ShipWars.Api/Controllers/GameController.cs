@@ -46,9 +46,10 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // Post api/<Game>/5/SaveShips
         [HttpPost("{id}/SaveShips")]
-            public void Post([FromBody] SaveShipsDto Ships)
+        public async Task<IActionResult> Post([FromBody] SaveShipsDto Ships)
         {
-            var createdBoard = gameLogic.CreateBoard(Ships);
+            gameLogic.CreateBoard(Ships);
+            return Ok();
         }
 
         

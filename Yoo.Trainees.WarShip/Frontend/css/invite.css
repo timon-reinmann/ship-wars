@@ -208,7 +208,7 @@
   z-index: 1;
 }
 
-.Link-h2 {
+.Link-title {
   font-size: 2em;
   color: #162938;
   position: absolute;
@@ -216,7 +216,7 @@
   left: 47%;
 }
 
-.email-h2 {
+.email-title {
   font-size: 2em;
   color: #162938;
   position: absolute;
