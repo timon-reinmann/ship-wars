@@ -95,7 +95,6 @@ containers.forEach((container) => {
       ? document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY}"]`)
       : document.querySelector(`[data-x="${currentX}"][data-y="${currentY + i}"]`);
 
-      if(i === 0 )
       if (!freeField || freeField.getAttribute("data-ships") > 0) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
         isPlacementValid = false;
