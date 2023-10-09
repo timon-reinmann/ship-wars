@@ -310,19 +310,14 @@ async function sendShips(Ships) {
 
 async function commitShips(commit_button) {
   const ships = document.getElementsByClassName("ship");
-  let ship_positions = [];
-  for (let i = 0; i < ships.length; i++) {
-    ship_positions[i] =
-      document.getElementsByClassName("ship")[i]?.parentElement;
-    const ship = {
-      ShipType: ships[i]?.dataset.name,
-      X: ships[i]?.parentNode.dataset.x,
-      Y: ships[i]?.parentNode.dataset.y,
-      Direction: ships[i]?.dataset.direction,
-    };
-    ship_positions[i] = ship;
-  }
-  let finishField = document.querySelector(".finish");
+  const ship_positions = Array.from(ships).map(ship => ({
+    ShipType: ship?.dataset.name,
+    X: ship?.parentNode?.dataset.x,
+    Y: ship?.parentNode?.dataset.y,
+    Direction: ship?.dataset.direction,
+    Id: ship?.Id,
+  }));
+  const finishField = document.querySelector(".finish");
   try {
     await sendShips(ship_positions);
     console.log("All ships are placed!!");
@@ -335,10 +330,10 @@ async function commitShips(commit_button) {
 }
 
 function error_popup(commit_button) {
-  let error_popup__screen_blocker = document.querySelector(
+  const error_popup__screen_blocker = document.querySelector(
     ".error-popup__screen-blocker"
   );
-  let error_popup = document.querySelector(".error-popup");
+  const error_popup = document.querySelector(".error-popup");
   error_popup.classList.add("error-popup--active");
   error_popup__screen_blocker.classList.add(
     "error-popup__screen-blocker--active"
