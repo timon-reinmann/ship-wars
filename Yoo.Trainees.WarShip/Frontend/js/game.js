@@ -329,7 +329,7 @@ async function commitShips(commit_button) {
     };
     ship_positions[i] = ship;
   }
-  let finishField = document.querySelector(".finish");
+  const finishField = document.querySelector(".finish");
   try {
     await sendShips(ship_positions);
     console.log("All ships are placed!!");

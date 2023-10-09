@@ -18,7 +18,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         public bool VerifyShipLocations(SaveShipDto[] shipDtos)
         {
-            var emamountOfShips = 10;
+            var amountOfShips = 10;
             if (shipDtos.Length != emamountOfShips)
             {
                 return false;
