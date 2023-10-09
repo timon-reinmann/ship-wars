@@ -119,7 +119,6 @@ containers.forEach((container) => {
   // Komischer Weise geht das auch mit drag anstatt drop
   container.addEventListener("drop", (e) => {
     e.preventDefault();
-
   });
 });
 
@@ -136,9 +135,12 @@ function deleteShipHitBox(container) {
     const oldX = parseInt(originField.dataset.x);
     const oldY = parseInt(originField.dataset.y);
     const oldShipSize = parseInt(originField.firstChild?.dataset.size);
-    for (let i = -1; i <= oldShipSize; i++) {
-      for (let j = -1; j < 2; j++) {
-        const oldField = document.querySelector(`[data-x="${oldX + (container.firstChild?.dataset.direction !== "vertical" ? i : j)}"][data-y="${oldY + (container.firstChild?.dataset.direction !== "vertical" ? j : i)}"]`);
+    const startingPoint = -1; // -1, weil das Schiff auch die Herumliegenden Felder belegt
+    const shipWidth = 2; // 2 weil das Schiff immer gleich breit ist (horizontal und vertikal)
+    const isVertical = container.firstChild?.dataset.direction === "vertical";
+    for (let i = startingPoint; i <= oldShipSize; i++) {
+      for (let j = startingPoint; j < shipWidth; j++) {
+        const oldField = document.querySelector(`[data-x="${oldX + (!isVertical ? i : j)}"][data-y="${oldY + (!isVertical ? j : i)}"]`);
         if (oldField) {
           const currentShips = parseInt(oldField.dataset.ships, 10) || 0;
           oldField.dataset.ships = Math.max(0, currentShips - 1);
@@ -148,7 +150,7 @@ function deleteShipHitBox(container) {
   }
 }
 
-function boardHitBoxOnClick(toggleOnClick, currentX, currentY, shipSize, fieldSize) {
+function changeHitBoxOnClick(toggleOnClick, currentX, currentY, shipSize, fieldSize) {
   for (let i = -1; i <= shipSize; i++) {
     for (let j = -1; j < 2; j++) {
       const field = document.querySelector(`[data-x="${currentX + (toggleOnClick ? i : j)}"][data-y="${currentY + (toggleOnClick ? j : i)}"]`);
