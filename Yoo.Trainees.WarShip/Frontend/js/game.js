@@ -36,12 +36,13 @@ draggables.forEach((draggable) => {
       boardHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
     }
   });
-  draggable.addEventListener("dragstart", (e) => {
+
+  draggable.addEventListener("dragstart", e => {
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
-    let draggableParentDiv = draggable.parentNode;
-    deleteShipHitBox(draggableParentDiv);
+    deleteShipHitBox(draggable.parentNode);
   });
+
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
     currentField.style.zIndex = zIndexChange + 1;
@@ -50,16 +51,9 @@ draggables.forEach((draggable) => {
     const shipSize = parseInt(draggable.getAttribute("data-size"));
     for (let i = -1; i <= shipSize; i++) {
       for (let j = -1; j < 2; j++) {
-        let field = null;
-        if (draggable.getAttribute("data-direction") !== "vertical") {
-          field = document.querySelector(
-            `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
-          );
-        } else {
-          field = document.querySelector(
-            `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
-          );
-        }
+        const field = draggable.getAttribute("data-direction") !== "vertical"
+          ? document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY + j}"]`)
+          : document.querySelector(`[data-x="${currentX + j}"][data-y="${currentY + i}"]`);
         if (field) {
           field.setAttribute(
             "data-ships",
@@ -75,6 +69,7 @@ draggables.forEach((draggable) => {
 containers.forEach((container) => {
   container.addEventListener("dragover", (e) => {
     e.preventDefault();
+    container.style.zIndex = 0;
     const draggable = document.querySelector(".dragging");
     if (!draggable) return;
 
@@ -96,16 +91,9 @@ containers.forEach((container) => {
     let isPlacementValid = true;
 
     for (let i = 0; i < shipSize; i++) {
-      let freeField = null;
-      if (draggable.getAttribute("data-direction") !== "vertical") {
-        freeField = document.querySelector(
-          `[data-x="${currentX + i}"][data-y="${currentY}"]`
-        );
-      } else {
-        freeField = document.querySelector(
-          `[data-x="${currentX}"][data-y="${currentY + i}"]`
-        );
-      }
+      const freeField = draggable.dataset.direction !== "vertical"
+      ? document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY}"]`)
+      : document.querySelector(`[data-x="${currentX}"][data-y="${currentY + i}"]`);
 
       if(i === 0 )
         console.log(currentX);
@@ -150,30 +138,15 @@ shipSelection.addEventListener("dragover", (e) => {
 });
 function deleteShipHitBox(container) {
   if (originField) {
-    let oldField = null;
-    const oldX = parseInt(originField.getAttribute("data-x"));
-    const oldY = parseInt(originField.getAttribute("data-y"));
-    const oldShipSize = parseInt(
-      originField.firstChild.getAttribute("data-size")
-    );
+    const oldX = parseInt(originField.dataset.x);
+    const oldY = parseInt(originField.dataset.y);
+    const oldShipSize = parseInt(originField.firstChild?.dataset.size);
     for (let i = -1; i <= oldShipSize; i++) {
       for (let j = -1; j < 2; j++) {
-        if (
-          container.firstChild.getAttribute("data-direction") !== "vertical"
-        ) {
-          oldField = document.querySelector(
-            `[data-x="${oldX + i}"][data-y="${oldY + j}"]`
-          );
-        } else {
-          oldField = document.querySelector(
-            `[data-x="${oldX + j}"][data-y="${oldY + i}"]`
-          );
-        }
+        const oldField = document.querySelector(`[data-x="${oldX + (container.firstChild?.dataset.direction !== "vertical" ? i : j)}"][data-y="${oldY + (container.firstChild?.dataset.direction !== "vertical" ? j : i)}"]`);
         if (oldField) {
-          let currentShips =
-            parseInt(oldField.getAttribute("data-ships"), 10) || 0;
-          currentShips = Math.max(0, currentShips - 1);
-          oldField.setAttribute("data-ships", currentShips);
+          const currentShips = parseInt(oldField.dataset.ships, 10) || 0;
+          oldField.dataset.ships = Math.max(0, currentShips - 1);
         }
       }
     }
