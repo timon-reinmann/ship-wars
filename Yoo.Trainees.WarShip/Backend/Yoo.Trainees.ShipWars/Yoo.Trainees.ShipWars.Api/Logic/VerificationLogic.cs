@@ -18,7 +18,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         public bool VerifyShipLocations(SaveShipDto[] shipDtos)
         {
-            if (shipDtos.Length != 10)
+            var emamountOfShips = 10;
+            if (shipDtos.Length != emamountOfShips)
             {
                 return false;
             }
@@ -36,31 +37,14 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 var shipDirection = shipDtos[i].Direction;
                 int _iXl;
                 int _iYl;
-                var allShips = new Dictionary<string, int>();
+                var maxBoardLength = 9;
+                var minBoardLength = 0;
 
-                if (shipX > 9 || shipY > 9 || shipX < 0 || shipY < 0 || shipType == null)
+                if (shipX > maxBoardLength || shipY > maxBoardLength || shipX < minBoardLength || shipY < minBoardLength || shipType == null)
                 {
                     return false;
                 }
 
-                foreach (var _shipType in shipDtos)
-                {
-                    if (!allShips.ContainsKey(_shipType.ShipType))
-                    {
-                        allShips.Add(_shipType.ShipType, 1);
-                    }
-                    else
-                    {
-                        allShips[_shipType.ShipType]++;
-                    }
-                }
-                foreach (var c in allShips)
-                {
-                    if (c.Value == 1 && c.Key != "Warship" || c.Value == 2 && c.Key != "Cruiser" || c.Value == 3 && c.Key != "Destroyer" || c.Value == 4 && c.Key != "Submarine")
-                    {
-                        return false;
-                    }
-                }
                 foreach (var j in shipDtos)
                     for (int l = -1; l <= shipLength; l++)
                     {
@@ -91,6 +75,31 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             }
             return true;
         }
+
+        public bool TestVerifyeToManyShipsFromSameType(SaveShipDto[] shipDtos)
+        {
+            var allShips = new Dictionary<string, int>();
+            foreach (var _shipType in shipDtos)
+            {
+                if (!allShips.ContainsKey(_shipType.ShipType))
+                {
+                    allShips.Add(_shipType.ShipType, 1);
+                }
+                else
+                {
+                    allShips[_shipType.ShipType]++;
+                }
+            }
+            foreach (var c in allShips)
+            {
+                if (c.Value == 1 && c.Key != "Warship" || c.Value == 2 && c.Key != "Cruiser" || c.Value == 3 && c.Key != "Destroyer" || c.Value == 4 && c.Key != "Submarine")
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     }
 }
 

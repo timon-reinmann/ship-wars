@@ -114,7 +114,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{Direction = "horizontal", X = 4, Y = 9, ShipType = "UnkownShip"}
             };
 
-            Assert.False(verificationLogic.VerifyShipLocations(shipDtos));
+            Assert.False(verificationLogic.TestVerifyeToManyShipsFromSameType(shipDtos));
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{Direction = "horizontal", X = 4, Y = 9, ShipType = "Submarine"}
             };
 
-            Assert.False(verificationLogic.VerifyShipLocations(shipDtos));
+            Assert.False(verificationLogic.TestVerifyeToManyShipsFromSameType(shipDtos));
         }
         
         [Test]
