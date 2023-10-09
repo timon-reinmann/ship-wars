@@ -326,6 +326,7 @@ async function commitShips(commit_button) {
       X: ships[i]?.parentNode.dataset.x,
       Y: ships[i]?.parentNode.dataset.y,
       Direction: ships[i]?.dataset.direction,
+      Id: ship[i]?.Id,
     };
     ship_positions[i] = ship;
   }

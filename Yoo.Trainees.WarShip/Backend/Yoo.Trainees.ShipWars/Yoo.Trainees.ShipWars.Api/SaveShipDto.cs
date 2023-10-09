@@ -9,5 +9,7 @@
         public string Direction { get; set; }
 
         public string ShipType { get; set; }
+        
+        public Guid Id { get; set; }
     }
 }
