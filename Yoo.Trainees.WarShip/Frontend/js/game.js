@@ -48,14 +48,6 @@ draggables.forEach((draggable) => {
     const currentX = parseInt(currentField.getAttribute("data-x"));
     const currentY = parseInt(currentField.getAttribute("data-y"));
     const shipSize = parseInt(draggable.getAttribute("data-size"));
-    for (let i = 1; i < shipSize; i++) {
-      const adjustFields = document.querySelector(
-        `[data-x="${currentX + i}"][data-y="${currentY}"]`
-      );
-      if (adjustFields) {
-        adjustFields.style.zIndex = zIndexChange;
-      }
-    }
     for (let i = -1; i <= shipSize; i++) {
       for (let j = -1; j < 2; j++) {
         let field = null;
@@ -81,12 +73,9 @@ draggables.forEach((draggable) => {
 });
 
 containers.forEach((container) => {
-  container.addEventListener("dragstart", (e) => {
-    container.setAttribute("data-new", "true");
-  });
   container.addEventListener("dragover", (e) => {
     e.preventDefault();
-
+    container.style.zIndex = 0;
     const draggable = document.querySelector(".dragging");
     if (!draggable) return;
 
@@ -118,8 +107,12 @@ containers.forEach((container) => {
           `[data-x="${currentX}"][data-y="${currentY + i}"]`
         );
       }
+
+      if(i === 0 )
+        console.log(currentX);
       if (!freeField || freeField.getAttribute("data-ships") > 0) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
+        console.log("invalid");
         isPlacementValid = false;
         break;
       }
@@ -127,12 +120,13 @@ containers.forEach((container) => {
         isPlacementValid = false;
       }
     }
-
+    console.log(isPlacementValid);
     if (isPlacementValid) {
       // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf
 
       // Platziere das Schiff und setze data-size für alle belegten Felder
       container.appendChild(draggable);
+      console.log("placed");
       currentField = container; // Aktualisiere das aktuelle linke Feld
       draggable.classList.remove("invalid");
     } else {
@@ -143,6 +137,7 @@ containers.forEach((container) => {
   // Komischer Weise geht das auch mit drag anstatt drop
   container.addEventListener("drop", (e) => {
     e.preventDefault();
+
   });
 });
 
@@ -180,7 +175,6 @@ function deleteShipHitBox(container) {
             parseInt(oldField.getAttribute("data-ships"), 10) || 0;
           currentShips = Math.max(0, currentShips - 1);
           oldField.setAttribute("data-ships", currentShips);
-          oldField.setAttribute("data-new", "false");
         }
       }
     }
@@ -242,7 +236,6 @@ function createBoard(gameBoard, isMyBoard) {
       if (isMyBoard) {
         div.classList.add("ownField");
         div.setAttribute("id", `box${countingFields}`);
-        div.setAttribute("data-new", "false");
         div.setAttribute("data-ships", 0);
       }
       gameBoard.appendChild(div);
