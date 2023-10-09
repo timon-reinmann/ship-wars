@@ -96,10 +96,8 @@ containers.forEach((container) => {
       : document.querySelector(`[data-x="${currentX}"][data-y="${currentY + i}"]`);
 
       if(i === 0 )
-        console.log(currentX);
       if (!freeField || freeField.getAttribute("data-ships") > 0) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
-        console.log("invalid");
         isPlacementValid = false;
         break;
       }
@@ -107,13 +105,11 @@ containers.forEach((container) => {
         isPlacementValid = false;
       }
     }
-    console.log(isPlacementValid);
     if (isPlacementValid) {
       // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf
 
       // Platziere das Schiff und setze data-size für alle belegten Felder
       container.appendChild(draggable);
-      console.log("placed");
       currentField = container; // Aktualisiere das aktuelle linke Feld
       draggable.classList.remove("invalid");
     } else {
@@ -217,7 +213,6 @@ commit_button.addEventListener("click", () => {
   if (ship_selector.children.length == 0) {
     commitShips(commit_button);
   } else {
-    console.log("All ships aren't placed!!");
     error_popup(commit_button);
   }
 });
@@ -265,7 +260,6 @@ async function commitShips(commit_button) {
   const finishField = document.querySelector(".finish");
   try {
     await sendShips(ship_positions);
-    console.log("All ships are placed!!");
     finishField.classList.add("active-popup");
     commit_button.classList.add("commit-button--active");
   } catch (error) {
