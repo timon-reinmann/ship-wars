@@ -180,43 +180,15 @@ function deleteShipHitBox(container) {
   }
 }
 
-function boardHitBoxOnClick(
-  toggleOnClick,
-  currentX,
-  currentY,
-  shipSize,
-  fieldSize
-) {
+function boardHitBoxOnClick(toggleOnClick, currentX, currentY, shipSize, fieldSize) {
   for (let i = -1; i <= shipSize; i++) {
     for (let j = -1; j < 2; j++) {
-      let field = null;
-      if (!toggleOnClick) {
-        field = document.querySelector(
-          `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
-        );
-      } else {
-        field = document.querySelector(
-          `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
-        );
-      }
+      const field = document.querySelector(`[data-x="${currentX + (toggleOnClick ? i : j)}"][data-y="${currentY + (toggleOnClick ? j : i)}"]`);
       if (field) {
-        let currentShips = parseInt(field.getAttribute("data-ships"), 10) || 0;
-
-        if (fieldSize > 0) {
-          currentShips += 1;
-        } else {
-          currentShips = Math.max(0, currentShips - 1);
-        }
-
-        field.setAttribute("data-ships", currentShips);
-        if (fieldSize > 0) {
-          if (!toggleOnClick) {
-            if (field.firstChild)
-              field.firstChild.setAttribute("data-direction", "vertical");
-          } else {
-            if (field.firstChild)
-              field.firstChild.setAttribute("data-direction", "horizontal");
-          }
+        const currentShips = parseInt(field.dataset.ships, 10) || 0;
+        field.dataset.ships = Math.max(0, currentShips + (fieldSize > 0 ? 1 : -1));
+        if (fieldSize > 0 && field.firstChild) {
+          field.firstChild.dataset.direction = toggleOnClick ? "horizontal" : "vertical";
         }
       }
     }
