@@ -75,7 +75,6 @@ draggables.forEach((draggable) => {
 containers.forEach((container) => {
   container.addEventListener("dragover", (e) => {
     e.preventDefault();
-    container.style.zIndex = 0;
     const draggable = document.querySelector(".dragging");
     if (!draggable) return;
 
@@ -247,7 +246,8 @@ function createBoard(gameBoard, isMyBoard) {
 function canChangeDirection(draggable, currentX, currentY, shipSize) {
   let isValid = true;
 
-  for (let i = 2; i < shipSize; i++) {
+  const nextPossibleField = 2;
+  for (let i = nextPossibleField; i < shipSize; i++) {
     let futureField = null;
     if (draggable.getAttribute("data-direction") !== "vertical") {
       futureField = document.querySelector(
