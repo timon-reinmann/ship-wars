@@ -25,8 +25,8 @@ draggables.forEach((draggable) => {
     const shipSize = parseInt(currentShip.firstChild.getAttribute("data-size"));
     const isValid = canChangeDirection(
       draggable,
-      parseInt(currentField.getAttribute("data-x")),
-      parseInt(currentField.getAttribute("data-y")),
+      currentX,
+      currentY,
       parseInt(draggable.getAttribute("data-size"))
     );
     if (isValid) {
@@ -232,15 +232,16 @@ function boardHitBoxOnClick(
 
 function canChangeDirection(draggable, currentX, currentY, shipSize) {
   let isValid = true;
-  for (let i = 0; i < shipSize; i++) {
+
+  for (let i = 2; i <= shipSize; i++) {
     let futureField = null;
     if (draggable.getAttribute("data-direction") !== "vertical") {
       futureField = document.querySelector(
-        `[data-x="${currentX + i}"][data-y="${currentY}"]`
+        `[data-x="${currentX}"][data-y="${currentY + i}"]`
       );
     } else {
       futureField = document.querySelector(
-        `[data-x="${currentX}"][data-y="${currentY + i}"]`
+        `[data-x="${currentX + i}"][data-y="${currentY}"]`
       );
     }
     if (!futureField || futureField.getAttribute("data-ships") > 0) {
@@ -248,7 +249,6 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
       break;
     }
   }
-
   return isValid;
 }
 // ...
@@ -277,7 +277,7 @@ error_popup__wmark.addEventListener("click", () => {
 });
 
 async function sendShips(Ships) {
-  let GamePlayerId = "382DE87E-D0BE-4AEA-B0A8-115F08465439"; //ToDo: No hardcoding!!!
+  let GamePlayerId = "382DE87E-D0BE-4AEA-B0A8-115F08465439"; //ToDo: No hardcoding!!! 🙀
   const API_URL = "https://localhost:7118/api/Game/" + gameId + "/SaveShips";
   await fetch(API_URL, {
     credentials: "omit",

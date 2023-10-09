@@ -66,7 +66,8 @@
 
 .shipwars__button:hover {
   background: white;
-  .shipwars__button_text {
+  transform: scale(1.01) skew(-30deg) translate(-45%, -45%);
+  .shipwars__button-text {
     color: black;
   }
 }
