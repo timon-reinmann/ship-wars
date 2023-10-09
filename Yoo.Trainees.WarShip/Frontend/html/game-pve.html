@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Bot</title>
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/game-pve.css" />
+    <link
+      rel="icon"
+      href="../img/favicon.ico"
+      type="image/x-icon"
+      sizes="32x32"
+    />
+  </head>
+  <body>
+    <div class="background-animation"></div>
+    <div class="container">
+      <nav class="shipwars__navbar">
+        <a href="../index.html" class="shipwars__logo"></a>
+        <div class="navbar__list">
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="#">Friends</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Alle Schiffe werden implementiert -->
+      <div class="middle">
+        <div class="ship__selection" droppable="true">
+          <div
+            class="ship warship"
+            data-direction="horizontal"
+            data-size="4"
+            draggable="true"
+            id="Warship1"
+          ></div>
+          <div
+            class="ship cruiser"
+            data-direction="horizontal"
+            data-size="3"
+            draggable="true"
+            id="cruiser1"
+          ></div>
+          <div
+            class="ship cruiser"
+            data-direction="horizontal"
+            data-size="3"
+            draggable="true"
+            id="cruiser2"
+          ></div>
+          <div
+            class="ship destroyer"
+            data-direction="horizontal"
+            data-size="2"
+            draggable="true"
+            id="destroyer1"
+          ></div>
+          <div
+            class="ship destroyer"
+            data-direction="horizontal"
+            data-size="2"
+            draggable="true"
+            id="destroyer2"
+          ></div>
+          <div
+            class="ship destroyer"
+            data-direction="horizontal"
+            data-size="2"
+            draggable="true"
+            id="destroyer3"
+          ></div>
+          <div
+            class="ship submarine"
+            data-direction="horizontal"
+            data-size="1"
+            draggable="true"
+            id="submarine1"
+          ></div>
+          <div
+            class="ship submarine"
+            data-direction="horizontal"
+            data-size="1"
+            draggable="true"
+            id="submarine2"
+          ></div>
+          <div
+            class="ship submarine"
+            data-direction="horizontal"
+            data-size="1"
+            draggable="true"
+            id="submarine3"
+          ></div>
+          <div
+            class="ship submarine"
+            data-direction="horizontal"
+            data-size="1"
+            draggable="true"
+            id="submarine4"
+          ></div>
+        </div>
+
+        <div id="game__board" class="board" droppable="true"></div>
+
+        <div id="opponent__board" class="board"></div>
+
+        <div class="chatbox"></div>
+
+        <script src="../js/game.js"></script>
+      </div>
+    </div>
+  </body>
+</html>
