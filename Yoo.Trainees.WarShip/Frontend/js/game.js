@@ -230,10 +230,31 @@ function boardHitBoxOnClick(
   }
 }
 
+function createBoard(gameBoard, isMyBoard) {
+  let countingFields = 0;
+  for (let y = 0; y < 10; y++) {
+    for (let x = 0; x < 10; x++) {
+      let div = document.createElement("div");
+      div.classList.add("field");
+      div.classList.add(`b${countingFields}`);
+      div.setAttribute("data-x", x);
+      div.setAttribute("data-y", y);
+      if (isMyBoard) {
+        div.classList.add("ownField");
+        div.setAttribute("id", `box${countingFields}`);
+        div.setAttribute("data-new", "false");
+        div.setAttribute("data-ships", 0);
+      }
+      gameBoard.appendChild(div);
+      countingFields += 1;
+    }
+  }
+}
+
 function canChangeDirection(draggable, currentX, currentY, shipSize) {
   let isValid = true;
 
-  for (let i = 2; i <= shipSize; i++) {
+  for (let i = 2; i < shipSize; i++) {
     let futureField = null;
     if (draggable.getAttribute("data-direction") !== "vertical") {
       futureField = document.querySelector(
@@ -244,7 +265,7 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
         `[data-x="${currentX + i}"][data-y="${currentY}"]`
       );
     }
-    if (!futureField || futureField.getAttribute("data-ships") > 0) {
+    if (futureField.getAttribute("data-ships") > 0) {
       isValid = false;
       break;
     }
@@ -292,27 +313,6 @@ async function sendShips(Ships) {
     body: JSON.stringify({ Ships, GamePlayerId }),
     method: "POST",
   });
-}
-
-function createBoard(gameBoard, isMyBoard) {
-  let countingFields = 0;
-  for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      let div = document.createElement("div");
-      div.classList.add("field");
-      div.classList.add(`b${countingFields}`);
-      div.setAttribute("data-x", x);
-      div.setAttribute("data-y", y);
-      if (isMyBoard) {
-        div.classList.add("ownField");
-        div.setAttribute("id", `box${countingFields}`);
-        div.setAttribute("data-new", "false");
-        div.setAttribute("data-ships", 0);
-      }
-      gameBoard.appendChild(div);
-      countingFields += 1;
-    }
-  }
 }
 
 async function commitShips(commit_button) {
