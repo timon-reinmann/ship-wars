@@ -1,6 +1,6 @@
 @font-face {
   font-family: "walkingdead";
-  src: url(../../font/BAD\ GRUNGE.ttf);
+  src: url(../../font/BadGrunge.ttf);
 }
 @media screen and (height < 800px) {
   .shipwars__title {
