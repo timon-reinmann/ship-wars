@@ -26,15 +26,15 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             foreach (var _ishipDtos in shipDtos)
             {
-                var shipType = ships.SingleOrDefault(x => x.Name == shipDtos[i].ShipType);
-                var shipX = shipDtos[i].X;
-                var shipY = shipDtos[i].Y;
+                var shipType = ships.SingleOrDefault(x => x.Name == _ishipDtos.ShipType);
+                var shipX = _ishipDtos.X;
+                var shipY = _ishipDtos.Y;
                 var shipLength = shipType.Length;
                 var _iY1 = shipY - 1;
                 var _iY2 = shipY + 1;
                 var _iX1 = shipX - 1;
                 var _iX2 = shipX + 1;
-                var shipDirection = shipDtos[i].Direction;
+                var shipDirection = _ishipDtos.Direction;
                 int _iXl;
                 int _iYl;
                 var maxBoardLength = 9;
@@ -51,7 +51,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                         _iXl = shipX + l;
                         _iYl = shipY + l;
 
-                        if (shipDtos[i] != j)
+                        if (_ishipDtos != j)
                         {
                             switch (shipDirection)
                             {

@@ -52,8 +52,6 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok();
         }
 
-        
-
         [Route("Email")]
         [HttpPost]
         public async Task<IActionResult> NotifyGameAsync([FromBody] EmailDto body)
