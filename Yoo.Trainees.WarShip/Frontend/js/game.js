@@ -225,17 +225,17 @@ function boardHitBoxOnClick(
 
 function createBoard(gameBoard, isMyBoard) {
   let countingFields = 0;
-  for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      let div = document.createElement("div");
-      div.classList.add("field");
-      div.classList.add(`b${countingFields}`);
-      div.setAttribute("data-x", x);
-      div.setAttribute("data-y", y);
+  const maxBoardLength = 10;
+  for (let y = 0; y < maxBoardLength; y++) {
+    for (let x = 0; x < maxBoardLength; x++) {
+      const div = document.createElement("div");
+      div.classList.add("field", `b${countingFields}`);
+      div.dataset.x = x;
+      div.dataset.y = y;
       if (isMyBoard) {
         div.classList.add("ownField");
-        div.setAttribute("id", `box${countingFields}`);
-        div.setAttribute("data-ships", 0);
+        div.id = `box${countingFields}`;
+        div.dataset.ships = 0;
       }
       gameBoard.appendChild(div);
       countingFields += 1;
