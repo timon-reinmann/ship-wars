@@ -1,6 +1,6 @@
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
-console.log(urlParams.get("playerid"));
+const gameId = urlParams.get("playerid");
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
@@ -252,29 +252,47 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
   return isValid;
 }
 // ...
+let commit_button = document.querySelector(".commit-button");
+commit_button.addEventListener("click", () => {
+  let ship_selector = document.querySelector(".ship__selection");
+  if (ship_selector.children.length == 0) {
+    commitShips(commit_button);
+  } else {
+    console.log("All ships aren't placed!!");
+    error_popup(commit_button);
+  }
+});
 
-("use strict");
+let error_popup__wmark = document.querySelector(".error-popup__xmark-icon");
+error_popup__wmark.addEventListener("click", () => {
+  let error_popup__screen_blocker = document.querySelector(
+    ".error-popup__screen-blocker"
+  );
+  let error_popup = document.querySelector(".error-popup");
+  error_popup.classList.remove("error-popup--active");
+  error_popup__screen_blocker.classList.remove(
+    "error-popup__screen-blocker--active"
+  );
+  commit_button.classList.remove("commit-button--active");
+});
 
-const API_URL = "https://localhost:7118/api/Game";
-fetch(API_URL, {
-  credentials: "omit",
-  headers: {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-    Accept: "*/*",
-    "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-    "Content-Type": "application/json",
-    "Sec-Fetch-Dest": "empty",
-  },
-  body: "ERSETZTEN",
-  method: "POST",
-})
-  .then((response) => response.json())
-  .data.then((data) => {})
-
-  .catch((error) => {
-    console.error("Es gab einen Fehler bei der Anfrage:", error);
+async function sendShips(Ships) {
+  let GamePlayerId = "382DE87E-D0BE-4AEA-B0A8-115F08465439"; //ToDo: No hardcoding!!!
+  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/SaveShips";
+  await fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    body: JSON.stringify({ Ships, GamePlayerId }),
+    method: "POST",
   });
+}
 
 function createBoard(gameBoard, isMyBoard) {
   let countingFields = 0;
@@ -295,4 +313,42 @@ function createBoard(gameBoard, isMyBoard) {
       countingFields += 1;
     }
   }
+}
+
+async function commitShips(commit_button) {
+  const ships = document.getElementsByClassName("ship");
+  let ship_positions = [];
+  for (let i = 0; i < ships.length; i++) {
+    ship_positions[i] =
+      document.getElementsByClassName("ship")[i]?.parentElement;
+    const ship = {
+      ShipType: ships[i]?.dataset.name,
+      X: ships[i]?.parentNode.dataset.x,
+      Y: ships[i]?.parentNode.dataset.y,
+      Direction: ships[i]?.dataset.direction,
+    };
+    ship_positions[i] = ship;
+  }
+  const finishField = document.querySelector(".finish");
+  try {
+    await sendShips(ship_positions);
+    console.log("All ships are placed!!");
+    finishField.classList.add("active-popup");
+    commit_button.classList.add("commit-button--active");
+  } catch (error) {
+    console.error("failed to send ships", error);
+    error_popup(commit_button);
+  }
+}
+
+function error_popup(commit_button) {
+  let error_popup__screen_blocker = document.querySelector(
+    ".error-popup__screen-blocker"
+  );
+  let error_popup = document.querySelector(".error-popup");
+  error_popup.classList.add("error-popup--active");
+  error_popup__screen_blocker.classList.add(
+    "error-popup__screen-blocker--active"
+  );
+  commit_button.classList.add("commit-button--active");
 }

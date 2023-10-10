@@ -57,5 +57,24 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return game;
         }
+        public void CreateBoard(SaveShipsDto saveShipsDto)
+        {
+            foreach (var Ship in saveShipsDto.Ships)
+            {
+                var shipType = applicationDbContext.Ship.Where(ship => ship.Name == Ship.ShipType).SingleOrDefault();
+                var shipPositio = new ShipPosition
+                {
+                    Id = Guid.NewGuid(),
+                    GamePlayerId = Guid.Parse(saveShipsDto.GamePlayerId.ToString()),
+                    ShipId = Guid.Parse(shipType.Id.ToString()),
+                    Direction = Ship.Direction,
+                    X = Ship.X,
+                    Y = Ship.Y                  
+                };
+
+             applicationDbContext.ShipPosition.Add(shipPositio);
+             applicationDbContext.SaveChanges();
+            }
+        }
     }
 }

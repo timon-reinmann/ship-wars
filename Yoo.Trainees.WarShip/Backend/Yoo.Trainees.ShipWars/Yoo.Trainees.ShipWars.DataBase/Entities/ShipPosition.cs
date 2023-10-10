@@ -12,7 +12,7 @@
 
         public int Y { get; set; }
 
-        public bool Direction { get; set; }
+        public string Direction { get; set; }
 
         public Ship Ship { get; set; }
 
