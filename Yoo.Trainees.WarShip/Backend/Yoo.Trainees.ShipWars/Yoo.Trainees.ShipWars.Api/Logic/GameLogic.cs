@@ -59,7 +59,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         }
         public async void CreateBoard(SaveShipsDto SwaggerData)
         {
-            for(var i = 0;i < SwaggerData.Ships.Length; i++)
+            foreach (var Ship in saveShipsDto.Ships)
             {
                 var Ship = SwaggerData.Ships[i];
                 var shipType = applicationDbContext.Ship.Where(ship => ship.Name == Ship.ShipType).SingleOrDefault();

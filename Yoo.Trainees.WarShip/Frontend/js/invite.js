@@ -1,7 +1,17 @@
 const copyText = document.querySelector(".copy__text");
-let lobbyName = null;
+const submit_button = document.getElementById("lobbyinput");
+const send_email = document.getElementById("email");
+const wrapper = document.querySelector(".wrapper");
+const loginLink = document.querySelector(".login-link");
+const registerLink = document.querySelector(".register-link");
+const btnPopup = document.querySelector(".btnLogin-popup");
+const iconClose = document.querySelector(".icon-close");
+
 let link = null;
-copyText.querySelector("button").addEventListener("click", function () {
+let lobbyName = null;
+
+
+copyText.querySelector("button").addEventListener("click", () => {
   let input = copyText.querySelector("input.text");
   input.select();
   document.execCommand("copy");
@@ -11,12 +21,6 @@ copyText.querySelector("button").addEventListener("click", function () {
     copyText.classList.remove("active");
   }, 2500);
 });
-
-const wrapper = document.querySelector(".wrapper");
-const loginLink = document.querySelector(".login-link");
-const registerLink = document.querySelector(".register-link");
-const btnPopup = document.querySelector(".btnLogin-popup");
-const iconClose = document.querySelector(".icon-close");
 
 registerLink.addEventListener("click", () => {
   wrapper.classList.add("active");
@@ -34,11 +38,10 @@ iconClose.addEventListener("click", () => {
   wrapper.classList.remove("active-popup");
 });
 
-const submit_button = document.getElementById("lobbyinput");
 submit_button.addEventListener("click", async function () {
-  let createGame = document.querySelector(".submit__lobbyname");
+  const createGame = document.querySelector(".submit__lobbyname");
   createGame.classList.add("active");
-  setTimeout(function () {
+  setTimeout(() => {
     createGame.classList.remove("active");
   }, 2500);
 
@@ -70,11 +73,9 @@ submit_button.addEventListener("click", async function () {
     });
 });
 
-const send_email = document.getElementById("email");
-email.addEventListener("click", function () {
+send_email.addEventListener("click", async () => {
   let email = document.getElementById("email-input").value;
 
-  // ----------------------EMAIL------------------------------------
   let daten = {
     gameName: lobbyName,
     email: email,
