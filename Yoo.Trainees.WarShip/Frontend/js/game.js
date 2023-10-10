@@ -29,11 +29,12 @@ draggables.forEach((draggable) => {
       currentY,
       parseInt(draggable.getAttribute("data-size"))
     );
+    console.log(isValid);
     if (isValid) {
       draggable.setAttribute("data-direction", "vertical");
       toggle = draggable.classList.toggle("vertical");
-      boardHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
-      boardHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
+      changeHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
+      changeHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
     }
   });
 
@@ -186,26 +187,19 @@ function createBoard(gameBoard, isMyBoard) {
 }
 
 function canChangeDirection(draggable, currentX, currentY, shipSize) {
-  let isValid = true;
-
   const nextPossibleField = 2;
-  for (let i = nextPossibleField; i < shipSize; i++) {
-    let futureField = null;
-    if (draggable.getAttribute("data-direction") !== "vertical") {
-      futureField = document.querySelector(
-        `[data-x="${currentX}"][data-y="${currentY + i}"]`
-      );
-    } else {
-      futureField = document.querySelector(
-        `[data-x="${currentX + i}"][data-y="${currentY}"]`
-      );
-    }
-    if (futureField.getAttribute("data-ships") > 0) {
-      isValid = false;
-      break;
+  const isVertical = draggable.dataset.direction === "vertical";
+  const highestPossibleField = shipSize == 2 ? 3 : shipSize; // That because if the Ship is 2 long it doesnt do the for loop and its alway valid
+
+  for (let i = nextPossibleField; i < highestPossibleField; i++) {
+    const x = !isVertical ? currentX : currentX + i;
+    const y = !isVertical ? currentY + i : currentY;
+    const futureField = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+    if (futureField.dataset.ships > 0) {
+      return false; // Is not valid
     }
   }
-  return isValid;
+  return true; // Is valid
 }
 // ...
 let commit_button = document.querySelector(".commit-button");
@@ -250,6 +244,7 @@ async function sendShips(Ships) {
 }
 
 async function commitShips(commit_button) {
+  const finishField = document.querySelector(".finish");
   const ships = document.getElementsByClassName("ship");
   const ship_positions = Array.from(ships).map(ship => ({
     ShipType: ship?.dataset.name,
@@ -258,7 +253,6 @@ async function commitShips(commit_button) {
     Direction: ship?.dataset.direction,
     Id: ship?.Id,
   }));
-  const finishField = document.querySelector(".finish");
   try {
     await sendShips(ship_positions);
     finishField.classList.add("active-popup");
