@@ -17,7 +17,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             var gamePlayers = new List<GamePlayer>();
             var player1 = new Player
             {
-                Id = Guid.NewGuid(), 
+                Id = Guid.NewGuid(),
                 Name = "Hans"
             };
             var player2 = new Player
@@ -59,7 +59,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         }
         public async void CreateBoard(SaveShipsDto SwaggerData)
         {
-            foreach (var Ship in saveShipsDto.Ships)
+            for (var i = 0; i < SwaggerData.Ships.Length; i++)
             {
                 var Ship = SwaggerData.Ships[i];
                 var shipType = applicationDbContext.Ship.Where(ship => ship.Name == Ship.ShipType).SingleOrDefault();
@@ -70,12 +70,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                     ShipId = Guid.Parse(shipType.Id.ToString()),
                     _direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship._direction, // Weirde Fehler aber me hets müesse Caste well es die gliche enums sie müesse
                     X = Ship.X,                                                                      // Und well beides in anderne Files gmacht worde isch es genau gseh nid sgliche :(    
-                    Y = Ship.Y                  
+                    Y = Ship.Y
                 };
 
-                 Console.WriteLine(shipPositio._direction);
-                
-             applicationDbContext.ShipPosition.Add(shipPositio);
+                Console.WriteLine(shipPositio._direction);
+
+                applicationDbContext.ShipPosition.Add(shipPositio);
             }
             applicationDbContext.SaveChanges();
         }
