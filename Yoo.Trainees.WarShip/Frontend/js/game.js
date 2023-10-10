@@ -189,13 +189,13 @@ function createBoard(gameBoard, isMyBoard) {
 function canChangeDirection(draggable, currentX, currentY, shipSize) {
   const nextPossibleField = 2;
   const isVertical = draggable.dataset.direction === "vertical";
-  const highestPossibleField = shipSize == 2 ? 3 : shipSize; // That because if the Ship is 2 long it doesnt do the for loop and its alway valid
-
-  for (let i = nextPossibleField; i < highestPossibleField; i++) {
+  const tinyShip = shipSize === 2 ? 1 : 0; // 
+  
+  for (let i = nextPossibleField - tinyShip; i < shipSize; i++) {
     const x = !isVertical ? currentX : currentX + i;
     const y = !isVertical ? currentY + i : currentY;
     const futureField = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
-    if (futureField.dataset.ships > 0) {
+    if (futureField.dataset.ships > 0 + tinyShip) {
       return false; // Is not valid
     }
   }
@@ -205,7 +205,7 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
 let commit_button = document.querySelector(".commit-button");
 commit_button.addEventListener("click", () => {
   let ship_selector = document.querySelector(".ship__selection");
-  if (ship_selector.children.length == 0) {
+  if (ship_selector.children.length === 0) {
     commitShips(commit_button);
   } else {
     error_popup(commit_button);
