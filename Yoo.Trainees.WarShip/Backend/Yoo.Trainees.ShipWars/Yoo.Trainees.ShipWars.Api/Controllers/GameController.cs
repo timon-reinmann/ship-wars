@@ -49,25 +49,29 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpPost]
         public String Post([FromBody] string name)
         {
-            Game = gameLogic.CreateGame(name);
-            var link = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + this.Game.Id  + "&playerId" + this.Game.GamePlayers.First().Id.ToString();
+            this.Game = gameLogic.CreateGame(name);
+            var link = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + this.Game.Id  + "&playerId=" + this.Game.GamePlayers.First().Id.ToString();
             return link;
         }
 
         // Post api/<Game>/5/SaveShips
         [HttpPost("{id}/SaveShips")]
-        public async Task<IActionResult> Post([FromBody] SaveShipsDto Ships)
+        public async Task<IActionResult> Post(Guid id, [FromBody] SaveShipsDto Ships)
         {
+            if (id != Ships.GameId)
+            {
+                return BadRequest("Mismatched game ID");
+            }
+
             bool isValidRequest = verificationLogic.verifyEvrything(Ships.Ships);
             if (!isValidRequest)
             {
                 return BadRequest();
             }
+
             gameLogic.CreateBoard(Ships);
             return Ok();
         }
-
-
 
         [Route("Email")]
         [HttpPost]

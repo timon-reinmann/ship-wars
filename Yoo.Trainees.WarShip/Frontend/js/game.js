@@ -259,7 +259,7 @@ async function sendShips(Ships) {
       "Content-Type": "application/json",
       "Sec-Fetch-Dest": "empty",
     },
-    body: JSON.stringify({ Ships, GamePlayerId }),
+    body: JSON.stringify({ gameId, GamePlayerId, Ships }),
     method: "POST",
   });
 }

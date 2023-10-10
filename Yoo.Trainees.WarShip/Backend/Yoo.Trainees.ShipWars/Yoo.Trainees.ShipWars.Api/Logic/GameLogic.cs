@@ -60,6 +60,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         }
         public void CreateBoard(SaveShipsDto SwaggerData)
         {
+            var game = applicationDbContext.Game.Find(SwaggerData.GameId);
+            if (game == null)
+            {
+                throw new Exception("Game not found");
+            }
             Guid id = new Guid();
             for (var i = 0; i < SwaggerData.Ships.Length; i++)
             {
@@ -67,7 +72,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 var shipType = applicationDbContext.Ship.Where(ship => ship.Name == Ship.ShipType).SingleOrDefault();
                 var shipPositio = new ShipPosition
                 {
-                    Id = Game.Id,
+                    Id = Guid.NewGuid(),
                     GamePlayerId = Guid.Parse(SwaggerData.GamePlayerId.ToString()),
                     ShipId = Guid.Parse(shipType.Id.ToString()),                                      // Weirde Fehler aber me hets müesse Caste well es die gliche enums sie müesse
                     X = Ship.X,                                                                      // Und well beides in anderne Files gmacht worde isch es genau gseh nid sgliche :(    
