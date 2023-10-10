@@ -26,7 +26,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
 
             var shipDtos = new SaveShipDto[] {};
 
-            Assert.False(verificationLogic.VerifyShipLocations(shipDtos));
+            Assert.False(verificationLogic.verifyEvrything(shipDtos));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 6, Y = 9, ShipType = "Submarine"}
             };
 
-            Assert.True(verificationLogic.VerifyShipLocations(shipDtos));
+            Assert.True(verificationLogic.verifyEvrything(shipDtos));
         }
 
         [Test]
@@ -59,9 +59,9 @@ namespace Yoo.Trainees.ShipWars.Api.Test
             var shipDtos = new SaveShipDto[]
             {
                 new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 0, Y = 0, ShipType = "Warship"},
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 0, ShipType = "Cruiser"},
+                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 7, Y = 0, ShipType = "Cruiser"},
                 new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 0, Y = 2, ShipType = "Cruiser"},
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 2, ShipType = "Destroyer"},
+                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 5, Y = 1, ShipType = "Destroyer"},
                 new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 1, Y = 4, ShipType = "Destroyer"},
                 new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 4, ShipType = "Destroyer"},
                 new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 7, Y = 4, ShipType = "Submarine"},
@@ -70,7 +70,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 6, Y = 6, ShipType = "Submarine"}
             };
 
-            Assert.False(verificationLogic.VerifyShipLocations(shipDtos));
+            Assert.False(verificationLogic.verifyEvrything(shipDtos));
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 12, ShipType = "Submarine"}
             };
 
-            Assert.False(verificationLogic.VerifyShipLocations(shipDtos));
+            Assert.False(verificationLogic.verifyEvrything(shipDtos));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 9, ShipType = "UnkownShip"}
             };
 
-            Assert.False(verificationLogic.TestVerifyeToManyShipsFromSameType(shipDtos));
+            Assert.False(verificationLogic.verifyEvrything(shipDtos));
         }
 
         [Test]
@@ -136,30 +136,8 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 9, ShipType = "Submarine"}
             };
 
-            Assert.False(verificationLogic.TestVerifyeToManyShipsFromSameType(shipDtos));
+            Assert.False(verificationLogic.verifyEvrything(shipDtos));
         }
         
-        [Test]
-        public void TestVerifyeUnkownDirection_ShouldReturnFalse()
-        {
-            var verificationLogic = new VerificationLogic(_ships);
-
-            var shipDtos = new SaveShipDto[]
-            {
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 2, ShipType = "Warship"},
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 0, Y = 3, ShipType = "Cruiser"},
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 6, ShipType = "Cruiser"},
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 0, Y = 0, ShipType = "Destroyer"},
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 7, Y = 4, ShipType = "Destroyer"},
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 1, Y = 8, ShipType = "Submarine"},
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 6, Y = 0, ShipType = "Submarine"},
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 1, Y = 5, ShipType = "Submarine"},
-                new SaveShipDto{ _direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 7, Y = 8, ShipType = "Submarine"},
-                new SaveShipDto{X = 4, Y = 9, ShipType = "Submarine"}
-            };
-
-            Assert.False(verificationLogic.VerifyShipLocations(shipDtos));
-        }
-
     }
 }

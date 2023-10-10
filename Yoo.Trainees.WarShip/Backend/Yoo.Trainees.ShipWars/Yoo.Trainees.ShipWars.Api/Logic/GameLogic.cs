@@ -57,7 +57,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return game;
         }
-        public void CreateBoard(SaveShipsDto SwaggerData)
+        public async void CreateBoard(SaveShipsDto SwaggerData)
         {
             for(var i = 0;i < SwaggerData.Ships.Length; i++)
             {
@@ -73,6 +73,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                     Y = Ship.Y                  
                 };
 
+                 Console.WriteLine(shipPositio._direction);
+                
              applicationDbContext.ShipPosition.Add(shipPositio);
             }
             applicationDbContext.SaveChanges();

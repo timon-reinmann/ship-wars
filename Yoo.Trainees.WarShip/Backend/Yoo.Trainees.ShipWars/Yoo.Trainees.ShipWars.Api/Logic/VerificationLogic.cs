@@ -16,6 +16,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             this.ships = ships;
         }
 
+        public bool verifyEvrything(SaveShipDto[] shipDtos)
+        {
+            return TestVerifyeToManyShipsFromSameType(shipDtos) && VerifyShipLocations(shipDtos);
+        }
+
         public bool VerifyShipLocations(SaveShipDto[] shipDtos)
         {
             var amountOfShips = 10;
@@ -26,7 +31,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             foreach (var _ishipDtos in shipDtos)
             {
-                var shipType = ships.SingleOrDefault(x => x.Name == _ishipDtos.ShipType);
+                var shipType = ships.SingleOrDefault(x => x.Name.ToUpper() == _ishipDtos.ShipType.ToUpper());
                 var shipX = _ishipDtos.X;
                 var shipY = _ishipDtos.Y;
                 var shipLength = shipType.Length;
@@ -46,32 +51,40 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 }
 
                 foreach (var j in shipDtos)
-                    for (int l = -1; l <= shipLength; l++)
+                {
+                    var jShipType = ships.SingleOrDefault(x => x.Name == j.ShipType);
+                    int jLength = jShipType.Length;
+                    //var jShipType = ships.SingleOrDefault(x => x.Name == j.ShipType);
+                    for (int i = 0; i < jLength ; i++)
                     {
-                        _iXl = shipX + l;
-                        _iYl = shipY + l;
-
-                        if (_ishipDtos != j)
+                        for (int l = -1; l <= shipLength; l++)
                         {
-                            switch (shipDirection)
+                            _iXl = shipX + l;
+                            _iYl = shipY + l;
+
+                            if (_ishipDtos != j)
                             {
-                                case Direction.horizontal:
-                                    if (j.X == _iXl && j.Y == shipY || j.X == _iXl && j.Y == _iY1 || j.X == _iXl && j.Y == _iY2)
-                                    {
+                                switch (shipDirection)
+                                {
+                                    case Direction.horizontal:
+                                         if (j.X + i == _iXl && j.Y == shipY || j.X + i == _iXl && j.Y == _iY1 || j.X + i == _iXl && j.Y == _iY2)
+                                        {
+                                            return false;
+                                        }
+                                        break;
+                                    case Direction.vertical:
+                                        if (j.Y + i == _iYl && j.X == shipX || j.Y + i == _iYl && j.X == _iX1 || j.Y + i == _iYl && j.X == _iX2)
+                                        {
+                                            return false;
+                                        }
+                                        break;
+                                    default:
                                         return false;
-                                    }
-                                    break;
-                                case Direction.vertical:
-                                    if (j.Y == _iYl && j.X == shipX || j.Y == _iYl && j.X == _iX1 || j.Y == _iYl && j.X == _iX2)
-                                    {
-                                        return false;
-                                    }
-                                    break;
-                                default:
-                                    return false;
+                                }
                             }
                         }
                     }
+                }
             }
             return true;
         }
@@ -94,7 +107,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             {
                 if (c.Value == 1 && c.Key != "Warship" || c.Value == 2 && c.Key != "Cruiser" || c.Value == 3 && c.Key != "Destroyer" || c.Value == 4 && c.Key != "Submarine")
                 {
-                    return false;
+                       return false;
                 }
             }
             return true;
