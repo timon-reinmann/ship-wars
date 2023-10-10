@@ -7,8 +7,9 @@ const registerLink = document.querySelector(".register-link");
 const btnPopup = document.querySelector(".btnLogin-popup");
 const iconClose = document.querySelector(".icon-close");
 
-const lobbyName = null;
-const link = null;
+let link = null;
+let lobbyName = null;
+
 
 copyText.querySelector("button").addEventListener("click", () => {
   let input = copyText.querySelector("input.text");

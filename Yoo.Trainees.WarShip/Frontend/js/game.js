@@ -260,12 +260,12 @@ async function sendShips(Ships) {
 }
 
 async function commitShips(commit_button) {
-  const finishField = document.querySelector(".finish");
+  let finishField = document.querySelector(".finish");
   const ships = document.getElementsByClassName("ship");
   const ship_positions = Array.from(ships).map(ship => ({
-    ShipType: ships?.dataset.name, 
-    X: ships?.parentNode.dataset.x, 
-    Y: ships?.parentNode.dataset.y, 
+    ShipType: ship?.dataset.name, 
+    X: ship?.parentNode.dataset.x, 
+    Y: ship?.parentNode.dataset.y, 
     Direction: mapFrontendDirectionToBackendEnum(ship?.dataset.direction),
     Id: ship?.Id,
   }));
