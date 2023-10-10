@@ -13,13 +13,14 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
     {
         private readonly IGameLogic gameLogic;
         private readonly IEmailSender _emailSender;
+        private Game Game;
         // ToDo muss nich mit Marcel angeschaut werden
         private readonly VerificationLogic verificationLogic = new VerificationLogic(new List<Ship>
             {
-                new Ship { Length = 2, Name = "Destroyer" },
-                new Ship { Length = 4, Name = "Warship" },
-                new Ship { Length = 3, Name = "Cruiser" },
-                new Ship { Length = 1, Name = "Submarine" }
+                new Ship { Length = 2, Name = "destroyer" },
+                new Ship { Length = 4, Name = "warship" },
+                new Ship { Length = 3, Name = "cruiser" },
+                new Ship { Length = 1, Name = "submarine" }
             });
 
         public GameController(IGameLogic gameLogic, IEmailSender emailSender)
@@ -48,8 +49,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpPost]
         public String Post([FromBody] string name)
         {
-            var createdGame = gameLogic.CreateGame(name);
-            return createdGame.Id.ToString();
+            Game = gameLogic.CreateGame(name);
+            var link = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + this.Game.Id  + "&playerId" + this.Game.GamePlayers.First().Id.ToString();
+            return link;
         }
 
         // Post api/<Game>/5/SaveShips

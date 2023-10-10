@@ -66,7 +66,7 @@ submit_button.addEventListener("click", async function () {
       console.log("Daten:", data);
       link =
         "http://127.0.0.1:5500/Frontend/html/game-pvp.html?playerid=" + data;
-      document.getElementById("linkoutput").value = link;
+      document.getElementById("linkoutput").value = data;
     })
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);

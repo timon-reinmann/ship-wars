@@ -1,6 +1,9 @@
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
-const gameId = urlParams.get("playerid");
+const gameId = urlParams.get("gameId");
+const GamePlayerId = urlParams.get("playerId");
+console.log("GamePlayerId:", GamePlayerId);
+console.log("gameId:", gameId);
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
@@ -245,7 +248,6 @@ error_popup__wmark.addEventListener("click", () => {
 });
 
 async function sendShips(Ships) {
-  let GamePlayerId = "382DE87E-D0BE-4AEA-B0A8-115F08465439"; //ToDo: No hardcoding!!! 🙀
   const API_URL = "https://localhost:7118/api/Game/" + gameId + "/SaveShips";
   await fetch(API_URL, {
     credentials: "omit",

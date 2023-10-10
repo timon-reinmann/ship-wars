@@ -6,6 +6,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     public class GameLogic : IGameLogic
     {
         private readonly ApplicationDbContext applicationDbContext;
+        private Game Game;
 
         public GameLogic(ApplicationDbContext applicationDbContext)
         {
@@ -40,7 +41,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 PlayerId = player2.Id
             });
 
-            var game = new Game
+            this.Game = new Game
             {
                 Id = gameId,
                 Name = name,
@@ -52,28 +53,28 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             applicationDbContext.Player.Add(player1);
             applicationDbContext.Player.Add(player2);
-            applicationDbContext.Game.Add(game);
+            applicationDbContext.Game.Add(this.Game);
             applicationDbContext.SaveChanges();
 
-            return game;
+            return this.Game;
         }
-        public async void CreateBoard(SaveShipsDto SwaggerData)
+        public void CreateBoard(SaveShipsDto SwaggerData)
         {
+            Guid id = new Guid();
             for (var i = 0; i < SwaggerData.Ships.Length; i++)
             {
                 var Ship = SwaggerData.Ships[i];
                 var shipType = applicationDbContext.Ship.Where(ship => ship.Name == Ship.ShipType).SingleOrDefault();
                 var shipPositio = new ShipPosition
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Game.Id,
                     GamePlayerId = Guid.Parse(SwaggerData.GamePlayerId.ToString()),
-                    ShipId = Guid.Parse(shipType.Id.ToString()),
-                    _direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship._direction, // Weirde Fehler aber me hets müesse Caste well es die gliche enums sie müesse
+                    ShipId = Guid.Parse(shipType.Id.ToString()),                                      // Weirde Fehler aber me hets müesse Caste well es die gliche enums sie müesse
                     X = Ship.X,                                                                      // Und well beides in anderne Files gmacht worde isch es genau gseh nid sgliche :(    
-                    Y = Ship.Y
+                    Y = Ship.Y,
+                    _direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship._direction
                 };
-
-                Console.WriteLine(shipPositio._direction);
+                id = shipPositio.GamePlayerId;
 
                 applicationDbContext.ShipPosition.Add(shipPositio);
             }

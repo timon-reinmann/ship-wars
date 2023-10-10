@@ -105,7 +105,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             }
             foreach (var c in allShips)
             {
-                if (c.Value == 1 && c.Key != "Warship" || c.Value == 2 && c.Key != "Cruiser" || c.Value == 3 && c.Key != "Destroyer" || c.Value == 4 && c.Key != "Submarine")
+                if (c.Value == 1 && c.Key != "warship" || c.Value == 2 && c.Key != "cruiser" || c.Value == 3 && c.Key != "destroyer" || c.Value == 4 && c.Key != "submarine")
                 {
                        return false;
                 }
