@@ -1,6 +1,6 @@
 @font-face {
   font-family: "walkingdead";
-  src: url(../../../font/BAD\ GRUNGE.ttf);
+  src: url(../../font/BadGrunge.ttf);
 }
 @media screen and (height < 800px) {
   .shipwars__title {
@@ -42,11 +42,14 @@
   background-color: rgba(128, 128, 128, 0.5);
   font-size: x-large;
   transition: all 0.3s ease-in-out;
+  box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
 }
 
-.shipwars__button_text {
+.shipwars__button-text {
   transform: skew(30deg);
   opacity: 1;
+  font-family: walkingdead;
+  font-size: 60px;
 }
 
 .shipwars__buttons:hover {
@@ -59,4 +62,12 @@
 .buttons a:visited {
   color: #fefefe;
   text-decoration: none;
+}
+
+.shipwars__button:hover {
+  background: white;
+  transform: scale(1.01) skew(-30deg) translate(-45%, -45%);
+  .shipwars__button-text {
+    color: black;
+  }
 }

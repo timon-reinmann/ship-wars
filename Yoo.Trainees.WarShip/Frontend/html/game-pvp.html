@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Game</title>
+    <title>Game vs. Player</title>
     <link rel="stylesheet" href="../css/layout.css" />
     <link rel="stylesheet" href="../css/game-pve.css" />
     <link
@@ -27,12 +27,13 @@
       </nav>
 
       <!-- Alle Schiffe werden implementiert -->
-      <div class="middle">
+      <div class="middle" id="ship_container">
         <div class="ship__selection" droppable="true">
           <div
             class="ship warship"
             data-direction="horizontal"
             data-size="4"
+            data-name="warship"
             draggable="true"
             id="Warship1"
           ></div>
@@ -40,6 +41,7 @@
             class="ship cruiser"
             data-direction="horizontal"
             data-size="3"
+            data-name="cruiser"
             draggable="true"
             id="cruiser1"
           ></div>
@@ -47,6 +49,7 @@
             class="ship cruiser"
             data-direction="horizontal"
             data-size="3"
+            data-name="cruiser"
             draggable="true"
             id="cruiser2"
           ></div>
@@ -54,6 +57,7 @@
             class="ship destroyer"
             data-direction="horizontal"
             data-size="2"
+            data-name="destroyer"
             draggable="true"
             id="destroyer1"
           ></div>
@@ -61,6 +65,7 @@
             class="ship destroyer"
             data-direction="horizontal"
             data-size="2"
+            data-name="destroyer"
             draggable="true"
             id="destroyer2"
           ></div>
@@ -68,6 +73,7 @@
             class="ship destroyer"
             data-direction="horizontal"
             data-size="2"
+            data-name="destroyer"
             draggable="true"
             id="destroyer3"
           ></div>
@@ -75,6 +81,7 @@
             class="ship submarine"
             data-direction="horizontal"
             data-size="1"
+            data-name="submarine"
             draggable="true"
             id="submarine1"
           ></div>
@@ -82,6 +89,7 @@
             class="ship submarine"
             data-direction="horizontal"
             data-size="1"
+            data-name="submarine"
             draggable="true"
             id="submarine2"
           ></div>
@@ -89,6 +97,7 @@
             class="ship submarine"
             data-direction="horizontal"
             data-size="1"
+            data-name="submarine"
             draggable="true"
             id="submarine3"
           ></div>
@@ -96,18 +105,40 @@
             class="ship submarine"
             data-direction="horizontal"
             data-size="1"
+            data-name="submarine"
             draggable="true"
             id="submarine4"
           ></div>
         </div>
 
-        <div id="game__board" class="board" droppable="true"></div>
+        <button class="commit-button" id="commit_button">Commit</button>
+
+        <div id="game__board" class="board" droppable="true">
+          <div class="finish">
+            <p>You're finished!!! Waiting for player 2</p>
+          </div>
+          <div class="error-popup__screen-blocker"></div>
+        </div>
 
         <div id="opponent__board" class="board"></div>
 
         <div class="chatbox"></div>
 
+        <div class="error-popup">
+          <i
+            class="fa-sharp fa-solid fa-circle-exclamation fa-beat-fade fa-2xl"
+          ></i>
+          <p class="error-popup__text">failed to save ships</p>
+          <div class="error-popup__xmark-icon">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+        </div>
+
         <script src="../js/game.js"></script>
+        <script
+          src="https://kit.fontawesome.com/d6df3707cf.js"
+          crossorigin="anonymous"
+        ></script>
       </div>
     </div>
   </body>
