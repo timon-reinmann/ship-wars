@@ -6,6 +6,10 @@ let originField = null;
 let toggle = false;
 let myBoard = document.getElementById("game__board");
 let gameOpponent = document.getElementById("opponent__board");
+const DirectionEnum = {
+  HORIZONTAL: 'horizontal',
+  VERTICAL: 'vertical',
+};
 
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
@@ -130,6 +134,19 @@ shipSelection.addEventListener("dragover", (e) => {
   shipSelection.appendChild(draggable);
   currentField = null;
 });
+
+function mapFrontendDirectionToBackendEnum(frontendDirection) {
+  switch (frontendDirection) {
+    case 'horizontal':
+      return DirectionEnum.HORIZONTAL;
+    case 'vertical':
+      return DirectionEnum.VERTICAL;
+    default:
+      // Handle ungültige Richtungen oder Fehlerbehandlung hier
+      throw new Error('Ungültige Richtung im Frontend: ' + frontendDirection);
+  }
+}
+
 function deleteShipHitBox(container) {
   if (originField) {
     const oldX = parseInt(originField.dataset.x);
@@ -246,10 +263,10 @@ async function commitShips(commit_button) {
   const finishField = document.querySelector(".finish");
   const ships = document.getElementsByClassName("ship");
   const ship_positions = Array.from(ships).map(ship => ({
-    ShipType: ship?.dataset.name,
-    X: ship?.parentNode?.dataset.x,
-    Y: ship?.parentNode?.dataset.y,
-    Direction: ship?.dataset.direction,
+    ShipType: ships?.dataset.name, 
+    X: ships?.parentNode.dataset.x, 
+    Y: ships?.parentNode.dataset.y, 
+    Direction: mapFrontendDirectionToBackendEnum(ship?.dataset.direction),
     Id: ship?.Id,
   }));
   try {
