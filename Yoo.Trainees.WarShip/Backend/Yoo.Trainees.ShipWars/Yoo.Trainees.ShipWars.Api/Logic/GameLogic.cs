@@ -62,20 +62,20 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             for(var i = 0;i < SwaggerData.Ships.Length; i++)
             {
                 var Ship = SwaggerData.Ships[i];
-                var ShipType = applicationDbContext.Ship.Where(ship => ship.Name == Ship.ShipType).SingleOrDefault();
-                var ShipPositio = new ShipPosition
+                var shipType = applicationDbContext.Ship.Where(ship => ship.Name == Ship.ShipType).SingleOrDefault();
+                var shipPositio = new ShipPosition
                 {
                     Id = Guid.NewGuid(),
                     GamePlayerId = Guid.Parse(SwaggerData.GamePlayerId.ToString()),
-                    ShipId = Guid.Parse(ShipType.Id.ToString()),
-                    Direction = Ship.Direction,
-                    X = Ship.X,
+                    ShipId = Guid.Parse(shipType.Id.ToString()),
+                    _direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship._direction, // Weirde Fehler aber me hets müesse Caste well es die gliche enums sie müesse
+                    X = Ship.X,                                                                      // Und well beides in anderne Files gmacht worde isch es genau gseh nid sgliche :(    
                     Y = Ship.Y                  
                 };
 
-             applicationDbContext.ShipPosition.Add(ShipPositio);
-             applicationDbContext.SaveChanges();
+             applicationDbContext.ShipPosition.Add(shipPositio);
             }
+            applicationDbContext.SaveChanges();
         }
     }
 }

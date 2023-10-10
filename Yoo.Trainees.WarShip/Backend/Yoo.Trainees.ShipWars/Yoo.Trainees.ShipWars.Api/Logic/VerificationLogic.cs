@@ -18,23 +18,23 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         public bool VerifyShipLocations(SaveShipDto[] shipDtos)
         {
-            var emamountOfShips = 10;
-            if (shipDtos.Length != emamountOfShips)
+            var amountOfShips = 10;
+            if (shipDtos.Length != amountOfShips)
             {
                 return false;
             }
 
-            for (int i = 0; i < shipDtos.Length; i++)
+            foreach (var _ishipDtos in shipDtos)
             {
-                var shipType = ships.SingleOrDefault(x => x.Name == shipDtos[i].ShipType);
-                var shipX = shipDtos[i].X;
-                var shipY = shipDtos[i].Y;
+                var shipType = ships.SingleOrDefault(x => x.Name == _ishipDtos.ShipType);
+                var shipX = _ishipDtos.X;
+                var shipY = _ishipDtos.Y;
                 var shipLength = shipType.Length;
                 var _iY1 = shipY - 1;
                 var _iY2 = shipY + 1;
                 var _iX1 = shipX - 1;
                 var _iX2 = shipX + 1;
-                var shipDirection = shipDtos[i].Direction;
+                var shipDirection = _ishipDtos._direction;
                 int _iXl;
                 int _iYl;
                 var maxBoardLength = 9;
@@ -51,17 +51,17 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                         _iXl = shipX + l;
                         _iYl = shipY + l;
 
-                        if (shipDtos[i] != j)
+                        if (_ishipDtos != j)
                         {
                             switch (shipDirection)
                             {
-                                case "horizontal":
+                                case Direction.horizontal:
                                     if (j.X == _iXl && j.Y == shipY || j.X == _iXl && j.Y == _iY1 || j.X == _iXl && j.Y == _iY2)
                                     {
                                         return false;
                                     }
                                     break;
-                                case "vertical":
+                                case Direction.vertical:
                                     if (j.Y == _iYl && j.X == shipX || j.Y == _iYl && j.X == _iX1 || j.Y == _iYl && j.X == _iX2)
                                     {
                                         return false;

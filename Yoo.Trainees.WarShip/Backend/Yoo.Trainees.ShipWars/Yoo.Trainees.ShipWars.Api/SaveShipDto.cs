@@ -1,13 +1,18 @@
-﻿namespace Yoo.Trainees.ShipWars.Api
+﻿using Yoo.Trainees.ShipWars.DataBase.Entities;
+
+namespace Yoo.Trainees.ShipWars.Api
 {
+    public enum Direction
+    {
+        horizontal,
+        vertical
+    }
     public class SaveShipDto
     {
         public int X { get; set; }
 
         public int Y { get; set; }
-
-        public string Direction { get; set; }
-
+        public Direction _direction { get; set; }
         public string ShipType { get; set; }
         
         public Guid Id { get; set; }
