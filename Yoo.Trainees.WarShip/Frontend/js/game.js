@@ -205,9 +205,10 @@ function createBoard(gameBoard, isMyBoard) {
 }
 
 function canChangeDirection(draggable, currentX, currentY, shipSize) {
-  const nextPossibleField = 2;
+  const nextPossibleField = 2; // Because all ships need 1 field apart from each other so we check on the field 2 0, 1 ,2 <-- 2 is the next possible field
   const isVertical = draggable.dataset.direction === "vertical";
-  const tinyShip = shipSize === 2 ? 1 : 0; // 
+  const tinyShip = shipSize === 2 ? 1 : 0;  // if we compare i < shipSize we see that its false because i = 2 and shipSize = 2 so we need to treat this case differently
+                                            // So we need to check earlier if there is a Ship but because our ship is also in that field we need to check if there are 2 ships not 1
 
   for (let i = nextPossibleField - tinyShip; i < shipSize; i++) {
     const x = !isVertical ? currentX : currentX + i;
