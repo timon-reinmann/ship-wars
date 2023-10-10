@@ -29,7 +29,6 @@ draggables.forEach((draggable) => {
       currentY,
       parseInt(draggable.getAttribute("data-size"))
     );
-    console.log(isValid);
     if (isValid) {
       draggable.setAttribute("data-direction", "vertical");
       toggle = draggable.classList.toggle("vertical");
@@ -190,7 +189,7 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
   const nextPossibleField = 2;
   const isVertical = draggable.dataset.direction === "vertical";
   const tinyShip = shipSize === 2 ? 1 : 0; // 
-  
+
   for (let i = nextPossibleField - tinyShip; i < shipSize; i++) {
     const x = !isVertical ? currentX : currentX + i;
     const y = !isVertical ? currentY + i : currentY;
