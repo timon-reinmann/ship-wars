@@ -7,8 +7,8 @@ let toggle = false;
 let myBoard = document.getElementById("game__board");
 let gameOpponent = document.getElementById("opponent__board");
 const DirectionEnum = {
-  HORIZONTAL: 'horizontal',
-  VERTICAL: 'vertical',
+  HORIZONTAL: 0,
+  VERTICAL: 1,
 };
 
 createBoard(myBoard, true);
