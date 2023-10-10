@@ -73,7 +73,9 @@ draggables.forEach((draggable) => {
 containers.forEach((container) => {
   container.addEventListener("dragover", (e) => {
     e.preventDefault();
-    container.style.zIndex = 0;
+    if(container.firstChild === null) {
+      container.style.zIndex = 0;
+    }
     const draggable = document.querySelector(".dragging");
     if (!draggable) return;
 
