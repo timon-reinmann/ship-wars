@@ -23,6 +23,8 @@ createBoard(gameOpponent, false);
 let zIndexChange = 1;
 let currentField = null;
 
+let intervalid;
+
 const draggables = document.querySelectorAll(".ship");
 const containers = document.querySelectorAll(".ownField");
 const shipSelection = document.querySelector(".ship__selection");
@@ -301,7 +303,7 @@ async function sendShips(Ships) {
       } else {
         finishField.classList.add("active-popup");
         commit_button.classList.add("commit-button--active");
-        setInterval(checkIfPlayerReady, 1000);
+        intervalid = setInterval(checkIfPlayerReady, 1000);
       }
   });
 }
@@ -355,7 +357,7 @@ function checkIfPlayerReady() {
     .then((data) => {
       if (data.ok) {
         console.log("working :)");
-        clearInterval(checkIfPlayerReady);
+        clearInterval(intervalid);
       }
     })
     .catch((error) => {
