@@ -50,10 +50,10 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         public IActionResult Post([FromBody] string name)
         {
             this.Game = gameLogic.CreateGame(name);
-            string linkPlayer2, linkPlayer1;
-            CreateLinks(out linkPlayer2, out linkPlayer1);
+            var linkPlayer1 = CreateLink(this.Game.Id, this.Game.GamePlayers.First().Id);
+            var linkPlayer2 = CreateLink(this.Game.Id, this.Game.GamePlayers.ToArray()[1].Id);
 
-            var links = new
+            var links = new 
             {
                 player1 = linkPlayer1,
                 player2 = linkPlayer2,
@@ -103,11 +103,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         public void Delete(int id)
         {
         }
-
-        private void CreateLinks(out string linkPlayer2, out string linkPlayer1)
+        private static String CreateLink(Guid gameId, Guid playerId)
         {
-            linkPlayer2 = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + this.Game.Id.ToString() + "&playerId=" + this.Game.GamePlayers.First().Id.ToString();
-            linkPlayer1 = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + this.Game.Id.ToString() + "&playerId=" + this.Game.GamePlayers.ToArray()[1].Id.ToString();
+            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&playerId=" + playerId;
         }
     }
 }
