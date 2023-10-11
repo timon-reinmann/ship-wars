@@ -272,3 +272,26 @@
   padding-left: 10px;
   min-width: 300px;
 }
+.join__button {
+  font-family: "walkingdead";
+  padding-top: 0.5rem;
+  font-size: 2.5rem;
+  padding-bottom: 0.5rem;
+  width: 20%;
+  background-color: rgba(79, 110, 51, 0.6);
+  color: white;
+  display: block;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 400;
+  text-decoration: none;
+  border: 1.5px solid #ffffff;
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translateX(-50%);
+  opacity: 0;
+}
+.join__button.active {
+  opacity: 1;
+}

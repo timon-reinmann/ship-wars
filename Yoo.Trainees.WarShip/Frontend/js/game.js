@@ -2,13 +2,16 @@
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const GamePlayerId = urlParams.get("playerId");
-console.log("GamePlayerId:", GamePlayerId);
-console.log("gameId:", gameId);
+
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
 let myBoard = document.getElementById("game__board");
 let gameOpponent = document.getElementById("opponent__board");
+
+let finishField = null;
+const commit_button = document.querySelector(".commit-button");
+
 const DirectionEnum = {
   HORIZONTAL: 0,
   VERTICAL: 1,
@@ -153,10 +156,8 @@ shipSelection.addEventListener("dragover", (e) => {
 function mapFrontendDirectionToBackendEnum(frontendDirection) {
   switch (frontendDirection) {
     case 'horizontal':
-      console.log('horizontal');
       return DirectionEnum.HORIZONTAL;
     case 'vertical':
-      console.log('vertical');
       return DirectionEnum.VERTICAL;
     default:
       // Handle ungültige Richtungen oder Fehlerbehandlung hier
@@ -257,7 +258,6 @@ function canChangeDirection(draggable, currentX, currentY, shipSize) {
   return true; // Is valid
 }
 // ...
-let commit_button = document.querySelector(".commit-button");
 commit_button.addEventListener("click", () => {
   let ship_selector = document.querySelector(".ship__selection");
   if (ship_selector.children.length === 0) {
@@ -294,11 +294,19 @@ async function sendShips(Ships) {
     },
     body: JSON.stringify({ gameId, GamePlayerId, Ships }),
     method: "POST",
+  })
+    .then((response) => {
+      if (!response.ok){
+        error_popup(commit_button);
+      } else {
+        finishField.classList.add("active-popup");
+        commit_button.classList.add("commit-button--active");
+      }
   });
 }
 
 async function commitShips(commit_button) {
-  let finishField = document.querySelector(".finish");
+  finishField = document.querySelector(".finish");
   const ships = document.getElementsByClassName("ship");
   const ship_positions = Array.from(ships).map((ship) => ({
     ShipType: ship?.dataset.name,
@@ -306,11 +314,11 @@ async function commitShips(commit_button) {
     Y: ship?.parentNode.dataset.y,
     Direction: mapFrontendDirectionToBackendEnum(ship?.dataset.direction),
     Id: ship?.Id,
-  }));
+  }))
+
   try {
     await sendShips(ship_positions);
-    finishField.classList.add("active-popup");
-    commit_button.classList.add("commit-button--active");
+    
   } catch (error) {
     console.error("failed to send ships", error);
     error_popup(commit_button);
@@ -328,3 +336,4 @@ function error_popup(commit_button) {
   );
   commit_button.classList.add("commit-button--active");
 }
+

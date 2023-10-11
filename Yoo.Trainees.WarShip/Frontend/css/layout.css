@@ -17,6 +17,10 @@ body {
     transform: scale(1);
   }
 }
+@font-face {
+  font-family: "walkingdead";
+  src: url(../../font/BadGrunge.ttf);
+}
 
 .background-animation {
   position: fixed;
