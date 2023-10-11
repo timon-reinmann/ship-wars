@@ -6,6 +6,7 @@ const loginLink = document.querySelector(".login-link");
 const registerLink = document.querySelector(".register-link");
 const btnPopup = document.querySelector(".btnLogin-popup");
 const iconClose = document.querySelector(".icon-close");
+const joinGame = document.querySelector(".join__button");
 
 let link = null;
 let lobbyName = null;
@@ -13,6 +14,7 @@ let lobbyName = null;
 
 copyText.querySelector("button").addEventListener("click", () => {
   let input = copyText.querySelector("input.text");
+  joinGame.classList.add("active");
   input.select();
   document.execCommand("copy");
   copyText.classList.add("active");
@@ -23,11 +25,13 @@ copyText.querySelector("button").addEventListener("click", () => {
 });
 
 registerLink.addEventListener("click", () => {
+  joinGame.classList.remove("active");
   wrapper.classList.add("active");
 });
 
 loginLink.addEventListener("click", () => {
   wrapper.classList.remove("active");
+  joinGame.classList.remove("active");
 });
 
 btnPopup.addEventListener("click", () => {
@@ -35,6 +39,7 @@ btnPopup.addEventListener("click", () => {
 });
 
 iconClose.addEventListener("click", () => {
+  joinGame.classList.remove("active");
   wrapper.classList.remove("active-popup");
 });
 
@@ -61,12 +66,10 @@ submit_button.addEventListener("click", async function () {
     body: lobbyName,
     method: "POST",
   })
-    .then((response) => response.text())
+    .then((response) => response.json())
     .then((data) => {
-      console.log("Daten:", data);
-      link =
-        "http://127.0.0.1:5500/Frontend/html/game-pvp.html?playerid=" + data;
-      document.getElementById("linkoutput").value = data;
+      joinGame.href = data.player1;
+      document.getElementById("linkoutput").value = data.player2;
     })
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
@@ -75,7 +78,7 @@ submit_button.addEventListener("click", async function () {
 
 send_email.addEventListener("click", async () => {
   let email = document.getElementById("email-input").value;
-
+  joinGame.classList.add("active");
   let daten = {
     gameName: lobbyName,
     email: email,

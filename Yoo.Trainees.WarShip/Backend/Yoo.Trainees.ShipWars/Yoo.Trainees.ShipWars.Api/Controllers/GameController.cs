@@ -47,11 +47,18 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // POST api/<GameController>
         [HttpPost]
-        public String Post([FromBody] string name)
+        public IActionResult Post([FromBody] string name)
         {
             this.Game = gameLogic.CreateGame(name);
-            var link = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + this.Game.Id  + "&playerId=" + this.Game.GamePlayers.First().Id.ToString();
-            return link;
+            var linkPlayer2 = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + this.Game.Id.ToString()  + "&playerId=" + this.Game.GamePlayers.First().Id.ToString();
+            var linkPlayer1 = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + this.Game.Id.ToString() + "&playerId=" + this.Game.GamePlayers.ToArray()[1].Id.ToString();
+
+            var links = new 
+            {
+                player1 = linkPlayer1,
+                player2 = linkPlayer2,
+            };
+            return Ok(links);
         }
 
         // Post api/<Game>/5/SaveShips
