@@ -1,11 +1,12 @@
+// TODO : #Trainee-177
 const follower = document.getElementById('follower');
 const printout = document.getElementById('printout');
 
-let mouseX = (e) => {
+const mouseX = (e) => {
     return e.clientX;
 }
 
-let mouseY = (e) => {
+const mouseY = (e) => {
     return e.clientY;
 }
 
