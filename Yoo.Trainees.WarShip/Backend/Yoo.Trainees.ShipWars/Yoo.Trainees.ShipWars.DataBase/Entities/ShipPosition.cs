@@ -17,7 +17,7 @@
 
         public int Y { get; set; }
 
-        public Direction _direction { get; set; }
+        public Direction Direction { get; set; }
 
         public Ship Ship { get; set; }
 

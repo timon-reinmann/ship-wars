@@ -77,7 +77,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                     ShipId = Guid.Parse(shipType.Id.ToString()),                                      // Weirde Fehler aber me hets müesse Caste well es die gliche enums sie müesse
                     X = Ship.X,                                                                      // Und well beides in anderne Files gmacht worde isch es genau gseh nid sgliche :(    
                     Y = Ship.Y,
-                    _direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship._direction
+                    Direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship.Direction
                 };
                 id = shipPositio.GamePlayerId;
 

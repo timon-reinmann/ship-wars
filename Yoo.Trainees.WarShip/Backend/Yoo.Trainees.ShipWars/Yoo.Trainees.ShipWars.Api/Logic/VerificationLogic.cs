@@ -39,7 +39,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 var _iY2 = shipY + 1;
                 var _iX1 = shipX - 1;
                 var _iX2 = shipX + 1;
-                var shipDirection = _ishipDtos._direction;
+                var shipDirection = _ishipDtos.Direction;
                 int _iXl;
                 int _iYl;
                 var maxBoardLength = 9;

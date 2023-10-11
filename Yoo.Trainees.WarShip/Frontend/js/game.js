@@ -44,7 +44,7 @@ draggables.forEach((draggable) => {
     }
   });
 
-  draggable.addEventListener("dragstart", e => {
+  draggable.addEventListener("dragstart", (e) => {
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
     deleteShipHitBox(draggable.parentNode);
@@ -58,9 +58,14 @@ draggables.forEach((draggable) => {
     const shipSize = parseInt(draggable.getAttribute("data-size"));
     for (let i = -1; i <= shipSize; i++) {
       for (let j = -1; j < 2; j++) {
-        const field = draggable.getAttribute("data-direction") !== "vertical"
-          ? document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY + j}"]`)
-          : document.querySelector(`[data-x="${currentX + j}"][data-y="${currentY + i}"]`);
+        const field =
+          draggable.getAttribute("data-direction") !== "vertical"
+            ? document.querySelector(
+                `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
+              )
+            : document.querySelector(
+                `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
+              );
         if (field) {
           field.setAttribute(
             "data-ships",
@@ -76,7 +81,7 @@ draggables.forEach((draggable) => {
 containers.forEach((container) => {
   container.addEventListener("dragover", (e) => {
     e.preventDefault();
-    if(container.firstChild === null) {
+    if (container.firstChild === null) {
       container.style.zIndex = 0;
     }
     const draggable = document.querySelector(".dragging");
@@ -100,9 +105,14 @@ containers.forEach((container) => {
     let isPlacementValid = true;
 
     for (let i = 0; i < shipSize; i++) {
-      const freeField = draggable.dataset.direction !== "vertical"
-      ? document.querySelector(`[data-x="${currentX + i}"][data-y="${currentY}"]`)
-      : document.querySelector(`[data-x="${currentX}"][data-y="${currentY + i}"]`);
+      const freeField =
+        draggable.dataset.direction !== "vertical"
+          ? document.querySelector(
+              `[data-x="${currentX + i}"][data-y="${currentY}"]`
+            )
+          : document.querySelector(
+              `[data-x="${currentX}"][data-y="${currentY + i}"]`
+            );
 
       if (!freeField || freeField.getAttribute("data-ships") > 0) {
         // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
@@ -150,7 +160,7 @@ function mapFrontendDirectionToBackendEnum(frontendDirection) {
       return DirectionEnum.VERTICAL;
     default:
       // Handle ungültige Richtungen oder Fehlerbehandlung hier
-      throw new Error('Ungültige Richtung im Frontend: ' + frontendDirection);
+      throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }
 
@@ -164,7 +174,11 @@ function deleteShipHitBox(container) {
     const isVertical = container.firstChild?.dataset.direction === "vertical";
     for (let i = startingPoint; i <= oldShipSize; i++) {
       for (let j = startingPoint; j < shipWidth; j++) {
-        const oldField = document.querySelector(`[data-x="${oldX + (!isVertical ? i : j)}"][data-y="${oldY + (!isVertical ? j : i)}"]`);
+        const oldField = document.querySelector(
+          `[data-x="${oldX + (!isVertical ? i : j)}"][data-y="${
+            oldY + (!isVertical ? j : i)
+          }"]`
+        );
         if (oldField) {
           const currentShips = parseInt(oldField.dataset.ships, 10) || 0;
           oldField.dataset.ships = Math.max(0, currentShips - 1);
@@ -174,15 +188,30 @@ function deleteShipHitBox(container) {
   }
 }
 
-function changeHitBoxOnClick(toggleOnClick, currentX, currentY, shipSize, fieldSize) {
+function changeHitBoxOnClick(
+  toggleOnClick,
+  currentX,
+  currentY,
+  shipSize,
+  fieldSize
+) {
   for (let i = -1; i <= shipSize; i++) {
     for (let j = -1; j < 2; j++) {
-      const field = document.querySelector(`[data-x="${currentX + (toggleOnClick ? i : j)}"][data-y="${currentY + (toggleOnClick ? j : i)}"]`);
+      const field = document.querySelector(
+        `[data-x="${currentX + (toggleOnClick ? i : j)}"][data-y="${
+          currentY + (toggleOnClick ? j : i)
+        }"]`
+      );
       if (field) {
         const currentShips = parseInt(field.dataset.ships, 10) || 0;
-        field.dataset.ships = Math.max(0, currentShips + (fieldSize > 0 ? 1 : -1));
+        field.dataset.ships = Math.max(
+          0,
+          currentShips + (fieldSize > 0 ? 1 : -1)
+        );
         if (fieldSize > 0 && field.firstChild) {
-          field.firstChild.dataset.direction = toggleOnClick ? "horizontal" : "vertical";
+          field.firstChild.dataset.direction = toggleOnClick
+            ? "horizontal"
+            : "vertical";
         }
       }
     }
@@ -212,13 +241,15 @@ function createBoard(gameBoard, isMyBoard) {
 function canChangeDirection(draggable, currentX, currentY, shipSize) {
   const nextPossibleField = 2; // Because all ships need 1 field apart from each other so we check on the field 2 0, 1 ,2 <-- 2 is the next possible field
   const isVertical = draggable.dataset.direction === "vertical";
-  const tinyShip = shipSize === 2 ? 1 : 0;  // if we compare i < shipSize we see that its false because i = 2 and shipSize = 2 so we need to treat this case differently
-                                            // So we need to check earlier if there is a Ship but because our ship is also in that field we need to check if there are 2 ships not 1
+  const tinyShip = shipSize === 2 ? 1 : 0; // if we compare i < shipSize we see that its false because i = 2 and shipSize = 2 so we need to treat this case differently
+  // So we need to check earlier if there is a Ship but because our ship is also in that field we need to check if there are 2 ships not 1
 
   for (let i = nextPossibleField - tinyShip; i < shipSize; i++) {
     const x = !isVertical ? currentX : currentX + i;
     const y = !isVertical ? currentY + i : currentY;
-    const futureField = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+    const futureField = document.querySelector(
+      `[data-x="${x}"][data-y="${y}"]`
+    );
     if (futureField.dataset.ships > 0 + tinyShip) {
       return false; // Is not valid
     }
@@ -269,10 +300,10 @@ async function sendShips(Ships) {
 async function commitShips(commit_button) {
   let finishField = document.querySelector(".finish");
   const ships = document.getElementsByClassName("ship");
-  const ship_positions = Array.from(ships).map(ship => ({
-    ShipType: ship?.dataset.name, 
-    X: ship?.parentNode.dataset.x, 
-    Y: ship?.parentNode.dataset.y, 
+  const ship_positions = Array.from(ships).map((ship) => ({
+    ShipType: ship?.dataset.name,
+    X: ship?.parentNode.dataset.x,
+    Y: ship?.parentNode.dataset.y,
     Direction: mapFrontendDirectionToBackendEnum(ship?.dataset.direction),
     Id: ship?.Id,
   }));

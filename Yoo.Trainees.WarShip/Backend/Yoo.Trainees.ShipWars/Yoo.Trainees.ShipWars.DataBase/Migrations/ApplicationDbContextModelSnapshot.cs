@@ -125,25 +125,25 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c937a8eb-09bb-435b-b5fd-3ddae1e8bc0f"),
+                            Id = new Guid("396040e1-9eaa-4c91-bae3-ebad10e01770"),
                             Length = 1,
                             Name = "Submarine"
                         },
                         new
                         {
-                            Id = new Guid("090ac64a-0fa0-43cb-ac94-4ec024f80d65"),
+                            Id = new Guid("c23e78f8-a1da-4041-8bc8-5a4cb060c9b9"),
                             Length = 2,
                             Name = "Destroyer"
                         },
                         new
                         {
-                            Id = new Guid("5d26e1f2-e2e8-431f-845f-9a92f0f38430"),
+                            Id = new Guid("556e5b47-b623-46ca-8d5d-5f2527749840"),
                             Length = 3,
                             Name = "Cruiser"
                         },
                         new
                         {
-                            Id = new Guid("9c95afc8-ee72-483c-8d32-28ff05eefa14"),
+                            Id = new Guid("099e8e46-8561-4bcf-ba3c-76ea553d1010"),
                             Length = 4,
                             Name = "Warship"
                         });
@@ -155,6 +155,9 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Direction")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("GamePlayerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -165,9 +168,6 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Y")
-                        .HasColumnType("int");
-
-                    b.Property<int>("_direction")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
