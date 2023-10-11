@@ -7,13 +7,14 @@ const registerLink = document.querySelector(".register-link");
 const btnPopup = document.querySelector(".btnLogin-popup");
 const iconClose = document.querySelector(".icon-close");
 const joinGame = document.querySelector(".join__button");
+const input = copyText.querySelector("input.text");
+
 
 let link = null;
 let lobbyName = null;
 
 
 copyText.querySelector("button").addEventListener("click", () => {
-  let input = copyText.querySelector("input.text");
   joinGame.classList.add("active");
   input.select();
   document.execCommand("copy");
@@ -77,7 +78,7 @@ submit_button.addEventListener("click", async function () {
 });
 
 send_email.addEventListener("click", async () => {
-  let email = document.getElementById("email-input").value;
+  const email = document.getElementById("email-input").value;
   joinGame.classList.add("active");
   let daten = {
     gameName: lobbyName,
