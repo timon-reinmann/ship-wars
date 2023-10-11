@@ -301,6 +301,7 @@ async function sendShips(Ships) {
       } else {
         finishField.classList.add("active-popup");
         commit_button.classList.add("commit-button--active");
+        setInterval(checkIfPlayerReady, 1000);
       }
   });
 }
@@ -337,3 +338,27 @@ function error_popup(commit_button) {
   commit_button.classList.add("commit-button--active");
 }
 
+function checkIfPlayerReady() {
+  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/Ready";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (response.ok) {
+        clearInterval(checkIfPlayerReady);
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}

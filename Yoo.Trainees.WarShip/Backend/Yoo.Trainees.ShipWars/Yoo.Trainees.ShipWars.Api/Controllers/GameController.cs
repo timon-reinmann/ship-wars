@@ -44,6 +44,12 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         {
             return "value";
         }
+        //
+        [HttpGet("{id}/Ready")]
+        public string Ready(Guid gameId)
+        {
+            return null;
+        }
 
         // POST api/<GameController>
         [HttpPost]
