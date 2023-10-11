@@ -46,9 +46,11 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
         //
         [HttpGet("{id}/Ready")]
-        public string Ready(Guid gameId)
+        public IActionResult Ready(Guid id)
         {
-            return null;
+            if (gameLogic.IsReady(id))
+                return Ok();
+            return BadRequest();
         }
 
         // POST api/<GameController>

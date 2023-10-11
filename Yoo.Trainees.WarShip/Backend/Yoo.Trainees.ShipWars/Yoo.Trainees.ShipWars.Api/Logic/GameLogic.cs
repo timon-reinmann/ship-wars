@@ -1,4 +1,5 @@
-﻿using Yoo.Trainees.ShipWars.DataBase;
+﻿using Microsoft.EntityFrameworkCore;
+using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
@@ -84,6 +85,24 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 applicationDbContext.ShipPosition.Add(shipPositio);
             }
             applicationDbContext.SaveChanges();
+        }
+        public bool IsReady(Guid gameId)
+        {
+            var game = applicationDbContext.Game.Where(Game => Game.Id == gameId).SingleOrDefault();
+            //var players = game.GamePlayers.Count();
+            var gamePlayers = from s in applicationDbContext.GamePlayer
+                      where s.GameId == gameId
+                      select s;
+            var gamePlayer1 = from s in applicationDbContext.ShipPosition
+                                   where s.GamePlayerId == gamePlayers.First().Id
+                                   select s;
+            var gamePlayer2 = from s in applicationDbContext.ShipPosition
+                              where s.GamePlayerId == gamePlayers.ToArray()[1].Id
+                              select s;
+
+            var count = gamePlayer1.Count() + gamePlayer2.Count();
+            
+            return count == 20;
         }
     }
 }

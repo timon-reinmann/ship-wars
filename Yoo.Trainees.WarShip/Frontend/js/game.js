@@ -352,9 +352,9 @@ function checkIfPlayerReady() {
     },
     method: "GET",
   })
-    .then((response) => response.json())
     .then((data) => {
-      if (response.ok) {
+      if (data.ok) {
+        console.log("working :)");
         clearInterval(checkIfPlayerReady);
       }
     })
