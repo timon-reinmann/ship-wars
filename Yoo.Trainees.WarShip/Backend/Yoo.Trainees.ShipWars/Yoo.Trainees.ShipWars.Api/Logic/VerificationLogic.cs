@@ -67,7 +67,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                                 switch (shipDirection)
                                 {
                                     case Direction.horizontal:
-                                        switch (j._direction)
+                                        switch (j.Direction)
                                         {
                                             case Direction.horizontal:
                                                 if (j.X + i == _iXl && j.Y == shipY || j.X + i == _iXl && j.Y == _iY1 || j.X + i == _iXl && j.Y == _iY2)
@@ -84,7 +84,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                                         }
                                         break;
                                     case Direction.vertical:
-                                        switch (j._direction)
+                                        switch (j.Direction)
                                         {
                                             case Direction.horizontal:
                                                 if (j.Y == _iYl && j.X + i == shipX || j.Y == _iYl && j.X + i == _iX1 || j.Y == _iYl && j.X + i == _iX2)
