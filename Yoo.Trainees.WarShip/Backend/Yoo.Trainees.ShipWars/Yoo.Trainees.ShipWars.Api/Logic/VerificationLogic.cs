@@ -67,15 +67,41 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                                 switch (shipDirection)
                                 {
                                     case Direction.horizontal:
-                                         if (j.X + i == _iXl && j.Y == shipY || j.X + i == _iXl && j.Y == _iY1 || j.X + i == _iXl && j.Y == _iY2)
+                                        switch (j._direction)
                                         {
-                                            return false;
+                                            case Direction.horizontal:
+                                                if (j.X + i == _iXl && j.Y == shipY || j.X + i == _iXl && j.Y == _iY1 || j.X + i == _iXl && j.Y == _iY2)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+                                            case Direction.vertical:
+                                                if (j.X == _iXl && j.Y + i == shipY || j.X == _iXl && j.Y + i == _iY1 || j.X == _iXl && j.Y + i == _iY2)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
                                         }
                                         break;
                                     case Direction.vertical:
-                                        if (j.Y + i == _iYl && j.X == shipX || j.Y + i == _iYl && j.X == _iX1 || j.Y + i == _iYl && j.X == _iX2)
+                                        switch (j._direction)
                                         {
-                                            return false;
+                                            case Direction.horizontal:
+                                                if (j.Y == _iYl && j.X + i == shipX || j.Y == _iYl && j.X + i == _iX1 || j.Y == _iYl && j.X + i == _iX2)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+
+                                            case Direction.vertical:
+
+                                                if (j.Y + i == _iYl && j.X == shipX || j.Y + i == _iYl && j.X == _iX1 || j.Y + i == _iYl && j.X == _iX2)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+                                            default: 
+                                                return false;
                                         }
                                         break;
                                     default:
@@ -105,7 +131,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             }
             foreach (var c in allShips)
             {
-                if (c.Value == 1 && c.Key != "warship" || c.Value == 2 && c.Key != "cruiser" || c.Value == 3 && c.Key != "destroyer" || c.Value == 4 && c.Key != "submarine")
+                if (c.Value == 1 && c.Key.ToLower() != "warship" || c.Value == 2 && c.Key.ToLower() != "cruiser" || c.Value == 3 && c.Key.ToLower() != "destroyer" || c.Value == 4 && c.Key.ToLower() != "submarine")
                 {
                        return false;
                 }

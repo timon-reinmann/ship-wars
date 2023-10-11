@@ -143,8 +143,10 @@ shipSelection.addEventListener("dragover", (e) => {
 function mapFrontendDirectionToBackendEnum(frontendDirection) {
   switch (frontendDirection) {
     case 'horizontal':
+      console.log('horizontal');
       return DirectionEnum.HORIZONTAL;
     case 'vertical':
+      console.log('vertical');
       return DirectionEnum.VERTICAL;
     default:
       // Handle ungültige Richtungen oder Fehlerbehandlung hier
