@@ -70,7 +70,8 @@ submit_button.addEventListener("click", async function () {
     .then((response) => response.json())
     .then((data) => {
       joinGame.href = data.player1;
-      document.getElementById("linkoutput").value = data.player2;
+      link = data.player2;
+      document.getElementById("linkoutput").value = link;
     })
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
@@ -81,7 +82,7 @@ send_email.addEventListener("click", async () => {
   const email = document.getElementById("email-input").value;
   joinGame.classList.add("active");
   let daten = {
-    gameName: lobbyName,
+    LobbyName: lobbyName,
     email: email,
     link: link,
   };
