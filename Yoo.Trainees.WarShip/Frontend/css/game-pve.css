@@ -55,7 +55,7 @@
   grid-template-columns: repeat(10, 1fr);
   align-self: center;
   position: relative;
-  cursor: url(../../Crosshair/Cross.ani), auto;
+  cursor: crosshair;
 }
 
 .finish {
@@ -97,7 +97,7 @@
   background-color: rgba(128, 128, 128, 0.75);
   box-shadow: 0px 0px 5px 5px rgba(128, 128, 128, 0.25);
   border: 2px solid #fefefe;
-  cursor: url(../../Crosshair/crosshairGame.png), auto;
+  cursor: crosshair;
 }
 .warship {
   height: calc(52px * 1);
