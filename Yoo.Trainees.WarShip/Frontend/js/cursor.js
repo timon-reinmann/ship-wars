@@ -1,5 +1,5 @@
-let follower = document.getElementById('follower');
-let printout = document.getElementById('printout');
+const follower = document.getElementById('follower');
+const printout = document.getElementById('printout');
 
 let mouseX = (e) => {
     return e.clientX;
