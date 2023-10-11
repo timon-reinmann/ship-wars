@@ -71,3 +71,11 @@
     color: black;
   }
 }
+.RickRoll {
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  opacity: 1;
+}
