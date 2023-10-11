@@ -10,7 +10,7 @@ let myBoard = document.getElementById("game__board");
 let gameOpponent = document.getElementById("opponent__board");
 
 let finishField = null;
-let commit_button = document.querySelector(".commit-button");
+const commit_button = document.querySelector(".commit-button");
 
 const DirectionEnum = {
   HORIZONTAL: 0,
