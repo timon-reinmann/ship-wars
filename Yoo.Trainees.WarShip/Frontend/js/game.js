@@ -1,9 +1,10 @@
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
-const GamePlayerId = urlParams.get("playerId");
+const gamePlayerId = urlParams.get("gamePlayerId");
+const playerId = urlParams.get("playerId");
 
-isBoardSet(GamePlayerId);
+isBoardSet(gamePlayerId);
 
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
@@ -298,7 +299,7 @@ async function sendShips(Ships) {
       "Content-Type": "application/json",
       "Sec-Fetch-Dest": "empty",
     },
-    body: JSON.stringify({ gameId, GamePlayerId, Ships }),
+    body: JSON.stringify({ gameId, GamePlayerId: gamePlayerId, Ships }),
     method: "POST",
   }).then((response) => {
     if (!response.ok) {
@@ -395,9 +396,8 @@ function screenBlocker() {
   });
 }
 
-function shotsFired(gamePlayerId) {
-  const API_URL =
-    "https://localhost:7118/api/Game/" + gamePlayerId + "/ShotsFired";
+function shotsFired(playerId) {
+  const API_URL = "https://localhost:7118/api/Game/" + playerId + "/" + gameId + "/ShotsFired";
   fetch(API_URL, {
     credentials: "omit",
     headers: {

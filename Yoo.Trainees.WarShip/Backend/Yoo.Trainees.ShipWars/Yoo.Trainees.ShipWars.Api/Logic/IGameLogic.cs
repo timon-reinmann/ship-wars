@@ -8,6 +8,6 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         void CreateBoard(SaveShipsDto Ships);
         bool IsReady(Guid gameId);
         BoardStateDto[] IsComplete(Guid gamePlayerId);
-        bool CheckShots(Guid gameId);
+        bool CheckShots(Guid gameId, Guid playerId);
     }
 }
