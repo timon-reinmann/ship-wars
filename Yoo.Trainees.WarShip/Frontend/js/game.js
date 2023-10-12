@@ -454,7 +454,7 @@ function loadGameBoard(data) {
           const container = document.querySelector(`[data-x="${i}"][data-y="${j}"]`); 
           container.appendChild(ship);
           ship.setAttribute("data-direction", Direction === 0 ? "horizontal" : "vertical");
-          ship.classList.add(Direction === 0 ? "vertical" : "horizontal");
+          ship.classList.add(Direction === 0 ? "horizontal" : "vertical");
           changeHitBoxOnClick(Direction === DirectionEnum.HORIZONTAL, currentX, currentY, shipSize, shipSize);
           shipFound = true;
         }
