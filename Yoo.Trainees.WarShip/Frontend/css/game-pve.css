@@ -304,6 +304,6 @@ span {
   grid-template-columns: repeat(10, 1fr);
   align-self: center;
   position: absolute;
-  z-index: 200;
+  z-index: 400;
   transform: scale(1);
 }
