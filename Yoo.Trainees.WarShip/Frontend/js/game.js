@@ -371,3 +371,85 @@ function checkIfPlayerReady() {
 function screenBlocker() {
   let;
 }
+
+function shotsFired(gamePlayerId) {
+  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/ShotsFired";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((data) => {
+      if (data.ok) {
+        // TODO: load shots fired
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+function isBoardSet(gameId) {
+  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/BoardState";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        console.log("board");
+        loadGameBoard(data);   
+        createLoadingScreen();
+        intervalid = setInterval(checkIfPlayerReady, 1000); 
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+function loadGameBoard(data) {
+  // playe the ships on the board and wait for the other player
+  data.forEach( ships => {
+    let shipFound = false;
+    const X = ships.x;
+    const Y = ships.y;
+    const Direction = ships.direction;
+    const shipType = ships.name.toLowerCase();
+
+    const ship = document.querySelector(`[data-name="${shipType}"]`);
+    const shipSize = parseInt(ship.getAttribute("data-size"));
+    const currentX = parseInt(X);
+    const currentY = parseInt(Y);
+
+    for(let i = 0; i < 10 && !shipFound; i++) {
+      for(let j = 0; j < 10 && !shipFound; j++) {
+
+        if(currentX === i && currentY === j) {
+          const container = document.querySelector(`[data-x="${i}"][data-y="${j}"]`); 
+          container.appendChild(ship);
+          ship.setAttribute("data-direction", Direction === 0 ? "horizontal" : "vertical");
+          ship.classList.add(Direction === 0 ? "vertical" : "horizontal");
+          changeHitBoxOnClick(Direction === DirectionEnum.HORIZONTAL, currentX, currentY, shipSize, shipSize);
+          shipFound = true;
+        }
+      }
+    }
+  });
+}

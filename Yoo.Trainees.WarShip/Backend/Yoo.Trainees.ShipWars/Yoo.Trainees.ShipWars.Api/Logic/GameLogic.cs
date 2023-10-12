@@ -105,5 +105,30 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             
             return count == 20;
         }
+        public BoardStateDto[] IsComplete(Guid gamePlayerId)
+        {
+            var gamePlayer = from sp in applicationDbContext.ShipPosition
+                             join g in applicationDbContext.Ship on sp.ShipId equals g.Id
+                             where sp.GamePlayerId.Equals(gamePlayerId)
+                             select new BoardStateDto { X = sp.X, Y = sp.Y, Direction = (Yoo.Trainees.ShipWars.Api.Direction)sp.Direction, Name = g.Name };
+            if (gamePlayer.Count() == 10)
+                return gamePlayer.ToArray();
+            return null;
+        }
+        public bool CheckShots(Guid gameId)
+        {
+            var gamePlayers = from s in applicationDbContext.GamePlayer
+                              where s.GameId == gameId
+                              select s;
+            var player1 = from gp in applicationDbContext.GamePlayer
+                          join s in applicationDbContext.Shot on gp.PlayerId equals s.Player.Id
+                          where gp.GameId == gameId && s.Player.Id == gamePlayers.First().Id
+                          select gp;
+            var player2 = from gp in applicationDbContext.GamePlayer
+                          join s in applicationDbContext.Shot on gp.PlayerId equals s.Player.Id
+                          where gp.GameId == gameId && s.Player.Id == gamePlayers.ToArray()[1].Id
+                          select gp;
+            return player1.Count() == player2.Count();
+        }
     }
 }
