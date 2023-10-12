@@ -302,12 +302,7 @@ async function sendShips(Ships) {
     if (!response.ok) {
       error_popup(commit_button);
     } else {
-      let ring = document.querySelector(".ring");
-      let shipSelection = document.querySelector(".ship__selection");
-      shipSelection.classList.add("ship__selection--active");
-      ring.classList.add("ring--active");
-      finishField.classList.add("active-popup");
-      commit_button.classList.add("commit-button--active");
+      createLoadingScreen();
       intervalid = setInterval(checkIfPlayerReady, 1000);
     }
   });
@@ -341,6 +336,17 @@ function error_popup(commit_button) {
   error_popup__screen_blocker.classList.add(
     "error-popup__screen-blocker--active"
   );
+  commit_button.classList.add("commit-button--active");
+}
+
+function createLoadingScreen() {
+  const finishField = document.querySelector(".finish");
+  const commit_button = document.querySelector(".commit-button");
+  const ring = document.querySelector(".ring");
+  const shipSelection = document.querySelector(".ship__selection");
+  shipSelection.classList.add("ship__selection--active");
+  ring.classList.add("ring--active");
+  finishField.classList.add("active-popup");
   commit_button.classList.add("commit-button--active");
 }
 
@@ -392,7 +398,9 @@ function isBoardSet(gamePlayerid) {
     .then((data) => {
       if (data) {
         console.log("board");
-        loadGameBoard(data);    
+        loadGameBoard(data);   
+        createLoadingScreen();
+        intervalid = setInterval(checkIfPlayerReady, 1000); 
       }
     })
     .catch((error) => {
@@ -416,19 +424,17 @@ function loadGameBoard(data) {
 
     for(let i = 0; i < 10 && !shipFound; i++) {
       for(let j = 0; j < 10 && !shipFound; j++) {
-        const containerX = parseInt(containers[i].dataset.x);
-        const containerY = parseInt(containers[j].dataset.y);
 
         if(currentX === i && currentY === j) {
           const container = document.querySelector(`[data-x="${i}"][data-y="${j}"]`); 
           container.appendChild(ship);
           ship.setAttribute("data-direction", Direction === 0 ? "horizontal" : "vertical");
+          ship.classList.add(Direction === 0 ? "vertical" : "horizontal");
           changeHitBoxOnClick(Direction === DirectionEnum.HORIZONTAL, currentX, currentY, shipSize, shipSize);
           shipFound = true;
         }
       }
     }
-    
   });
 
 }
