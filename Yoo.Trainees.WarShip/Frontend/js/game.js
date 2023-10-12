@@ -51,11 +51,13 @@ draggables.forEach((draggable) => {
     }
   });
 
-  draggable.addEventListener("dragstart", (e) => {
+  function onDragg() {
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
     deleteShipHitBox(draggable.parentNode);
-  });
+  }
+
+  draggable.addEventListener("dragstart", onDragg);
 
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
@@ -340,11 +342,13 @@ function error_popup(commit_button) {
 }
 
 function createLoadingScreen() {
+  const screenBlocker = document.querySelector(".screen-blocker");
   const finishField = document.querySelector(".finish");
   const commit_button = document.querySelector(".commit-button");
   const ring = document.querySelector(".ring");
   const shipSelection = document.querySelector(".ship__selection");
   shipSelection.classList.add("ship__selection--active");
+  screenBlocker.classList.add("screen-blocker--active");
   ring.classList.add("ring--active");
   finishField.classList.add("active-popup");
   commit_button.classList.add("commit-button--active");
@@ -377,11 +381,23 @@ function checkIfPlayerReady() {
 }
 
 function screenBlocker() {
-  let;
+  const finishField = document.querySelector(".finish");
+  const ring = document.querySelector(".ring");
+  ring.classList.remove("ring--active");
+  finishField.classList.remove("active-popup");
+
+  draggables.forEach((draggable) => {
+    console.log("working");
+    draggable.setAttribute("draggable", false);
+    draggable.removeEventListener("dragstart", onDragg);
+    myBoard.setAttribute("droppable", false);
+    console.log(draggable.getAttribute("draggable"));
+  });
 }
 
 function shotsFired(gamePlayerId) {
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/ShotsFired";
+  const API_URL =
+    "https://localhost:7118/api/Game/" + gamePlayerId + "/ShotsFired";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -422,9 +438,9 @@ function isBoardSet(gameId) {
     .then((data) => {
       if (data) {
         console.log("board");
-        loadGameBoard(data);   
+        loadGameBoard(data);
         createLoadingScreen();
-        intervalid = setInterval(checkIfPlayerReady, 1000); 
+        intervalid = setInterval(checkIfPlayerReady, 1000);
       }
     })
     .catch((error) => {
@@ -434,7 +450,7 @@ function isBoardSet(gameId) {
 
 function loadGameBoard(data) {
   // playe the ships on the board and wait for the other player
-  data.forEach( ships => {
+  data.forEach((ships) => {
     let shipFound = false;
     const X = ships.x;
     const Y = ships.y;
@@ -446,15 +462,26 @@ function loadGameBoard(data) {
     const currentX = parseInt(X);
     const currentY = parseInt(Y);
 
-    for(let i = 0; i < 10 && !shipFound; i++) {
-      for(let j = 0; j < 10 && !shipFound; j++) {
-
-        if(currentX === i && currentY === j) {
-          const container = document.querySelector(`[data-x="${i}"][data-y="${j}"]`); 
+    for (let i = 0; i < 10 && !shipFound; i++) {
+      for (let j = 0; j < 10 && !shipFound; j++) {
+        if (currentX === i && currentY === j) {
+          const container = document.querySelector(
+            `[data-x="${i}"][data-y="${j}"]`
+          );
           container.appendChild(ship);
-          ship.setAttribute("data-direction", Direction === 0 ? "horizontal" : "vertical");
+          ship.setAttribute(
+            "data-direction",
+            Direction === 0 ? "horizontal" : "vertical"
+          );
+          ship.setAttribute("draggable", false);
           ship.classList.add(Direction === 0 ? "vertical" : "horizontal");
-          changeHitBoxOnClick(Direction === DirectionEnum.HORIZONTAL, currentX, currentY, shipSize, shipSize);
+          changeHitBoxOnClick(
+            Direction === DirectionEnum.HORIZONTAL,
+            currentX,
+            currentY,
+            shipSize,
+            shipSize
+          );
           shipFound = true;
         }
       }
