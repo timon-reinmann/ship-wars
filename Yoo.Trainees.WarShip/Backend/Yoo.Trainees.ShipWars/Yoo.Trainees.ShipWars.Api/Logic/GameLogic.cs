@@ -115,5 +115,20 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 return gamePlayer.ToArray();
             return null;
         }
+        public bool CheckShots(Guid gameId)
+        {
+            var gamePlayers = from s in applicationDbContext.GamePlayer
+                              where s.GameId == gameId
+                              select s;
+            var player1 = from gp in applicationDbContext.GamePlayer
+                          join s in applicationDbContext.Shot on gp.PlayerId equals s.Player.Id
+                          where gp.GameId == gameId && s.Player.Id == gamePlayers.First().Id
+                          select gp;
+            var player2 = from gp in applicationDbContext.GamePlayer
+                          join s in applicationDbContext.Shot on gp.PlayerId equals s.Player.Id
+                          where gp.GameId == gameId && s.Player.Id == gamePlayers.ToArray()[1].Id
+                          select gp;
+            return player1.Count() == player2.Count();
+        }
     }
 }

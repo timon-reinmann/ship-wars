@@ -63,6 +63,15 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return BadRequest();
         }
 
+        //
+        [HttpGet("{id}/ShotsFired")]
+        public IActionResult ShotsFired(Guid id)
+        {
+            if (!gameLogic.CheckShots(id))
+                return Ok();
+            return BadRequest();
+        }
+
         // POST api/<GameController>
         [HttpPost]
         public IActionResult Post([FromBody] string name)

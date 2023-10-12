@@ -380,8 +380,32 @@ function screenBlocker() {
   let;
 }
 
-function isBoardSet(gamePlayerid) {
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerid + "/BoardState";
+function shotsFired(gamePlayerId) {
+  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/ShotsFired";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((data) => {
+      if (data.ok) {
+        // TODO: load shots fired
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+function isBoardSet(gameId) {
+  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/BoardState";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -436,5 +460,4 @@ function loadGameBoard(data) {
       }
     }
   });
-
 }
