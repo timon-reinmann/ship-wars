@@ -52,7 +52,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("GameId")
+                    b.Property<Guid>("PlayerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PlayerId")
@@ -60,7 +60,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId");
+                    b.HasIndex("PlayerId");
 
                     b.HasIndex("PlayerId");
 
@@ -205,7 +205,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 {
                     b.HasOne("Yoo.Trainees.ShipWars.DataBase.Entities.Game", "Game")
                         .WithMany("GamePlayers")
-                        .HasForeignKey("GameId")
+                        .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
