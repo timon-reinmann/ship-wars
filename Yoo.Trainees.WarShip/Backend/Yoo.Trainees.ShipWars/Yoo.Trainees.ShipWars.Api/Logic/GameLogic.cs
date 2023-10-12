@@ -88,8 +88,9 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         }
         public bool IsReady(Guid gameId)
         {
-            var game = applicationDbContext.Game.Where(Game => Game.Id == gameId).SingleOrDefault();
-            //var players = game.GamePlayers.Count();
+            // var game = applicationDbContext.Game.Where(Game => Game.Id == gameId).SingleOrDefault();
+            // var players = game.GamePlayers.Count();
+
             var gamePlayers = from s in applicationDbContext.GamePlayer
                       where s.GameId == gameId
                       select s;
