@@ -157,9 +157,9 @@ shipSelection.addEventListener("dragover", (e) => {
 
 function mapFrontendDirectionToBackendEnum(frontendDirection) {
   switch (frontendDirection) {
-    case 'horizontal':
+    case "horizontal":
       return DirectionEnum.HORIZONTAL;
-    case 'vertical':
+    case "vertical":
       return DirectionEnum.VERTICAL;
     default:
       // Handle ungültige Richtungen oder Fehlerbehandlung hier
@@ -296,15 +296,18 @@ async function sendShips(Ships) {
     },
     body: JSON.stringify({ gameId, GamePlayerId, Ships }),
     method: "POST",
-  })
-    .then((response) => {
-      if (!response.ok){
-        error_popup(commit_button);
-      } else {
-        finishField.classList.add("active-popup");
-        commit_button.classList.add("commit-button--active");
-        intervalid = setInterval(checkIfPlayerReady, 1000);
-      }
+  }).then((response) => {
+    if (!response.ok) {
+      error_popup(commit_button);
+    } else {
+      let ring = document.querySelector(".ring");
+      let shipSelection = document.querySelector(".ship__selection");
+      shipSelection.classList.add("ship__selection--active");
+      ring.classList.add("ring--active");
+      finishField.classList.add("active-popup");
+      commit_button.classList.add("commit-button--active");
+      intervalid = setInterval(checkIfPlayerReady, 1000);
+    }
   });
 }
 
@@ -317,11 +320,10 @@ async function commitShips(commit_button) {
     Y: ship?.parentNode.dataset.y,
     Direction: mapFrontendDirectionToBackendEnum(ship?.dataset.direction),
     Id: ship?.Id,
-  }))
+  }));
 
   try {
     await sendShips(ship_positions);
-    
   } catch (error) {
     console.error("failed to send ships", error);
     error_popup(commit_button);
@@ -358,9 +360,14 @@ function checkIfPlayerReady() {
       if (data.ok) {
         console.log("working :)");
         clearInterval(intervalid);
+        screenBlocker();
       }
     })
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
+}
+
+function screenBlocker() {
+  let;
 }
