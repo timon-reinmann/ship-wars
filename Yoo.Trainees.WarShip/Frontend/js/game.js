@@ -3,6 +3,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const GamePlayerId = urlParams.get("playerId");
 
+isBoardSet(GamePlayerId);
+
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
@@ -300,12 +302,7 @@ async function sendShips(Ships) {
     if (!response.ok) {
       error_popup(commit_button);
     } else {
-      let ring = document.querySelector(".ring");
-      let shipSelection = document.querySelector(".ship__selection");
-      shipSelection.classList.add("ship__selection--active");
-      ring.classList.add("ring--active");
-      finishField.classList.add("active-popup");
-      commit_button.classList.add("commit-button--active");
+      createLoadingScreen();
       intervalid = setInterval(checkIfPlayerReady, 1000);
     }
   });
@@ -339,6 +336,17 @@ function error_popup(commit_button) {
   error_popup__screen_blocker.classList.add(
     "error-popup__screen-blocker--active"
   );
+  commit_button.classList.add("commit-button--active");
+}
+
+function createLoadingScreen() {
+  const finishField = document.querySelector(".finish");
+  const commit_button = document.querySelector(".commit-button");
+  const ring = document.querySelector(".ring");
+  const shipSelection = document.querySelector(".ship__selection");
+  shipSelection.classList.add("ship__selection--active");
+  ring.classList.add("ring--active");
+  finishField.classList.add("active-popup");
   commit_button.classList.add("commit-button--active");
 }
 
