@@ -3,6 +3,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const GamePlayerId = urlParams.get("playerId");
 
+isBoardSet(GamePlayerId);
+
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
@@ -363,4 +365,63 @@ function checkIfPlayerReady() {
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
+}
+
+function isBoardSet(gamePlayerid) {
+  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerid + "/BoardState";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        console.log("board");
+        loadGameBoard(data);    
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+function loadGameBoard(data) {
+  // playe the ships on the board and wait for the other player
+  data.forEach( ships => {
+    let shipFound = false;
+    const X = ships.x;
+    const Y = ships.y;
+    const Direction = ships.direction;
+    const shipType = ships.name.toLowerCase();
+
+    const ship = document.querySelector(`[data-name="${shipType}"]`);
+    const shipSize = parseInt(ship.getAttribute("data-size"));
+    const currentX = parseInt(X);
+    const currentY = parseInt(Y);
+
+    for(let i = 0; i < 10 && !shipFound; i++) {
+      for(let j = 0; j < 10 && !shipFound; j++) {
+        const containerX = parseInt(containers[i].dataset.x);
+        const containerY = parseInt(containers[j].dataset.y);
+
+        if(currentX === i && currentY === j) {
+          const container = document.querySelector(`[data-x="${i}"][data-y="${j}"]`); 
+          container.appendChild(ship);
+          ship.setAttribute("data-direction", Direction === 0 ? "horizontal" : "vertical");
+          changeHitBoxOnClick(Direction === DirectionEnum.HORIZONTAL, currentX, currentY, shipSize, shipSize);
+          shipFound = true;
+        }
+      }
+    }
+    
+  });
+
 }

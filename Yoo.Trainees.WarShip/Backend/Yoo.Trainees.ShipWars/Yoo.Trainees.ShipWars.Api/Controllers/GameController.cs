@@ -44,12 +44,22 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         {
             return "value";
         }
-        //
+        
         [HttpGet("{id}/Ready")]
         public IActionResult Ready(Guid id)
         {
             if (gameLogic.IsReady(id))
                 return Ok();
+            return BadRequest();
+        }
+
+        //
+        [HttpGet("{id}/BoardState")]
+        public IActionResult BoardState(Guid id)
+        {
+            var board = gameLogic.IsComplete(id);
+            if (board != null)
+                return Ok(board);
             return BadRequest();
         }
 
