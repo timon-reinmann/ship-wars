@@ -86,6 +86,15 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [HttpPut("{gamePlayerId}/SaveSRP")]
+        public IActionResult SaveSRP([FromBody] ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
+        {
+            gameLogic.SaveChoiceIntoDB(scissorsRockPaperBet, gamePlayerId);
+            return Ok();
+        }
+        
+
         // POST api/<GameController>
         [HttpPost]
         public IActionResult Post([FromBody] string name)

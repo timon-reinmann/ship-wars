@@ -144,5 +144,14 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 throw new InvalidOperationException("Ungültiger Schuss");
             }
         }
+        public void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
+        {
+            var gamePlayer = applicationDbContext.GamePlayer.First(x => x.Id == gamePlayerId);
+            
+            gamePlayer.ScissorsRockPaperBet = scissorsRockPaperBet;
+            applicationDbContext.GamePlayer.Update(gamePlayer);
+
+            applicationDbContext.SaveChanges();
+        }
     }
 }

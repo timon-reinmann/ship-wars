@@ -3,6 +3,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
 const playerId = urlParams.get("playerId");
+const SRPChoice = document.querySelectorAll(".SRP-choice");
 
 isBoardSet(gamePlayerId);
 
@@ -19,6 +20,11 @@ const DirectionEnum = {
   HORIZONTAL: 0,
   VERTICAL: 1,
 };
+const ScissorsRockPaperEnum = {
+  Scissors: 0,
+  Rock: 1,
+  Paper: 2,
+};
 
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
@@ -33,6 +39,10 @@ const containers = document.querySelectorAll(".ownField");
 const shipSelection = document.querySelector(".ship__selection");
 const opponentFields = document.querySelectorAll(".opponentField");
 
+const scissors = document.querySelector(".scissors");
+const rock = document.querySelector(".rock");
+const paper = document.querySelector(".paper");
+const SRP = document.querySelector(".SRP");
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("click", (e) => {
@@ -157,7 +167,8 @@ opponentFields.forEach((opponentField) => {
   opponentField.addEventListener("click", (e) => {
     const currentX = parseInt(opponentField.getAttribute("data-x"));
     const currentY = parseInt(opponentField.getAttribute("data-y"));
-    const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveShotInDB";
+    const API_URL =
+      "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveShotInDB";
     fetch(API_URL, {
       credentials: "omit",
       headers: {
@@ -268,7 +279,7 @@ function createBoard(gameBoard, isMyBoard) {
         div.id = `box${countingFields}`;
         div.dataset.ships = 0;
       }
-      if(!isMyBoard) {
+      if (!isMyBoard) {
         div.classList.add("opponentField");
       }
       gameBoard.appendChild(div);
@@ -341,7 +352,6 @@ async function sendShips(Ships) {
     }
   });
 }
-
 async function commitShips(commit_button) {
   finishField = document.querySelector(".finish");
   const ships = document.getElementsByClassName("ship");
@@ -400,7 +410,6 @@ function checkIfPlayerReady() {
   })
     .then((data) => {
       if (data.ok) {
-        console.log("working :)");
         clearInterval(intervalid);
         screenBlocker();
       }
@@ -417,11 +426,16 @@ function screenBlocker() {
   ring.classList.remove("ring--active");
   finishField.classList.remove("active-popup");
   screenBlocker.classList.add("screen-blocker--active");
-  SRP();
+  ScissorsRockPaper();
 }
 
 function shotsFired(playerId) {
-  const API_URL = "https://localhost:7118/api/Game/" + playerId + "/" + gameId + "/CheckReadyToShoot";
+  const API_URL =
+    "https://localhost:7118/api/Game/" +
+    playerId +
+    "/" +
+    gameId +
+    "/CheckReadyToShoot";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -461,7 +475,6 @@ function isBoardSet(gameId) {
     .then((response) => response.json())
     .then((data) => {
       if (data) {
-        console.log("board");
         loadGameBoard(data);
         createLoadingScreen();
         intervalid = setInterval(checkIfPlayerReady, 1000);
@@ -513,28 +526,56 @@ function loadGameBoard(data) {
   });
 }
 
-function SRP() {
-  let sicssors = document.querySelector(".sicssors");
-  let rock = document.querySelector(".rock");
-  let paper = document.querySelector(".paper");
-  let SRP = document.querySelector(":SRP");
-  sicssors.classList.add("scissors--actove");
+async function ScissorsRockPaper() {
+  scissors.classList.add("scissors--active");
   rock.classList.add("rock--active");
   paper.classList.add("paper--active");
   SRP.classList.add("SRP--active");
 
-  var timeLeft = 3;
-  var elem = document.getElementById("some_div");
+  scissors.setAttribute("data-choice", "scissors");
+}
+SRPChoice.forEach((srp) => {
+  srp.addEventListener("click", function () {
+    const choice = mapFrontendScissorsRockPaperToBackendEnum(
+      srp.dataset.choice
+    );
+    console.log(choice);
 
-  var timerId = setInterval(countdown, 1000);
+    const API_URL =
+      "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveSRP";
+    fetch(API_URL, {
+      credentials: "omit",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+        Accept: "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+      },
+      body: JSON.stringify(choice),
+      method: "Put",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+        }
+      });
+  });
+});
 
-  function countdown() {
-    if (timeLeft == -1) {
-      clearTimeout(timerId);
-      doSomething();
-    } else {
-      elem.innerHTML = timeLeft + " seconds remaining";
-      timeLeft--;
-    }
+function 
+
+function mapFrontendScissorsRockPaperToBackendEnum(choice) {
+  switch (choice) {
+    case "scissors":
+      return ScissorsRockPaperEnum.Scissors;
+    case "rock":
+      return ScissorsRockPaperEnum.Rock;
+    case "paper":
+      return ScissorsRockPaperEnum.Paper;
+    default:
+      // Handle ungültige Richtungen oder Fehlerbehandlung hier
+      throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }

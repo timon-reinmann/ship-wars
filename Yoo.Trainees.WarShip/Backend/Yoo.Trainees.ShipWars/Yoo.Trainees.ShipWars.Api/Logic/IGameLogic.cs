@@ -11,5 +11,6 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         BoardStateDto[] IsComplete(Guid gamePlayerId);
         bool CheckShots(Guid gameId, Guid playerId);
         void VerifyAndExecuteShotOrThrow(String[] xy, Guid gamePlayerId);
+        void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId);
     }
 }
