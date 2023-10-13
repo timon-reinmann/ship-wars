@@ -12,8 +12,8 @@ using Yoo.Trainees.ShipWars.DataBase;
 namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231011072838_initial")]
-    partial class initial
+    [Migration("20231013145027_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,9 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<Guid?>("NextPlayer")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.ToTable("Game");
@@ -55,7 +58,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PlayerId")
+                    b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PlayerId")
@@ -63,7 +66,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("GameId");
 
                     b.HasIndex("PlayerId");
 
@@ -128,25 +131,25 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("396040e1-9eaa-4c91-bae3-ebad10e01770"),
+                            Id = new Guid("85ce8508-012d-4cec-b19f-7da26443ee95"),
                             Length = 1,
                             Name = "Submarine"
                         },
                         new
                         {
-                            Id = new Guid("c23e78f8-a1da-4041-8bc8-5a4cb060c9b9"),
+                            Id = new Guid("f9e8c834-2b20-4f05-a96d-993c70e055bf"),
                             Length = 2,
                             Name = "Destroyer"
                         },
                         new
                         {
-                            Id = new Guid("556e5b47-b623-46ca-8d5d-5f2527749840"),
+                            Id = new Guid("1c33868c-d693-4343-92eb-583e78ca53b3"),
                             Length = 3,
                             Name = "Cruiser"
                         },
                         new
                         {
-                            Id = new Guid("099e8e46-8561-4bcf-ba3c-76ea553d1010"),
+                            Id = new Guid("adf1162d-6589-4ffb-9bd9-3a25fbc088c4"),
                             Length = 4,
                             Name = "Warship"
                         });
@@ -208,7 +211,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 {
                     b.HasOne("Yoo.Trainees.ShipWars.DataBase.Entities.Game", "Game")
                         .WithMany("GamePlayers")
-                        .HasForeignKey("PlayerId")
+                        .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

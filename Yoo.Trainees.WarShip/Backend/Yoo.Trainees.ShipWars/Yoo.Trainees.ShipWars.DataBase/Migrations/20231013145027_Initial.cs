@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,6 +20,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     GameStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    NextPlayer = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Date = table.Column<DateTime>(type: "smalldatetime", nullable: false)
                 },
                 constraints: table =>
@@ -150,10 +151,10 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 columns: new[] { "Id", "Length", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("099e8e46-8561-4bcf-ba3c-76ea553d1010"), 4, "Warship" },
-                    { new Guid("396040e1-9eaa-4c91-bae3-ebad10e01770"), 1, "Submarine" },
-                    { new Guid("556e5b47-b623-46ca-8d5d-5f2527749840"), 3, "Cruiser" },
-                    { new Guid("c23e78f8-a1da-4041-8bc8-5a4cb060c9b9"), 2, "Destroyer" }
+                    { new Guid("1c33868c-d693-4343-92eb-583e78ca53b3"), 3, "Cruiser" },
+                    { new Guid("85ce8508-012d-4cec-b19f-7da26443ee95"), 1, "Submarine" },
+                    { new Guid("adf1162d-6589-4ffb-9bd9-3a25fbc088c4"), 4, "Warship" },
+                    { new Guid("f9e8c834-2b20-4f05-a96d-993c70e055bf"), 2, "Destroyer" }
                 });
 
             migrationBuilder.CreateIndex(

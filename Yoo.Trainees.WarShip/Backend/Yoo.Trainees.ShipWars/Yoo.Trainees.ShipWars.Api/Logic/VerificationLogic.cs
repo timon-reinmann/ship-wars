@@ -15,7 +15,6 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
        public VerificationLogic()
         {
-
         }
         public VerificationLogic(List<Ship> ships)
         {
@@ -152,6 +151,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 if (shot.X > 9 || shot.X < 0 || shot.Y > 9 || shot.Y < 0)
                     return false;
                 if (sh.X == shot.X || sh.Y == shot.Y)
+                    return false;
+                if(shotsDto == null || shot == null)
                     return false;
             }
 
