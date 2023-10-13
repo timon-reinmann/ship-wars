@@ -304,10 +304,90 @@ span {
   grid-template-columns: repeat(10, 1fr);
   align-self: center;
   position: absolute;
-  z-index: 400;
+  z-index: 200;
+  transform: scale(1);
+}
+
+.SRP {
+  background-color: rgba(65, 91, 42, 0.76);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  font-family: walkingdead;
+  color: white;
+  font-size: 130px;
+  text-align: center;
   transform: scale(0);
 }
 
-.screen-blocker--active {
+.SRP--active {
   transform: scale(1);
+}
+
+.scissors {
+  position: absolute;
+  left: 30.4%;
+  top: 75%;
+  height: 200px;
+  width: 200px;
+  background-color: rgba(124, 124, 124, 0.567);
+  border: 2px solid #3c3c3c;
+  border-radius: 10px;
+  font-size: 100px;
+  transform: scale(0);
+}
+
+.rock {
+  position: absolute;
+  left: 43.4%;
+  top: 75%;
+  height: 200px;
+  width: 200px;
+  background-color: rgba(124, 124, 124, 0.567);
+  border: 2px solid #3c3c3c;
+  border-radius: 10px;
+  font-size: 100px;
+  transform: scale(0);
+}
+
+.paper {
+  position: absolute;
+  left: 56.4%;
+  top: 75%;
+  height: 200px;
+  width: 200px;
+  background-color: rgba(124, 124, 124, 0.567);
+  border: 2px solid #3c3c3c;
+  border-radius: 10px;
+  font-size: 100px;
+  transform: scale(0);
+}
+
+.scissors--active {
+  transform: scale(1);
+}
+
+.rock--active {
+  transform: scale(1);
+}
+
+.paper--active {
+  transform: scale(1);
+}
+
+.scissors:hover {
+  background-color: rgba(124, 124, 124, 0.837);
+  cursor: pointer;
+}
+
+.rock:hover {
+  background-color: rgba(124, 124, 124, 0.837);
+  cursor: pointer;
+}
+
+.paper:hover {
+  background-color: rgba(124, 124, 124, 0.837);
+  cursor: pointer;
 }

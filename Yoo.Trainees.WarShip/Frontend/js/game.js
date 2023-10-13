@@ -342,13 +342,11 @@ function error_popup(commit_button) {
 }
 
 function createLoadingScreen() {
-  const screenBlocker = document.querySelector(".screen-blocker");
   const finishField = document.querySelector(".finish");
   const commit_button = document.querySelector(".commit-button");
   const ring = document.querySelector(".ring");
   const shipSelection = document.querySelector(".ship__selection");
   shipSelection.classList.add("ship__selection--active");
-  screenBlocker.classList.add("screen-blocker--active");
   ring.classList.add("ring--active");
   finishField.classList.add("active-popup");
   commit_button.classList.add("commit-button--active");
@@ -383,16 +381,11 @@ function checkIfPlayerReady() {
 function screenBlocker() {
   const finishField = document.querySelector(".finish");
   const ring = document.querySelector(".ring");
+  const screenBlocker = document.querySelector(".screen-blocker");
   ring.classList.remove("ring--active");
   finishField.classList.remove("active-popup");
-
-  draggables.forEach((draggable) => {
-    console.log("working");
-    draggable.setAttribute("draggable", false);
-    draggable.removeEventListener("dragstart", onDragg);
-    myBoard.setAttribute("droppable", false);
-    console.log(draggable.getAttribute("draggable"));
-  });
+  screenBlocker.classList.add("screen-blocker--active");
+  SRP();
 }
 
 function shotsFired(gamePlayerId) {
@@ -487,4 +480,30 @@ function loadGameBoard(data) {
       }
     }
   });
+}
+
+function SRP() {
+  let sicssors = document.querySelector(".sicssors");
+  let rock = document.querySelector(".rock");
+  let paper = document.querySelector(".paper");
+  let SRP = document.querySelector(":SRP");
+  sicssors.classList.add("scissors--actove");
+  rock.classList.add("rock--active");
+  paper.classList.add("paper--active");
+  SRP.classList.add("SRP--active");
+
+  var timeLeft = 3;
+  var elem = document.getElementById("some_div");
+
+  var timerId = setInterval(countdown, 1000);
+
+  function countdown() {
+    if (timeLeft == -1) {
+      clearTimeout(timerId);
+      doSomething();
+    } else {
+      elem.innerHTML = timeLeft + " seconds remaining";
+      timeLeft--;
+    }
+  }
 }
