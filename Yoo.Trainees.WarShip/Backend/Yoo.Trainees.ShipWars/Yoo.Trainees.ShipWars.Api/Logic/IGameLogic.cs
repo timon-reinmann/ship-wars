@@ -1,4 +1,5 @@
-﻿using Yoo.Trainees.ShipWars.DataBase.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
 {
@@ -8,6 +9,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         void CreateBoard(SaveShipsDto Ships);
         bool IsReady(Guid gameId);
         BoardStateDto[] IsComplete(Guid gamePlayerId);
-        bool CheckShots(Guid gameId);
+        bool CheckShots(Guid gameId, Guid playerId);
+        void VerifyAndExecuteShotOrThrow(String[] xy, Guid gamePlayerId);
     }
 }

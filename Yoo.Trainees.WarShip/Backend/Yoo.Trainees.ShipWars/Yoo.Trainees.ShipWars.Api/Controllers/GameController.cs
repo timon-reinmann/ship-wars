@@ -64,21 +64,35 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
 
         //
-        [HttpGet("{id}/ShotsFired")]
-        public IActionResult ShotsFired(Guid id)
+        [HttpGet("{playerId}/{gameId}/CheckReadyToShoot")]
+        public IActionResult CheckReadyToShoot(Guid gameId, Guid playerId)
         {
-            if (!gameLogic.CheckShots(id))
+            if (!gameLogic.CheckShots(gameId, playerId))
                 return Ok();
             return BadRequest();
         }
 
+        //
+        [HttpPost("{gamePlayerId}/SaveShotInDB")]
+        public IActionResult SaveShotInDB([FromBody] string[] xy, Guid gamePlayerId)
+        {
+            try
+            {
+                gameLogic.VerifyAndExecuteShotOrThrow(xy, gamePlayerId);
+                return Ok();
+            } 
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex);
+            }
+        }
         // POST api/<GameController>
         [HttpPost]
         public IActionResult Post([FromBody] string name)
         {
             this.Game = gameLogic.CreateGame(name);
-            var linkPlayer1 = CreateLink(this.Game.Id, this.Game.GamePlayers.First().Id);
-            var linkPlayer2 = CreateLink(this.Game.Id, this.Game.GamePlayers.ToArray()[1].Id);
+            var linkPlayer1 = CreateLink(this.Game.Id, this.Game.GamePlayers.First().Id, Game.GamePlayers.First().PlayerId);
+            var linkPlayer2 = CreateLink(this.Game.Id, this.Game.GamePlayers.ToArray()[1].Id, this.Game.GamePlayers.ToArray()[1].PlayerId);
 
             var links = new 
             {
@@ -97,7 +111,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 return BadRequest("Mismatched game ID");
             }
 
-            bool isValidRequest = verificationLogic.verifyEvrything(Ships.Ships);
+            bool isValidRequest = verificationLogic.VerifyEverything(Ships.Ships);
             if (!isValidRequest)
             {
                 return BadRequest();
@@ -130,9 +144,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         public void Delete(int id)
         {
         }
-        private static String CreateLink(Guid gameId, Guid playerId)
+        private static String CreateLink(Guid gameId, Guid gamePlayerId, Guid playerId)
         {
-            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&playerId=" + playerId;
+            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId + "&playerId=" + playerId;
         }
     }
 }

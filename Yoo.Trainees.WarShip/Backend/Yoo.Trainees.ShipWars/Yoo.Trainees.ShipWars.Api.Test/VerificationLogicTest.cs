@@ -26,7 +26,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
 
             var shipDtos = new SaveShipDto[] {};
 
-            Assert.False(verificationLogic.verifyEvrything(shipDtos));
+            Assert.False(verificationLogic.VerifyEverything(shipDtos));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ Direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 6, Y = 9, ShipType = "Submarine"}
             };
 
-            Assert.True(verificationLogic.verifyEvrything(shipDtos));
+            Assert.True(verificationLogic.VerifyEverything(shipDtos));
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ Direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 6, Y = 6, ShipType = "Submarine"}
             };
 
-            Assert.False(verificationLogic.verifyEvrything(shipDtos));
+            Assert.False(verificationLogic.VerifyEverything(shipDtos));
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ Direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 12, ShipType = "Submarine"}
             };
 
-            Assert.False(verificationLogic.verifyEvrything(shipDtos));
+            Assert.False(verificationLogic.VerifyEverything(shipDtos));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ Direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 9, ShipType = "UnkownShip"}
             };
 
-            Assert.False(verificationLogic.verifyEvrything(shipDtos));
+            Assert.False(verificationLogic.VerifyEverything(shipDtos));
         }
 
         [Test]
@@ -136,8 +136,64 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ Direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 9, ShipType = "Submarine"}
             };
 
-            Assert.False(verificationLogic.verifyEvrything(shipDtos));
+            Assert.False(verificationLogic.VerifyEverything(shipDtos));
+        }  
+    
+        [Test]
+        public void TestVerifyHaveShotsSamePosition_ShouldReturnFalse()
+        {
+            var verificationLogic = new VerificationLogic();
+
+            var shotsDto = new List<SaveShotsDto>()
+            {
+                new SaveShotsDto{X = 1, Y = 2},
+                new SaveShotsDto{X = 2, Y = 2},
+                new SaveShotsDto{X = 3, Y = 8},
+                new SaveShotsDto{X = 5, Y = 1},
+                new SaveShotsDto{X = 1, Y = 5},
+                new SaveShotsDto{X = 3, Y = 2}
+            };
+            var shot = new SaveShotsDto{ X = 3, Y = 2 };
+
+            Assert.False(verificationLogic.VerifyShot(shotsDto, shot));
         }
-        
+
+        [Test]
+        public void TestVerifyShotsOutOfBoard_ShouldReturnFalse()
+        {
+            var verificationLogic = new VerificationLogic();
+
+            var shotsDto = new List<SaveShotsDto>()
+            {
+                new SaveShotsDto{X = 1, Y = 2},
+                new SaveShotsDto{X = 2, Y = 2},
+                new SaveShotsDto{X = 4, Y = 3},
+                new SaveShotsDto{X = 1, Y = 4},
+                new SaveShotsDto{X = 8, Y = 4},
+                new SaveShotsDto{X = 2, Y = 5}
+            };
+            var shot = new SaveShotsDto{ X =  3, Y = -7 };
+
+            Assert.False(verificationLogic.VerifyShot(shotsDto, shot));
+        }
+
+        [Test]
+        public void TestVerifyShotRight_ShouldReturnRight()
+        {
+            var verificationLogic = new VerificationLogic();
+
+            var shotsDto = new List<SaveShotsDto>()
+            {
+                new SaveShotsDto{X = 1, Y = 8},
+                new SaveShotsDto{X = 2, Y = 1},
+                new SaveShotsDto{X = 4, Y = 5},
+                new SaveShotsDto{X = 7, Y = 5},
+                new SaveShotsDto{X = 4, Y = 8},
+                new SaveShotsDto{X = 2, Y = 8}
+            };
+            var shot = new SaveShotsDto{ X = 3, Y = 7 };
+
+            Assert.True(verificationLogic.VerifyShot(shotsDto, shot));
+        }
     }
 }

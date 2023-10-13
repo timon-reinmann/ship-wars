@@ -300,8 +300,6 @@ span {
   background-color: transparent;
   width: 520px;
   height: 520px;
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
   align-self: center;
   position: absolute;
   z-index: 200;
