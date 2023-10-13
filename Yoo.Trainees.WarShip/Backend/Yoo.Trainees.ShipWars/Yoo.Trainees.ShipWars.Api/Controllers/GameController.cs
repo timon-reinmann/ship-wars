@@ -64,14 +64,28 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
 
         //
-        [HttpGet("{playerId}/{gameId}/ShotsFired")]
-        public IActionResult ShotsFired(Guid gameId, Guid playerId)
+        [HttpGet("{playerId}/{gameId}/CheckReadyToShoot")]
+        public IActionResult CheckReadyToShoot(Guid gameId, Guid playerId)
         {
             if (!gameLogic.CheckShots(gameId, playerId))
                 return Ok();
             return BadRequest();
         }
 
+        //
+        [HttpPost("{gamePlayerId}/SaveShotInDB")]
+        public IActionResult SaveShotInDB([FromBody] string[] xy, Guid gamePlayerId)
+        {
+            try
+            {
+                gameLogic.VerifyAndExecuteShotOrThrow(xy, gamePlayerId);
+                return Ok();
+            } 
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex);
+            }
+        }
         // POST api/<GameController>
         [HttpPost]
         public IActionResult Post([FromBody] string name)
@@ -97,7 +111,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 return BadRequest("Mismatched game ID");
             }
 
-            bool isValidRequest = verificationLogic.verifyEvrything(Ships.Ships);
+            bool isValidRequest = verificationLogic.VerifyEverything(Ships.Ships);
             if (!isValidRequest)
             {
                 return BadRequest();

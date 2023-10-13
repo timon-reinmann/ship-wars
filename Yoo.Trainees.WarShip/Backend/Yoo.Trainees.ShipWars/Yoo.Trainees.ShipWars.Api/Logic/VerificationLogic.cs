@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
 using System.Data;
+using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
@@ -10,13 +11,18 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     {
         private List<Ship> ships;
         private DataTable dtShip = default;
+        private readonly ApplicationDbContext applicationDbContext;
 
+       public VerificationLogic()
+        {
+
+        }
         public VerificationLogic(List<Ship> ships)
         {
             this.ships = ships;
         }
 
-        public bool verifyEvrything(SaveShipDto[] shipDtos)
+        public bool VerifyEverything(SaveShipDto[] shipDtos)
         {
             return TestVerifyeToManyShipsFromSameType(shipDtos) && VerifyShipLocations(shipDtos);
         }
@@ -139,6 +145,16 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return true;
         }
 
+        public bool VerifyShot(List<SaveShotsDto> shotsDto, int[] shot)
+        {
+            foreach(var sh in shotsDto)
+            {
+                if (sh.X > 9 || sh.X < 0 || sh.Y > 9 || sh.Y < 0)
+                    return false;
+            }
+
+            return true;
+        }
     }
 }
 

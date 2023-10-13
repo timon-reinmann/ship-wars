@@ -26,7 +26,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
 
             var shipDtos = new SaveShipDto[] {};
 
-            Assert.False(verificationLogic.verifyEvrything(shipDtos));
+            Assert.False(verificationLogic.VerifyEverything(shipDtos));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ Direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 6, Y = 9, ShipType = "Submarine"}
             };
 
-            Assert.True(verificationLogic.verifyEvrything(shipDtos));
+            Assert.True(verificationLogic.VerifyEverything(shipDtos));
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ Direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 6, Y = 6, ShipType = "Submarine"}
             };
 
-            Assert.False(verificationLogic.verifyEvrything(shipDtos));
+            Assert.False(verificationLogic.VerifyEverything(shipDtos));
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ Direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 12, ShipType = "Submarine"}
             };
 
-            Assert.False(verificationLogic.verifyEvrything(shipDtos));
+            Assert.False(verificationLogic.VerifyEverything(shipDtos));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ Direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 9, ShipType = "UnkownShip"}
             };
 
-            Assert.False(verificationLogic.verifyEvrything(shipDtos));
+            Assert.False(verificationLogic.VerifyEverything(shipDtos));
         }
 
         [Test]
@@ -136,8 +136,62 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShipDto{ Direction = (Yoo.Trainees.ShipWars.Api.Direction)Direction.horizontal, X = 4, Y = 9, ShipType = "Submarine"}
             };
 
-            Assert.False(verificationLogic.verifyEvrything(shipDtos));
+            Assert.False(verificationLogic.VerifyEverything(shipDtos));
+        }  
+    
+        [Test]
+        public void TestVerifyHaveShotsSamePosition_ShouldReturnFalse()
+        {
+            var verificationLogic = new VerificationLogic();
+
+            var shotsDto = new List<SaveShotsDto>()
+            {
+                new SaveShotsDto{X = 1, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
+                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
+                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
+                new SaveShotsDto{X = 1, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
+                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
+                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")}
+            };
+
+            Assert.False(verificationLogic.VerifyShot(shotsDto));
         }
-        
+
+        [Test]
+        public void TestVerifyShotsOutOfBoard_ShouldReturnFalse()
+        {
+            var verificationLogic = new VerificationLogic();
+
+            var shotsDto = new List<SaveShotsDto>()
+            {
+                new SaveShotsDto{X = -1, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
+                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
+                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
+                new SaveShotsDto{X = 1, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
+                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
+                new SaveShotsDto{X = 2, Y = 10, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")}
+            };
+
+            Assert.False(verificationLogic.VerifyShot(shotsDto));
+        }
+
+        [Test]
+        public void TestVerifyShotRight_ShouldReturnRight()
+        {
+            var verificationLogic = new VerificationLogic();
+
+            var shotsDto = new List<SaveShotsDto>()
+            {
+                new SaveShotsDto{X = 1, Y = 8},
+                new SaveShotsDto{X = 2, Y = 1},
+                new SaveShotsDto{X = 4, Y = 5},
+                new SaveShotsDto{X = 7, Y = 5},
+                new SaveShotsDto{X = 4, Y = 8},
+                new SaveShotsDto{X = 2, Y = 8}
+            };
+            int[] shot = { 3, 7 };
+
+            Assert.True(verificationLogic.VerifyShot(shotsDto, shot));
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Yoo.Trainees.ShipWars.DataBase;
+﻿using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
@@ -7,6 +6,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     public class GameLogic : IGameLogic
     {
         private readonly ApplicationDbContext applicationDbContext;
+        private readonly VerificationLogic verificationLogic;
         private Game Game;
 
         public GameLogic(ApplicationDbContext applicationDbContext)
@@ -129,6 +129,20 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                           where gp.GameId == gameId && s.Player.Id != playerId
                           select gp;
             return player1.Count() == player2.Count() || player1.Count() == player2.Count()-1;
+        }
+
+        public void VerifyAndExecuteShotOrThrow(String[] xy, Guid gamePlayerId)
+        {
+            int[] shot = Array.ConvertAll(xy, s => int.Parse(s));
+            var shots = (from gp in applicationDbContext.GamePlayer
+                        join s in applicationDbContext.Shot on gp.PlayerId equals s.Player.Id
+                        where gp.Id == gamePlayerId
+                        select new SaveShotsDto { X = s.X, Y = s.Y })
+                        .ToList();
+            if (!verificationLogic.VerifyShot(shots, shot))
+            {
+                throw new InvalidOperationException("Ungültiger Schuss");
+            }
         }
     }
 }

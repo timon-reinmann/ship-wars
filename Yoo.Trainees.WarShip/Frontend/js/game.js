@@ -31,6 +31,8 @@ let intervalid;
 const draggables = document.querySelectorAll(".ship");
 const containers = document.querySelectorAll(".ownField");
 const shipSelection = document.querySelector(".ship__selection");
+const opponentFields = document.querySelectorAll(".opponentField");
+
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("click", (e) => {
@@ -151,6 +153,32 @@ containers.forEach((container) => {
   });
 });
 
+opponentFields.forEach((opponentField) => {
+  opponentField.addEventListener("click", (e) => {
+    const currentX = parseInt(opponentField.getAttribute("data-x"));
+    const currentY = parseInt(opponentField.getAttribute("data-y"));
+    const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveShotInDB";
+    fetch(API_URL, {
+      credentials: "omit",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+        Accept: "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+      },
+      body: JSON.stringify({ X: currentX, Y: currentY }),
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+        }
+      });
+  });
+});
+
 shipSelection.addEventListener("dragover", (e) => {
   e.preventDefault();
   const draggable = document.querySelector(".dragging");
@@ -239,6 +267,9 @@ function createBoard(gameBoard, isMyBoard) {
         div.classList.add("ownField");
         div.id = `box${countingFields}`;
         div.dataset.ships = 0;
+      }
+      if(!isMyBoard) {
+        div.classList.add("opponentField");
       }
       gameBoard.appendChild(div);
       countingFields += 1;
@@ -386,18 +417,10 @@ function screenBlocker() {
   const ring = document.querySelector(".ring");
   ring.classList.remove("ring--active");
   finishField.classList.remove("active-popup");
-
-  draggables.forEach((draggable) => {
-    console.log("working");
-    draggable.setAttribute("draggable", false);
-    draggable.removeEventListener("dragstart", onDragg);
-    myBoard.setAttribute("droppable", false);
-    console.log(draggable.getAttribute("draggable"));
-  });
 }
 
 function shotsFired(playerId) {
-  const API_URL = "https://localhost:7118/api/Game/" + playerId + "/" + gameId + "/ShotsFired";
+  const API_URL = "https://localhost:7118/api/Game/" + playerId + "/" + gameId + "/CheckReadyToShoot";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -474,7 +497,7 @@ function loadGameBoard(data) {
             Direction === 0 ? "horizontal" : "vertical"
           );
           ship.setAttribute("draggable", false);
-          ship.classList.add(Direction === 0 ? "vertical" : "horizontal");
+          ship.classList.add(Direction === 0 ? "horizontal" : "vertical");
           changeHitBoxOnClick(
             Direction === DirectionEnum.HORIZONTAL,
             currentX,
