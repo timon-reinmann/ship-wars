@@ -146,15 +146,16 @@ namespace Yoo.Trainees.ShipWars.Api.Test
 
             var shotsDto = new List<SaveShotsDto>()
             {
-                new SaveShotsDto{X = 1, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
-                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
-                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
-                new SaveShotsDto{X = 1, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
-                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
-                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")}
+                new SaveShotsDto{X = 1, Y = 2},
+                new SaveShotsDto{X = 2, Y = 2},
+                new SaveShotsDto{X = 3, Y = 8},
+                new SaveShotsDto{X = 5, Y = 1},
+                new SaveShotsDto{X = 1, Y = 5},
+                new SaveShotsDto{X = 3, Y = 2}
             };
+            var shot = new SaveShotsDto{ X = 3, Y = 2 };
 
-            Assert.False(verificationLogic.VerifyShot(shotsDto));
+            Assert.False(verificationLogic.VerifyShot(shotsDto, shot));
         }
 
         [Test]
@@ -164,15 +165,16 @@ namespace Yoo.Trainees.ShipWars.Api.Test
 
             var shotsDto = new List<SaveShotsDto>()
             {
-                new SaveShotsDto{X = -1, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
-                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
-                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
-                new SaveShotsDto{X = 1, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
-                new SaveShotsDto{X = 2, Y = 2, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")},
-                new SaveShotsDto{X = 2, Y = 10, PlayerId = new Guid("EF50998F-319D-42B8-9BDA-D773EFA96D7A")}
+                new SaveShotsDto{X = 1, Y = 2},
+                new SaveShotsDto{X = 2, Y = 2},
+                new SaveShotsDto{X = 4, Y = 3},
+                new SaveShotsDto{X = 1, Y = 4},
+                new SaveShotsDto{X = 8, Y = 4},
+                new SaveShotsDto{X = 2, Y = 5}
             };
+            var shot = new SaveShotsDto{ X =  3, Y = -7 };
 
-            Assert.False(verificationLogic.VerifyShot(shotsDto));
+            Assert.False(verificationLogic.VerifyShot(shotsDto, shot));
         }
 
         [Test]
@@ -189,7 +191,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShotsDto{X = 4, Y = 8},
                 new SaveShotsDto{X = 2, Y = 8}
             };
-            int[] shot = { 3, 7 };
+            var shot = new SaveShotsDto{ X = 3, Y = 7 };
 
             Assert.True(verificationLogic.VerifyShot(shotsDto, shot));
         }

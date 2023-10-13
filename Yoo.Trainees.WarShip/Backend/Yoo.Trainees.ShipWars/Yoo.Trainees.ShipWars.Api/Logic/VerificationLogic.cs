@@ -145,11 +145,13 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return true;
         }
 
-        public bool VerifyShot(List<SaveShotsDto> shotsDto, int[] shot)
+        public bool VerifyShot(List<SaveShotsDto> shotsDto, SaveShotsDto shot)
         {
             foreach(var sh in shotsDto)
             {
-                if (sh.X > 9 || sh.X < 0 || sh.Y > 9 || sh.Y < 0)
+                if (shot.X > 9 || shot.X < 0 || shot.Y > 9 || shot.Y < 0)
+                    return false;
+                if (sh.X == shot.X || sh.Y == shot.Y)
                     return false;
             }
 

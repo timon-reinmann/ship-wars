@@ -133,7 +133,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         public void VerifyAndExecuteShotOrThrow(String[] xy, Guid gamePlayerId)
         {
-            int[] shot = Array.ConvertAll(xy, s => int.Parse(s));
+            SaveShotsDto shot = new SaveShotsDto { X = int.Parse(xy[0]), Y = int.Parse(xy[1])};
             var shots = (from gp in applicationDbContext.GamePlayer
                         join s in applicationDbContext.Shot on gp.PlayerId equals s.Player.Id
                         where gp.Id == gamePlayerId
