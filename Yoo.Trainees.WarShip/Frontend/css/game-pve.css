@@ -303,6 +303,10 @@ span {
   align-self: center;
   position: absolute;
   z-index: 200;
+  transform: scale(0);
+}
+
+.screen-blocker--active {
   transform: scale(1);
 }
 

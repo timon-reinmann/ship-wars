@@ -139,6 +139,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                         where gp.Id == gamePlayerId
                         select new SaveShotsDto { X = s.X, Y = s.Y })
                         .ToList();
+
             if (!verificationLogic.VerifyShot(shots, shot))
             {
                 throw new InvalidOperationException("Ungültiger Schuss");
