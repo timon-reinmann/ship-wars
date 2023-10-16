@@ -139,15 +139,19 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         public void VerifyAndExecuteShotOrThrow(SaveShotsDto xy, Guid gamePlayerId)
         {
+            var game = (from gp in applicationDbContext.GamePlayer
+                        select gp.Game).FirstOrDefault();
             SaveShotsDto shot = new SaveShotsDto { X = xy.X, Y = xy.Y};
-            var shots = (from gp in applicationDbContext.GamePlayer
-                        join s in applicationDbContext.Shot on gp.PlayerId equals s.Player.Id
-                        where gp.Id == gamePlayerId
+            var shots = (from s in applicationDbContext.Shot
+                        where s.Player.Id == gamePlayerId
                         select new SaveShotsDto { X = s.X, Y = s.Y })
                         .ToList();
 
-            if (shots == null || !verificationLogic.VerifyShot(shots, shot))
+            if (!verificationLogic.VerifyShot(shots, shot))
             {
+                game.NextPlayer = gamePlayerId;
+                applicationDbContext.Game.Update(game);
+                applicationDbContext.SaveChanges();
                 throw new InvalidOperationException("Ungültiger Schuss");
             }
         }
