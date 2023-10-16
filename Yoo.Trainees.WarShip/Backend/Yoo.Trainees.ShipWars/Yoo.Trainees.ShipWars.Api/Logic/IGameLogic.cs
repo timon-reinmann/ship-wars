@@ -10,7 +10,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         bool IsReady(Guid gameId);
         BoardStateDto[] IsComplete(Guid gamePlayerId);
         bool CheckShots(Guid gameId, Guid playerId);
-        void VerifyAndExecuteShotOrThrow(String[] xy, Guid gamePlayerId);
+        void VerifyAndExecuteShotOrThrow(SaveShotsDto xy, Guid gamePlayerId);
+        void SaveShot(SaveShotsDto shot, Guid gamePlayerId);
         void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId);
         bool GetResultOfTheSRP(Guid gamePlayerId);
     }

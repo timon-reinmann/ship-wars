@@ -1,3 +1,6 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Reflection.Metadata;
 ﻿using Microsoft.EntityFrameworkCore.Query.Internal;
 using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
@@ -7,7 +10,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     public class GameLogic : IGameLogic
     {
         private readonly ApplicationDbContext applicationDbContext;
-        private readonly VerificationLogic verificationLogic;
+        private readonly VerificationLogic verificationLogic = new VerificationLogic();
         private Game Game;
 
         public GameLogic(ApplicationDbContext applicationDbContext)
@@ -116,34 +119,56 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 return gamePlayer.ToArray();
             return null;
         }
-        public bool CheckShots(Guid gameId, Guid playerId)
+        public bool CheckShots(Guid gameId, Guid gamePlayerId)
         {
-            var gamePlayers = from s in applicationDbContext.GamePlayer
-                              where s.GameId == gameId
-                              select s;
-            var player1 = from gp in applicationDbContext.GamePlayer
-                          join s in applicationDbContext.Shot on gp.PlayerId equals s.Player.Id
-                          where gp.GameId == gameId && s.Player.Id == playerId
-                          select gp;
-            var player2 = from gp in applicationDbContext.GamePlayer
-                          join s in applicationDbContext.Shot on gp.PlayerId equals s.Player.Id
-                          where gp.GameId == gameId && s.Player.Id != playerId
-                          select gp;
-            return player1.Count() == player2.Count() || player1.Count() == player2.Count()-1;
+            var game = (from sp in applicationDbContext.Game
+                        where sp.Id.Equals(gameId)
+                        select sp.NextPlayer);
+            Guid? nextPlayerId = game.SingleOrDefault();
+            //var player1 = (from s in applicationDbContext.Shot
+            //               join gp in applicationDbContext.GamePlayer on s.Player.Id equals gp.Id
+            //               where s.Player.Id.Equals(gamePlayerId) && gp.GameId.Equals(gameId)
+            //               select s.);
+            //var player2 = (from s in applicationDbContext.Shot
+            //               join gp in applicationDbContext.GamePlayer on s.Player.Id equals gp.Id
+            //               where s.Player.Id != gamePlayerId && gp.GameId.Equals(gameId)
+            //              select s).ToList();
+            //var player1Count = player1.Count;
+            //var player2Count = player2.Count;
+            return nextPlayerId == gamePlayerId;
         }
 
-        public void VerifyAndExecuteShotOrThrow(String[] xy, Guid gamePlayerId)
+        public void VerifyAndExecuteShotOrThrow(SaveShotsDto xy, Guid gamePlayerId)
         {
-            SaveShotsDto shot = new SaveShotsDto { X = int.Parse(xy[0]), Y = int.Parse(xy[1])};
+            SaveShotsDto shot = new SaveShotsDto { X = xy.X, Y = xy.Y};
             var shots = (from gp in applicationDbContext.GamePlayer
                         join s in applicationDbContext.Shot on gp.PlayerId equals s.Player.Id
                         where gp.Id == gamePlayerId
                         select new SaveShotsDto { X = s.X, Y = s.Y })
                         .ToList();
-            if (!verificationLogic.VerifyShot(shots, shot))
+
+            if (shots == null || !verificationLogic.VerifyShot(shots, shot))
             {
                 throw new InvalidOperationException("Ungültiger Schuss");
             }
+        }
+        public void SaveShot(SaveShotsDto shot, Guid gamePlayerId)
+        {
+            var player = applicationDbContext.GamePlayer
+                .FirstOrDefault(x => x.Id == gamePlayerId)?.Player;
+
+            var gamePlayer = (from gp in applicationDbContext.GamePlayer
+                           where gp.Id == gamePlayerId
+                           select gp).FirstOrDefault();
+            var shotToSave = new Shot
+            {
+                Id = Guid.NewGuid(),
+                X = shot.X,
+                Y = shot.Y,
+                Player = gamePlayer
+            };
+            applicationDbContext.Shot.Add(shotToSave);
+            applicationDbContext.SaveChanges();
         }
         public void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
         {

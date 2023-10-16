@@ -64,21 +64,22 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
 
         //
-        [HttpGet("{playerId}/{gameId}/CheckReadyToShoot")]
-        public IActionResult CheckReadyToShoot(Guid gameId, Guid playerId)
+        [HttpGet("{gamePlayerId}/{gameId}/CheckReadyToShoot")]
+        public IActionResult CheckReadyToShoot(Guid gameId, Guid gamePlayerId)
         {
-            if (!gameLogic.CheckShots(gameId, playerId))
+            if (gameLogic.CheckShots(gameId, gamePlayerId))
                 return Ok();
             return BadRequest();
         }
 
         //
         [HttpPost("{gamePlayerId}/SaveShotInDB")]
-        public IActionResult SaveShotInDB([FromBody] string[] xy, Guid gamePlayerId)
+        public IActionResult SaveShotInDB([FromBody] SaveShotsDto xy, Guid gamePlayerId)
         {
             try
             {
                 gameLogic.VerifyAndExecuteShotOrThrow(xy, gamePlayerId);
+                gameLogic.SaveShot(xy, gamePlayerId);
                 return Ok();
             } 
             catch (InvalidOperationException ex)
@@ -164,7 +165,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
         private static String CreateLink(Guid gameId, Guid gamePlayerId, Guid playerId)
         {
-            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId + "&playerId=" + playerId;
+            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId + "&gamePlayerId=" + playerId;
         }
     }
 }

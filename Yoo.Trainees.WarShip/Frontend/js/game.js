@@ -164,7 +164,9 @@ containers.forEach((container) => {
 });
 
 opponentFields.forEach((opponentField) => {
-  opponentField.addEventListener("click", (e) => {
+  opponentField.addEventListener("click", async (e) => {
+    const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
+    if(isReadyToShoot) {
     const currentX = parseInt(opponentField.getAttribute("data-x"));
     const currentY = parseInt(opponentField.getAttribute("data-y"));
     const API_URL =
@@ -184,9 +186,9 @@ opponentFields.forEach((opponentField) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data) {
-        }
+        console.log(data)
       });
+    }
   });
 });
 
@@ -429,14 +431,9 @@ function screenBlocker() {
   ScissorsRockPaper();
 }
 
-function shotsFired(playerId) {
-  const API_URL =
-    "https://localhost:7118/api/Game/" +
-    playerId +
-    "/" +
-    gameId +
-    "/CheckReadyToShoot";
-  fetch(API_URL, {
+async function checkReadyToShoot(gamePlayerId) {
+  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/" + gameId + "/CheckReadyToShoot";
+  const test = fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -450,12 +447,16 @@ function shotsFired(playerId) {
   })
     .then((data) => {
       if (data.ok) {
-        // TODO: load shots fired
+        console.log("ready to shoot");
+        return true;
       }
+      return false;
     })
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
+    console.log(test);
+    return test;
 }
 
 function isBoardSet(gameId) {
