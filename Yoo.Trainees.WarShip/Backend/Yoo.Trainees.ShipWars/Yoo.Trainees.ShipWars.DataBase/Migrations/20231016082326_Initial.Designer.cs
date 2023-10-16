@@ -12,11 +12,7 @@ using Yoo.Trainees.ShipWars.DataBase;
 namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013131425_Initial.Designer.cs
-    [Migration("20231013131425_Initial")]
-========
-    [Migration("20231013145027_Initial")]
->>>>>>>> feature/TRAINEE-173-play-mode-of-the-game:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013145027_Initial.Designer.cs
+    [Migration("20231016082326_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -138,41 +134,25 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.HasData(
                         new
                         {
-<<<<<<<< HEAD:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013131425_Initial.Designer.cs
-                            Id = new Guid("37283c82-668f-4d63-a7e4-b54b08d0546c"),
-========
-                            Id = new Guid("85ce8508-012d-4cec-b19f-7da26443ee95"),
->>>>>>>> feature/TRAINEE-173-play-mode-of-the-game:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013145027_Initial.Designer.cs
+                            Id = new Guid("ca53cb84-709a-45cd-8c89-9d70cbae49c8"),
                             Length = 1,
                             Name = "Submarine"
                         },
                         new
                         {
-<<<<<<<< HEAD:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013131425_Initial.Designer.cs
-                            Id = new Guid("224bae5a-3245-4896-a000-f5acbdee6eb8"),
-========
-                            Id = new Guid("f9e8c834-2b20-4f05-a96d-993c70e055bf"),
->>>>>>>> feature/TRAINEE-173-play-mode-of-the-game:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013145027_Initial.Designer.cs
+                            Id = new Guid("7796d5f5-3141-41ee-9fe9-91d04e694b6e"),
                             Length = 2,
                             Name = "Destroyer"
                         },
                         new
                         {
-<<<<<<<< HEAD:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013131425_Initial.Designer.cs
-                            Id = new Guid("a4fad743-eeb2-4c08-a47e-fdb178d97544"),
-========
-                            Id = new Guid("1c33868c-d693-4343-92eb-583e78ca53b3"),
->>>>>>>> feature/TRAINEE-173-play-mode-of-the-game:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013145027_Initial.Designer.cs
+                            Id = new Guid("4b639ae9-e916-44d5-ab48-cd29143fba11"),
                             Length = 3,
                             Name = "Cruiser"
                         },
                         new
                         {
-<<<<<<<< HEAD:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013131425_Initial.Designer.cs
-                            Id = new Guid("ed1eb044-3d2b-4486-bdc9-3b3c90b2cc42"),
-========
-                            Id = new Guid("adf1162d-6589-4ffb-9bd9-3a25fbc088c4"),
->>>>>>>> feature/TRAINEE-173-play-mode-of-the-game:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013145027_Initial.Designer.cs
+                            Id = new Guid("918ebf61-0fea-4571-a69b-5b58dfb13328"),
                             Length = 4,
                             Name = "Warship"
                         });

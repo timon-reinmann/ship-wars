@@ -7,6 +7,12 @@ using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
 {
+    public enum SRPStatus
+    {
+        waiting,
+        lost,
+        won
+    }
     public class GameLogic : IGameLogic
     {
         private readonly ApplicationDbContext applicationDbContext;
@@ -179,34 +185,40 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             applicationDbContext.SaveChanges();
         }
-        public bool GetResultOfTheSRP(Guid gamePlayerId)
+        public SRPStatus GetResultOfTheSRP(Guid gamePlayerId)
         {
             var gameId = (from gp in applicationDbContext.GamePlayer
                           where gp.Id.Equals(gamePlayerId)
-                          select gp.GameId).SingleOrDefault();
+                          select gp.GameId).FirstOrDefault();
             var player1 = (from gp in applicationDbContext.GamePlayer
                            where gp.Id == gamePlayerId
-                           select gp.ScissorsRockPaperBet).SingleOrDefault();
+                           select gp).SingleOrDefault();
             var player2 = (from gp in applicationDbContext.GamePlayer
                            where gp.GameId != gamePlayerId && gp.GameId.Equals(gameId)
-                           select gp.ScissorsRockPaperBet).SingleOrDefault();
-
-            if(player2 == null || player1 == null) return false;
+                           select gp).FirstOrDefault();
 
             var game = (from g in applicationDbContext.Game
                         where g.Id.Equals(gameId)
                         select g).SingleOrDefault();
 
-            // Kann ich es hier mit ()||()||() Verbinden oder ist das zu unleserlich?
-            if((player1 == ScissorsRockPaper.Scissors && player2 == ScissorsRockPaper.Rock) ||
-               (player1 == ScissorsRockPaper.Rock && player2 == ScissorsRockPaper.Paper)    ||
-               (player1 == ScissorsRockPaper.Paper && player2 == ScissorsRockPaper.Scissors))
-            {
-                
-                return false;
-            }
+            if (player1.ScissorsRockPaperBet == null || player2.ScissorsRockPaperBet == null || game == null) return SRPStatus.waiting;
 
-            return true;
+            bool isPlayer1Loser = CheckIfPlayer1IsLoser(player1, player2);
+
+            game.NextPlayer = isPlayer1Loser ? player2.Id : player1.Id;
+
+            applicationDbContext.Game.Update(game);
+            applicationDbContext.SaveChanges();
+
+            if (isPlayer1Loser)
+                return SRPStatus.lost;
+            return SRPStatus.won;
+        }
+        public bool CheckIfPlayer1IsLoser(GamePlayer player1, GamePlayer player2)
+        {
+            return (player1.ScissorsRockPaperBet == ScissorsRockPaper.Scissors && player2.ScissorsRockPaperBet == ScissorsRockPaper.Rock) ||
+                   (player1.ScissorsRockPaperBet == ScissorsRockPaper.Rock && player2.ScissorsRockPaperBet == ScissorsRockPaper.Paper) ||
+                   (player1.ScissorsRockPaperBet == ScissorsRockPaper.Paper && player2.ScissorsRockPaperBet == ScissorsRockPaper.Scissors);
         }
     }
 }

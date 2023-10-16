@@ -152,17 +152,10 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 columns: new[] { "Id", "Length", "Name" },
                 values: new object[,]
                 {
-<<<<<<<< HEAD:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013131425_Initial.cs
-                    { new Guid("224bae5a-3245-4896-a000-f5acbdee6eb8"), 2, "Destroyer" },
-                    { new Guid("37283c82-668f-4d63-a7e4-b54b08d0546c"), 1, "Submarine" },
-                    { new Guid("a4fad743-eeb2-4c08-a47e-fdb178d97544"), 3, "Cruiser" },
-                    { new Guid("ed1eb044-3d2b-4486-bdc9-3b3c90b2cc42"), 4, "Warship" }
-========
-                    { new Guid("1c33868c-d693-4343-92eb-583e78ca53b3"), 3, "Cruiser" },
-                    { new Guid("85ce8508-012d-4cec-b19f-7da26443ee95"), 1, "Submarine" },
-                    { new Guid("adf1162d-6589-4ffb-9bd9-3a25fbc088c4"), 4, "Warship" },
-                    { new Guid("f9e8c834-2b20-4f05-a96d-993c70e055bf"), 2, "Destroyer" }
->>>>>>>> feature/TRAINEE-173-play-mode-of-the-game:Yoo.Trainees.WarShip/Backend/Yoo.Trainees.ShipWars/Yoo.Trainees.ShipWars.DataBase/Migrations/20231013145027_Initial.cs
+                    { new Guid("4b639ae9-e916-44d5-ab48-cd29143fba11"), 3, "Cruiser" },
+                    { new Guid("7796d5f5-3141-41ee-9fe9-91d04e694b6e"), 2, "Destroyer" },
+                    { new Guid("918ebf61-0fea-4571-a69b-5b58dfb13328"), 4, "Warship" },
+                    { new Guid("ca53cb84-709a-45cd-8c89-9d70cbae49c8"), 1, "Submarine" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -41,6 +41,9 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<Guid?>("NextPlayer")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.ToTable("Game");
@@ -128,25 +131,25 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("37283c82-668f-4d63-a7e4-b54b08d0546c"),
+                            Id = new Guid("ca53cb84-709a-45cd-8c89-9d70cbae49c8"),
                             Length = 1,
                             Name = "Submarine"
                         },
                         new
                         {
-                            Id = new Guid("224bae5a-3245-4896-a000-f5acbdee6eb8"),
+                            Id = new Guid("7796d5f5-3141-41ee-9fe9-91d04e694b6e"),
                             Length = 2,
                             Name = "Destroyer"
                         },
                         new
                         {
-                            Id = new Guid("a4fad743-eeb2-4c08-a47e-fdb178d97544"),
+                            Id = new Guid("4b639ae9-e916-44d5-ab48-cd29143fba11"),
                             Length = 3,
                             Name = "Cruiser"
                         },
                         new
                         {
-                            Id = new Guid("ed1eb044-3d2b-4486-bdc9-3b3c90b2cc42"),
+                            Id = new Guid("918ebf61-0fea-4571-a69b-5b58dfb13328"),
                             Length = 4,
                             Name = "Warship"
                         });

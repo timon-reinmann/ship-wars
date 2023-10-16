@@ -33,6 +33,7 @@ let zIndexChange = 1;
 let currentField = null;
 
 let intervalid;
+let intervalSRP;
 
 const draggables = document.querySelectorAll(".ship");
 const containers = document.querySelectorAll(".ownField");
@@ -528,11 +529,15 @@ function loadGameBoard(data) {
 }
 
 async function ScissorsRockPaper() {
-  scissors.classList.add("scissors--active");
-  rock.classList.add("rock--active");
-  paper.classList.add("paper--active");
-  SRP.classList.add("SRP--active");
+  SRPFindished = await CheckIfSRPIsSet(gamePlayerId); 
+  if(!SRPFindished) {
+    scissors.classList.add("scissors--active");
+    rock.classList.add("rock--active");
+    paper.classList.add("paper--active");
+    SRP.classList.add("SRP--active");
+  }
 }
+
 function createLoadingScreenForSRP() {
   scissors.classList.remove("scissors--active");
   rock.classList.remove("rock--active");
@@ -547,6 +552,18 @@ function createLoadingScreenForSRP() {
   finishField.classList.add("active-popup");
   commit_button.classList.add("commit-button--active");
 }
+
+function deleteLoadingScreenForSRP() {
+    const finish = document.querySelector(".finish");
+    const commit_button = document.querySelector(".commit-button");
+    const ring = document.querySelector(".ring");
+    const shipSelection = document.querySelector(".ship__selection");
+    shipSelection.classList.remove("ship__selection");
+    ring.classList.remove("ring--active");
+    finish.classList.remove("active-popup");
+    remove(commit_button);
+}
+
 SRPChoice.forEach((srp) => {
   srp.addEventListener("click", function () {
     const choice = mapFrontendScissorsRockPaperToBackendEnum(
@@ -571,11 +588,39 @@ SRPChoice.forEach((srp) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data) {
+        if (data.ok) {
+          createLoadingScreenForSRP()
+          intervalSRP = setInterval(CheckIfSRPIsSet, 1000);
         }
       });
   });
-}); 
+});
+async function CheckIfSRPIsSet() {
+  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/CheckIfSRPIsSet";
+  const result = fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === 1 || data.status === 2) {
+        console.log(data)
+        clearInterval(intervalSRP);
+        deleteLoadingScreenForSRP();
+        return true;
+      }
+      return false;
+    });
+    return result;
+}
 
 function mapFrontendScissorsRockPaperToBackendEnum(choice) {
   switch (choice) {
