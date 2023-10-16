@@ -89,6 +89,14 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
 
         //
+        [HttpGet("{gamePlayerId}/LoadFiredShots")]
+        public IActionResult LoadFiredShots(Guid gamePlayerId)
+        {
+            var shots = gameLogic.ShotsAll(gamePlayerId);
+            return Ok(shots);
+        }
+
+        //
         [HttpGet("{gamePlayerId}/CheckIfSRPIsSet")]
         public IActionResult CheckIfSRPIsSet(Guid gamePlayerId)
         {

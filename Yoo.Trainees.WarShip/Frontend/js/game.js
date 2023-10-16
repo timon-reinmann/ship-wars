@@ -6,6 +6,7 @@ const playerId = urlParams.get("playerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
 
 isBoardSet(gamePlayerId);
+loadFiredShots(gamePlayerId);
 
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
@@ -482,6 +483,39 @@ function isBoardSet(gameId) {
         loadGameBoard(data);
         createLoadingScreen();
         intervalid = setInterval(checkIfPlayerReady, 1000);
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+function loadFiredShots(gamePlayerId) {
+  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/LoadFiredShots";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        data.forEach((shots) => {
+          const X = shots.x;
+          const Y = shots.y;
+          const opponentFields = document.getElementById("opponent__board");
+          const opponentField = opponentFields.querySelector(
+            `[data-x="${X}"][data-y="${Y}"]`
+          );
+          opponentField.classList.add("opponentField--hit");
+        });
       }
     })
     .catch((error) => {

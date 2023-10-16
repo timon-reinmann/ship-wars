@@ -393,8 +393,10 @@ span {
   cursor: pointer;
 }
 .opponentField--hit {
-  background-image: url(../img/red-cross.png);
+  /* background-image: url(../img/red-cross.png);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100% 100%;
+  background-size: 100% 100%; */
+  background-color: red;
+  opacity: 0.25;
 }

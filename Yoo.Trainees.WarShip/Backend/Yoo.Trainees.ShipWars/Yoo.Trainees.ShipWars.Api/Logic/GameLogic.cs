@@ -182,6 +182,14 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             applicationDbContext.Shot.Add(shotToSave);
             applicationDbContext.SaveChanges();
         }
+
+        public List<SaveShotsDto> ShotsAll(Guid gamePlayerId)
+        {
+            var shots = (from s in applicationDbContext.Shot
+                         where s.Player.Id.Equals(gamePlayerId)
+                         select new SaveShotsDto { X = s.X, Y = s.Y }).ToList();
+            return shots;
+        }
         public void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
         {
             var gamePlayer = applicationDbContext.GamePlayer.First(x => x.Id == gamePlayerId);
