@@ -1,4 +1,5 @@
-﻿using Yoo.Trainees.ShipWars.DataBase;
+﻿using Microsoft.EntityFrameworkCore.Query.Internal;
+using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
@@ -152,6 +153,35 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             applicationDbContext.GamePlayer.Update(gamePlayer);
 
             applicationDbContext.SaveChanges();
+        }
+        public bool GetResultOfTheSRP(Guid gamePlayerId)
+        {
+            var gameId = (from gp in applicationDbContext.GamePlayer
+                          where gp.Id.Equals(gamePlayerId)
+                          select gp.GameId).SingleOrDefault();
+            var player1 = (from gp in applicationDbContext.GamePlayer
+                           where gp.Id == gamePlayerId
+                           select gp.ScissorsRockPaperBet).SingleOrDefault();
+            var player2 = (from gp in applicationDbContext.GamePlayer
+                           where gp.GameId != gamePlayerId && gp.GameId.Equals(gameId)
+                           select gp.ScissorsRockPaperBet).SingleOrDefault();
+
+            if(player2 == null || player1 == null) return false;
+
+            var game = (from g in applicationDbContext.Game
+                        where g.Id.Equals(gameId)
+                        select g).SingleOrDefault();
+
+            // Kann ich es hier mit ()||()||() Verbinden oder ist das zu unleserlich?
+            if((player1 == ScissorsRockPaper.Scissors && player2 == ScissorsRockPaper.Rock) ||
+               (player1 == ScissorsRockPaper.Rock && player2 == ScissorsRockPaper.Paper)    ||
+               (player1 == ScissorsRockPaper.Paper && player2 == ScissorsRockPaper.Scissors))
+            {
+                
+                return false;
+            }
+
+            return true;
         }
     }
 }

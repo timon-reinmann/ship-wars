@@ -87,13 +87,22 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             }
         }
 
+        //
+        [HttpGet("{gamePlayerId}/CheckIfSRPIsSet")]
+        public IActionResult CheckIfSRPIsSet(Guid gamePlayerId)
+        {
+            if(gameLogic.GetResultOfTheSRP(gamePlayerId))
+                return Ok();
+            return BadRequest();
+        }
+
+        //
         [HttpPut("{gamePlayerId}/SaveSRP")]
         public IActionResult SaveSRP([FromBody] ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
         {
             gameLogic.SaveChoiceIntoDB(scissorsRockPaperBet, gamePlayerId);
             return Ok();
         }
-        
 
         // POST api/<GameController>
         [HttpPost]

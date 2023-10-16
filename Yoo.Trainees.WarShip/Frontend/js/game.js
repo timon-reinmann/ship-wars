@@ -531,8 +531,20 @@ async function ScissorsRockPaper() {
   rock.classList.add("rock--active");
   paper.classList.add("paper--active");
   SRP.classList.add("SRP--active");
-
-  scissors.setAttribute("data-choice", "scissors");
+}
+function createLoadingScreenForSRP() {
+  scissors.classList.remove("scissors--active");
+  rock.classList.remove("rock--active");
+  paper.classList.remove("paper--active");
+  SRP.classList.remove("SRP--active");
+  const finishField = document.querySelector(".finish");
+  const commit_button = document.querySelector(".commit-button");
+  const ring = document.querySelector(".ring");
+  const shipSelection = document.querySelector(".ship__selection");
+  shipSelection.classList.add("ship__selection--active");
+  ring.classList.add("ring--active");
+  finishField.classList.add("active-popup");
+  commit_button.classList.add("commit-button--active");
 }
 SRPChoice.forEach((srp) => {
   srp.addEventListener("click", function () {
@@ -562,9 +574,7 @@ SRPChoice.forEach((srp) => {
         }
       });
   });
-});
-
-function 
+}); 
 
 function mapFrontendScissorsRockPaperToBackendEnum(choice) {
   switch (choice) {
