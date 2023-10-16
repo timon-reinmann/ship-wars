@@ -80,11 +80,11 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             {
                 gameLogic.VerifyAndExecuteShotOrThrow(xy, gamePlayerId);
                 gameLogic.SaveShot(xy, gamePlayerId);
-                return Ok();
+                return Ok(new { good = 1 });
             } 
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex);
+                return BadRequest(new { good = -1 });
             }
         }
 

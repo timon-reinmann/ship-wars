@@ -189,6 +189,9 @@ opponentFields.forEach((opponentField) => {
     })
       .then((response) => response.json())
       .then((data) => {
+        if(data.good === 1) {
+          opponentField.classList.add("opponentField--hit");
+        }
       });
     }
   });

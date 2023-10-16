@@ -392,3 +392,9 @@ span {
   background-color: rgba(124, 124, 124, 0.837);
   cursor: pointer;
 }
+.opponentField--hit {
+  background-image: url(../img/red-cross.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+}
