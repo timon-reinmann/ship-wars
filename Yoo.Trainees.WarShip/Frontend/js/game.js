@@ -189,7 +189,6 @@ opponentFields.forEach((opponentField) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
       });
     }
   });
@@ -450,7 +449,6 @@ async function checkReadyToShoot(gamePlayerId) {
   })
     .then((data) => {
       if (data.ok) {
-        console.log("ready to shoot");
         return true;
       }
       return false;
@@ -458,7 +456,6 @@ async function checkReadyToShoot(gamePlayerId) {
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
-    console.log(test);
     return test;
 }
 
@@ -572,7 +569,6 @@ SRPChoice.forEach((srp) => {
     const choice = mapFrontendScissorsRockPaperToBackendEnum(
       srp.dataset.choice
     );
-    console.log(choice);
 
     const API_URL =
       "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveSRP";
@@ -615,7 +611,6 @@ async function CheckIfSRPIsSet() {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 1 || data.status === 2) {
-        console.log(data)
         clearInterval(intervalSRP);
         deleteLoadingScreenForSRP();
         return true;

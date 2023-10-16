@@ -181,11 +181,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         public void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
         {
             var gamePlayer = applicationDbContext.GamePlayer.First(x => x.Id == gamePlayerId);
-            
-            gamePlayer.ScissorsRockPaperBet = scissorsRockPaperBet;
-            applicationDbContext.GamePlayer.Update(gamePlayer);
 
-            applicationDbContext.SaveChanges();
+            if (gamePlayer != null) {
+                gamePlayer.ScissorsRockPaperBet = scissorsRockPaperBet;
+                applicationDbContext.GamePlayer.Update(gamePlayer);
+                applicationDbContext.SaveChanges();
+            }
         }
         public SRPStatus GetResultOfTheSRP(Guid gamePlayerId)
         {
@@ -223,9 +224,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             applicationDbContext.Game.Update(game);
             applicationDbContext.SaveChanges();
 
-            if (isPlayer1Loser)
-                return SRPStatus.lost;
-            return SRPStatus.won;
+            return isPlayer1Loser ? SRPStatus.lost : SRPStatus.won;
         }
         public bool CheckIfPlayer1IsLoser(GamePlayer player1, GamePlayer player2)
         {
