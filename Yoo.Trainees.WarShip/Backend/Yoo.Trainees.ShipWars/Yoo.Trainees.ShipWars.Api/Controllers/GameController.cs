@@ -64,12 +64,48 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
 
         //
-        [HttpGet("{playerId}/{gameId}/ShotsFired")]
-        public IActionResult ShotsFired(Guid gameId, Guid playerId)
+        [HttpGet("{gamePlayerId}/{gameId}/CheckReadyToShoot")]
+        public IActionResult CheckReadyToShoot(Guid gameId, Guid gamePlayerId)
         {
-            if (!gameLogic.CheckShots(gameId, playerId))
+            if (gameLogic.CheckShots(gameId, gamePlayerId))
                 return Ok();
             return BadRequest();
+        }
+
+        //
+        [HttpPost("{gamePlayerId}/SaveShotInDB")]
+        public IActionResult SaveShotInDB([FromBody] SaveShotsDto xy, Guid gamePlayerId)
+        {
+            try
+            {
+                gameLogic.VerifyAndExecuteShotOrThrow(xy, gamePlayerId);
+                gameLogic.SaveShot(xy, gamePlayerId);
+                return Ok();
+            } 
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        //
+        [HttpGet("{gamePlayerId}/CheckIfSRPIsSet")]
+        public IActionResult CheckIfSRPIsSet(Guid gamePlayerId)
+        {
+            SRPStatus status = gameLogic.GetResultOfTheSRP(gamePlayerId);
+            if (status == SRPStatus.won)
+                return Ok(new { status = status });
+            if (status == SRPStatus.lost)
+                return Ok(new { status = status });
+            return BadRequest(new { status = status });
+        }
+
+        //
+        [HttpPut("{gamePlayerId}/SaveSRP")]
+        public IActionResult SaveSRP([FromBody] ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
+        {
+            gameLogic.SaveChoiceIntoDB(scissorsRockPaperBet, gamePlayerId);
+            return Ok(new { ok = true});
         }
 
         // POST api/<GameController>
@@ -97,7 +133,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 return BadRequest("Mismatched game ID");
             }
 
-            bool isValidRequest = verificationLogic.verifyEvrything(Ships.Ships);
+            bool isValidRequest = verificationLogic.VerifyEverything(Ships.Ships);
             if (!isValidRequest)
             {
                 return BadRequest();
@@ -132,7 +168,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
         private static String CreateLink(Guid gameId, Guid gamePlayerId, Guid playerId)
         {
-            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId + "&playerId=" + playerId;
+            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId + "&gamePlayerId=" + playerId;
         }
     }
 }
