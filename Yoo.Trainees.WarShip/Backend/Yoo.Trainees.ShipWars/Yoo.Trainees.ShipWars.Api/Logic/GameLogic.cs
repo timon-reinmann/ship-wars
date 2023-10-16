@@ -11,7 +11,9 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     {
         waiting,
         lost,
-        won
+        won,
+        draw,
+        redo
     }
     public class GameLogic : IGameLogic
     {
@@ -127,20 +129,20 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         }
         public bool CheckShots(Guid gameId, Guid gamePlayerId)
         {
-            var game = (from sp in applicationDbContext.Game
-                        where sp.Id.Equals(gameId)
-                        select sp.NextPlayer);
-            Guid? nextPlayerId = game.SingleOrDefault();
-            //var player1 = (from s in applicationDbContext.Shot
-            //               join gp in applicationDbContext.GamePlayer on s.Player.Id equals gp.Id
-            //               where s.Player.Id.Equals(gamePlayerId) && gp.GameId.Equals(gameId)
-            //               select s.);
-            //var player2 = (from s in applicationDbContext.Shot
-            //               join gp in applicationDbContext.GamePlayer on s.Player.Id equals gp.Id
-            //               where s.Player.Id != gamePlayerId && gp.GameId.Equals(gameId)
-            //              select s).ToList();
-            //var player1Count = player1.Count;
-            //var player2Count = player2.Count;
+            var game = (from g in applicationDbContext.Game
+                        where g.Id.Equals(gameId)
+                        select g).SingleOrDefault();
+            Guid? nextPlayerId = game.NextPlayer;
+
+            if(nextPlayerId == gamePlayerId)
+            {
+                var nextPlayer = (from gp in applicationDbContext.GamePlayer
+                                  where gp.Id != nextPlayerId && gp.GameId.Equals(gameId)
+                                  select gp.Id).SingleOrDefault();
+                game.NextPlayer = nextPlayer;
+                applicationDbContext.Game.Update(game);
+                applicationDbContext.SaveChanges();
+            }
             return nextPlayerId == gamePlayerId;
         }
 
@@ -194,14 +196,25 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                            where gp.Id == gamePlayerId
                            select gp).SingleOrDefault();
             var player2 = (from gp in applicationDbContext.GamePlayer
-                           where gp.GameId != gamePlayerId && gp.GameId.Equals(gameId)
+                           where gp.Id != gamePlayerId && gp.GameId.Equals(gameId)
                            select gp).FirstOrDefault();
 
             var game = (from g in applicationDbContext.Game
                         where g.Id.Equals(gameId)
                         select g).SingleOrDefault();
 
-            if (player1.ScissorsRockPaperBet == null || player2.ScissorsRockPaperBet == null || game == null) return SRPStatus.waiting;
+
+            if (player1.ScissorsRockPaperBet == null) return SRPStatus.redo;
+            if (player2.ScissorsRockPaperBet == null || game == null) return SRPStatus.waiting;
+            if (player1.ScissorsRockPaperBet == player2.ScissorsRockPaperBet) 
+            {
+                player1.ScissorsRockPaperBet = null;
+                player2.ScissorsRockPaperBet = null;
+                applicationDbContext.GamePlayer.Update(player1);
+                applicationDbContext.GamePlayer.Update(player2);
+                applicationDbContext.SaveChanges();
+                return SRPStatus.draw; 
+            }
 
             bool isPlayer1Loser = CheckIfPlayer1IsLoser(player1, player2);
 

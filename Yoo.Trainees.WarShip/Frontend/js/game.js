@@ -45,6 +45,8 @@ const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
 const SRP = document.querySelector(".SRP");
 
+localStorage.setItem('srpReload', 'false');
+
 draggables.forEach((draggable) => {
   draggable.addEventListener("click", (e) => {
     let currentShip = draggable.parentNode;
@@ -566,6 +568,7 @@ function deleteLoadingScreenForSRP() {
 
 SRPChoice.forEach((srp) => {
   srp.addEventListener("click", function () {
+    localStorage.setItem('srpReload', 'true');
     const choice = mapFrontendScissorsRockPaperToBackendEnum(
       srp.dataset.choice
     );
@@ -616,6 +619,10 @@ async function CheckIfSRPIsSet() {
         clearInterval(intervalSRP);
         deleteLoadingScreenForSRP();
         return true;
+      }
+      if((data.status === 4 || data.status === 3) && localStorage.getItem('srpReload') === 'true'){
+        localStorage.setItem('srpReload', 'false');
+        location.reload();
       }
       return false;
     });

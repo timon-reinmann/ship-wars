@@ -97,7 +97,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 return Ok(new { status = status });
             if (status == SRPStatus.lost)
                 return Ok(new { status = status });
-            return BadRequest();
+            return BadRequest(new { status = status });
         }
 
         //
