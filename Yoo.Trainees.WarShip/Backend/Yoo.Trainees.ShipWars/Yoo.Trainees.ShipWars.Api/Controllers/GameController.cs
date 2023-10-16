@@ -87,6 +87,35 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 return BadRequest(new { good = -1 });
             }
         }
+
+        //
+        [HttpGet("{gamePlayerId}/LoadFiredShots")]
+        public IActionResult LoadFiredShots(Guid gamePlayerId)
+        {
+            var shots = gameLogic.ShotsAll(gamePlayerId);
+            return Ok(shots);
+        }
+
+        //
+        [HttpGet("{gamePlayerId}/CheckIfSRPIsSet")]
+        public IActionResult CheckIfSRPIsSet(Guid gamePlayerId)
+        {
+            SRPStatus status = gameLogic.GetResultOfTheSRP(gamePlayerId);
+            if (status == SRPStatus.won)
+                return Ok(new { status = status });
+            if (status == SRPStatus.lost)
+                return Ok(new { status = status });
+            return BadRequest(new { status = status });
+        }
+
+        //
+        [HttpPut("{gamePlayerId}/SaveSRP")]
+        public IActionResult SaveSRP([FromBody] ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
+        {
+            gameLogic.SaveChoiceIntoDB(scissorsRockPaperBet, gamePlayerId);
+            return Ok(new { ok = true});
+        }
+
         // POST api/<GameController>
         [HttpPost]
         public IActionResult Post([FromBody] string name)

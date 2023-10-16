@@ -59,7 +59,8 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ScissorsRockPaperBet = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -151,10 +152,10 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 columns: new[] { "Id", "Length", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("1c33868c-d693-4343-92eb-583e78ca53b3"), 3, "Cruiser" },
-                    { new Guid("85ce8508-012d-4cec-b19f-7da26443ee95"), 1, "Submarine" },
-                    { new Guid("adf1162d-6589-4ffb-9bd9-3a25fbc088c4"), 4, "Warship" },
-                    { new Guid("f9e8c834-2b20-4f05-a96d-993c70e055bf"), 2, "Destroyer" }
+                    { new Guid("4b639ae9-e916-44d5-ab48-cd29143fba11"), 3, "Cruiser" },
+                    { new Guid("7796d5f5-3141-41ee-9fe9-91d04e694b6e"), 2, "Destroyer" },
+                    { new Guid("918ebf61-0fea-4571-a69b-5b58dfb13328"), 4, "Warship" },
+                    { new Guid("ca53cb84-709a-45cd-8c89-9d70cbae49c8"), 1, "Submarine" }
                 });
 
             migrationBuilder.CreateIndex(

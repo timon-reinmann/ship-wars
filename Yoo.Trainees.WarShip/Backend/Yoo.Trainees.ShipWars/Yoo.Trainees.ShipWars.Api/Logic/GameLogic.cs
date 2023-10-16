@@ -1,11 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Query.Internal;
 using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
 {
+    public enum SRPStatus
+    {
+        waiting,
+        lost,
+        won,
+        draw,
+        redo
+    }
     public class GameLogic : IGameLogic
     {
         private readonly ApplicationDbContext applicationDbContext;
@@ -120,20 +129,20 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         }
         public bool CheckShots(Guid gameId, Guid gamePlayerId)
         {
-            var game = (from sp in applicationDbContext.Game
-                        where sp.Id.Equals(gameId)
-                        select sp.NextPlayer);
-            Guid? nextPlayerId = game.SingleOrDefault();
-            //var player1 = (from s in applicationDbContext.Shot
-            //               join gp in applicationDbContext.GamePlayer on s.Player.Id equals gp.Id
-            //               where s.Player.Id.Equals(gamePlayerId) && gp.GameId.Equals(gameId)
-            //               select s.);
-            //var player2 = (from s in applicationDbContext.Shot
-            //               join gp in applicationDbContext.GamePlayer on s.Player.Id equals gp.Id
-            //               where s.Player.Id != gamePlayerId && gp.GameId.Equals(gameId)
-            //              select s).ToList();
-            //var player1Count = player1.Count;
-            //var player2Count = player2.Count;
+            var game = (from g in applicationDbContext.Game
+                        where g.Id.Equals(gameId)
+                        select g).SingleOrDefault();
+            Guid? nextPlayerId = game.NextPlayer;
+
+            if(nextPlayerId == gamePlayerId)
+            {
+                var nextPlayer = (from gp in applicationDbContext.GamePlayer
+                                  where gp.Id != nextPlayerId && gp.GameId.Equals(gameId)
+                                  select gp.Id).SingleOrDefault();
+                game.NextPlayer = nextPlayer;
+                applicationDbContext.Game.Update(game);
+                applicationDbContext.SaveChanges();
+            }
             return nextPlayerId == gamePlayerId;
         }
 
@@ -172,6 +181,68 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             };
             applicationDbContext.Shot.Add(shotToSave);
             applicationDbContext.SaveChanges();
+        }
+
+        public List<SaveShotsDto> ShotsAll(Guid gamePlayerId)
+        {
+            var shots = (from s in applicationDbContext.Shot
+                         where s.Player.Id.Equals(gamePlayerId)
+                         select new SaveShotsDto { X = s.X, Y = s.Y }).ToList();
+            return shots;
+        }
+        public void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
+        {
+            var gamePlayer = applicationDbContext.GamePlayer.First(x => x.Id == gamePlayerId);
+
+            if (gamePlayer != null) {
+                gamePlayer.ScissorsRockPaperBet = scissorsRockPaperBet;
+                applicationDbContext.GamePlayer.Update(gamePlayer);
+                applicationDbContext.SaveChanges();
+            }
+        }
+        public SRPStatus GetResultOfTheSRP(Guid gamePlayerId)
+        {
+            var gameId = (from gp in applicationDbContext.GamePlayer
+                          where gp.Id.Equals(gamePlayerId)
+                          select gp.GameId).FirstOrDefault();
+            var player1 = (from gp in applicationDbContext.GamePlayer
+                           where gp.Id == gamePlayerId
+                           select gp).SingleOrDefault();
+            var player2 = (from gp in applicationDbContext.GamePlayer
+                           where gp.Id != gamePlayerId && gp.GameId.Equals(gameId)
+                           select gp).FirstOrDefault();
+
+            var game = (from g in applicationDbContext.Game
+                        where g.Id.Equals(gameId)
+                        select g).SingleOrDefault();
+
+
+            if (player1.ScissorsRockPaperBet == null) return SRPStatus.redo;
+            if (player2.ScissorsRockPaperBet == null || game == null) return SRPStatus.waiting;
+            if (player1.ScissorsRockPaperBet == player2.ScissorsRockPaperBet) 
+            {
+                player1.ScissorsRockPaperBet = null;
+                player2.ScissorsRockPaperBet = null;
+                applicationDbContext.GamePlayer.Update(player1);
+                applicationDbContext.GamePlayer.Update(player2);
+                applicationDbContext.SaveChanges();
+                return SRPStatus.draw; 
+            }
+
+            bool isPlayer1Loser = CheckIfPlayer1IsLoser(player1, player2);
+
+            game.NextPlayer = isPlayer1Loser ? player2.Id : player1.Id;
+
+            applicationDbContext.Game.Update(game);
+            applicationDbContext.SaveChanges();
+
+            return isPlayer1Loser ? SRPStatus.lost : SRPStatus.won;
+        }
+        public bool CheckIfPlayer1IsLoser(GamePlayer player1, GamePlayer player2)
+        {
+            return (player1.ScissorsRockPaperBet == ScissorsRockPaper.Scissors && player2.ScissorsRockPaperBet == ScissorsRockPaper.Rock) ||
+                   (player1.ScissorsRockPaperBet == ScissorsRockPaper.Rock && player2.ScissorsRockPaperBet == ScissorsRockPaper.Paper) ||
+                   (player1.ScissorsRockPaperBet == ScissorsRockPaper.Paper && player2.ScissorsRockPaperBet == ScissorsRockPaper.Scissors);
         }
     }
 }

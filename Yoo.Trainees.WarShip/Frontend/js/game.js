@@ -3,8 +3,10 @@ const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
 const playerId = urlParams.get("playerId");
+const SRPChoice = document.querySelectorAll(".SRP-choice");
 
 isBoardSet(gamePlayerId);
+loadFiredShots(gamePlayerId);
 
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
@@ -19,6 +21,11 @@ const DirectionEnum = {
   HORIZONTAL: 0,
   VERTICAL: 1,
 };
+const ScissorsRockPaperEnum = {
+  Scissors: 0,
+  Rock: 1,
+  Paper: 2,
+};
 
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
@@ -27,12 +34,19 @@ let zIndexChange = 1;
 let currentField = null;
 
 let intervalid;
+let intervalSRP;
 
 const draggables = document.querySelectorAll(".ship");
 const containers = document.querySelectorAll(".ownField");
 const shipSelection = document.querySelector(".ship__selection");
 const opponentFields = document.querySelectorAll(".opponentField");
 
+const scissors = document.querySelector(".scissors");
+const rock = document.querySelector(".rock");
+const paper = document.querySelector(".paper");
+const SRP = document.querySelector(".SRP");
+
+localStorage.setItem('srpReload', 'false');
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("click", (e) => {
@@ -159,7 +173,8 @@ opponentFields.forEach((opponentField) => {
     if(isReadyToShoot) {
     const currentX = parseInt(opponentField.getAttribute("data-x"));
     const currentY = parseInt(opponentField.getAttribute("data-y"));
-    const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveShotInDB";
+    const API_URL =
+      "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveShotInDB";
     fetch(API_URL, {
       credentials: "omit",
       headers: {
@@ -272,7 +287,7 @@ function createBoard(gameBoard, isMyBoard) {
         div.id = `box${countingFields}`;
         div.dataset.ships = 0;
       }
-      if(!isMyBoard) {
+      if (!isMyBoard) {
         div.classList.add("opponentField");
       }
       gameBoard.appendChild(div);
@@ -345,7 +360,6 @@ async function sendShips(Ships) {
     }
   });
 }
-
 async function commitShips(commit_button) {
   finishField = document.querySelector(".finish");
   const ships = document.getElementsByClassName("ship");
@@ -404,7 +418,6 @@ function checkIfPlayerReady() {
   })
     .then((data) => {
       if (data.ok) {
-        console.log("working :)");
         clearInterval(intervalid);
         screenBlocker();
       }
@@ -421,7 +434,7 @@ function screenBlocker() {
   ring.classList.remove("ring--active");
   finishField.classList.remove("active-popup");
   screenBlocker.classList.add("screen-blocker--active");
-  SRP();
+  ScissorsRockPaper();
 }
 
 async function checkReadyToShoot(gamePlayerId) {
@@ -440,7 +453,6 @@ async function checkReadyToShoot(gamePlayerId) {
   })
     .then((data) => {
       if (data.ok) {
-        console.log("ready to shoot");
         return true;
       }
       return false;
@@ -448,7 +460,6 @@ async function checkReadyToShoot(gamePlayerId) {
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
-    console.log(test);
     return test;
 }
 
@@ -469,10 +480,42 @@ function isBoardSet(gameId) {
     .then((response) => response.json())
     .then((data) => {
       if (data) {
-        console.log("board");
         loadGameBoard(data);
         createLoadingScreen();
         intervalid = setInterval(checkIfPlayerReady, 1000);
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+function loadFiredShots(gamePlayerId) {
+  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/LoadFiredShots";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        data.forEach((shots) => {
+          const X = shots.x;
+          const Y = shots.y;
+          const opponentFields = document.getElementById("opponent__board");
+          const opponentField = opponentFields.querySelector(
+            `[data-x="${X}"][data-y="${Y}"]`
+          );
+          opponentField.classList.add("opponentField--hit");
+        });
       }
     })
     .catch((error) => {
@@ -521,28 +564,113 @@ function loadGameBoard(data) {
   });
 }
 
-function SRP() {
-  let sicssors = document.querySelector(".sicssors");
-  let rock = document.querySelector(".rock");
-  let paper = document.querySelector(".paper");
-  let SRP = document.querySelector(":SRP");
-  sicssors.classList.add("scissors--actove");
-  rock.classList.add("rock--active");
-  paper.classList.add("paper--active");
-  SRP.classList.add("SRP--active");
+async function ScissorsRockPaper() {
+  SRPFindished = await CheckIfSRPIsSet(gamePlayerId); 
+  if(!SRPFindished) {
+    scissors.classList.add("scissors--active");
+    rock.classList.add("rock--active");
+    paper.classList.add("paper--active");
+    SRP.classList.add("SRP--active");
+  }
+}
 
-  var timeLeft = 3;
-  var elem = document.getElementById("some_div");
+function createLoadingScreenForSRP() {
+  scissors.classList.remove("scissors--active");
+  rock.classList.remove("rock--active");
+  paper.classList.remove("paper--active");
+  SRP.classList.remove("SRP--active");
+  const finishField = document.querySelector(".finish");
+  const commit_button = document.querySelector(".commit-button");
+  const ring = document.querySelector(".ring");
+  const shipSelection = document.querySelector(".ship__selection");
+  shipSelection.classList.add("ship__selection--active");
+  ring.classList.add("ring--active");
+  finishField.classList.add("active-popup");
+  commit_button.classList.add("commit-button--active");
+}
 
-  var timerId = setInterval(countdown, 1000);
+function deleteLoadingScreenForSRP() {
+    const finish = document.querySelector(".finish");
+    const commit_button = document.querySelector(".commit-button");
+    const ring = document.querySelector(".ring");
+    const shipSelection = document.querySelector(".ship__selection");
+    shipSelection.classList.remove("ship__selection");
+    ring.classList.remove("ring--active");
+    finish.classList.remove("active-popup");
+    remove(commit_button);
+}
 
-  function countdown() {
-    if (timeLeft == -1) {
-      clearTimeout(timerId);
-      doSomething();
-    } else {
-      elem.innerHTML = timeLeft + " seconds remaining";
-      timeLeft--;
-    }
+SRPChoice.forEach((srp) => {
+  srp.addEventListener("click", function () {
+    localStorage.setItem('srpReload', 'true');
+    const choice = mapFrontendScissorsRockPaperToBackendEnum(
+      srp.dataset.choice
+    );
+
+    const API_URL =
+      "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveSRP";
+    fetch(API_URL, {
+      credentials: "omit",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+        Accept: "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+      },
+      body: JSON.stringify(choice),
+      method: "Put",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.ok) {
+          createLoadingScreenForSRP()
+          intervalSRP = setInterval(CheckIfSRPIsSet, 1000);
+        }
+      });
+  });
+});
+async function CheckIfSRPIsSet() {
+  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/CheckIfSRPIsSet";
+  const result = fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === 1 || data.status === 2) {
+        clearInterval(intervalSRP);
+        deleteLoadingScreenForSRP();
+        return true;
+      }
+      if((data.status === 4 || data.status === 3) && localStorage.getItem('srpReload') === 'true'){
+        localStorage.setItem('srpReload', 'false');
+        location.reload();
+      }
+      return false;
+    });
+    return result;
+}
+
+function mapFrontendScissorsRockPaperToBackendEnum(choice) {
+  switch (choice) {
+    case "scissors":
+      return ScissorsRockPaperEnum.Scissors;
+    case "rock":
+      return ScissorsRockPaperEnum.Rock;
+    case "paper":
+      return ScissorsRockPaperEnum.Paper;
+    default:
+      // Handle ungültige Richtungen oder Fehlerbehandlung hier
+      throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }
