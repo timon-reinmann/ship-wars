@@ -110,10 +110,10 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{gamePlayerId}/CheckIfSRPIsSet")]
         public IActionResult CheckIfSRPIsSet(Guid gamePlayerId)
         {
-            SRPStatus status = gameLogic.GetResultOfTheSRP(gamePlayerId);
-            if (status == SRPStatus.WON)
+            SRPState status = gameLogic.GetResultOfTheSRP(gamePlayerId);
+            if (status == SRPState.WON)
                 return Ok(new { status = status });
-            if (status == SRPStatus.LOST)
+            if (status == SRPState.LOST)
                 return Ok(new { status = status });
             return BadRequest(new { status = status });
         }
@@ -184,7 +184,10 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         public IActionResult CountShots(Guid gamePlayerId)
         {
             int[] countAndNextPlayer = gameLogic.CountShotsInDB(gamePlayerId);
-            return Ok(new { shots = countAndNextPlayer[0], nextPlayer = countAndNextPlayer[1] });
+
+            GameState gameStateDB = gameLogic.CheckGameState(gamePlayerId);
+
+            return Ok(new { shots = countAndNextPlayer[0], nextPlayer = countAndNextPlayer[1], gameState = gameStateDB });
         }
 
         private static String CreateLink(Guid gameId, Guid gamePlayerId, Guid playerId)

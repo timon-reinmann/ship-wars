@@ -1,14 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Reflection.Metadata;
-﻿using Microsoft.EntityFrameworkCore.Query.Internal;
-using Yoo.Trainees.ShipWars.DataBase;
+﻿using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
-using System.Collections.Generic;
+
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
 {
-    public enum SRPStatus
+    public enum SRPState
     {
         WAITING,
         LOST,
@@ -20,6 +16,15 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     {
         MISSED,
         HIT
+    }
+
+    public enum GameState
+    {
+        ONGOING,
+        LOST,
+        WON,
+        PREP,
+        COMPLETE
     }
     public class GameLogic : IGameLogic
     {
@@ -64,7 +69,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             {
                 Id = gameId,
                 Name = name,
-                GameStatus = "TODO",
+                GameStatus = GameState.PREP.ToString(),
                 GamePlayers = gamePlayers,
                 Date = DateTime.Now
             };
@@ -221,7 +226,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 applicationDbContext.SaveChanges();
             }
         }
-        public SRPStatus GetResultOfTheSRP(Guid gamePlayerId)
+        public SRPState GetResultOfTheSRP(Guid gamePlayerId)
         {
             var gameId = (from gp in applicationDbContext.GamePlayer
                           where gp.Id.Equals(gamePlayerId)
@@ -238,8 +243,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                         select g).SingleOrDefault();
 
 
-            if (player1.ScissorsRockPaperBet == null) return SRPStatus.REDO;
-            if (player2.ScissorsRockPaperBet == null || game == null) return SRPStatus.WAITING;
+            if (player1.ScissorsRockPaperBet == null) return SRPState.REDO;
+            if (player2.ScissorsRockPaperBet == null || game == null) return SRPState.WAITING;
             if (player1.ScissorsRockPaperBet == player2.ScissorsRockPaperBet) 
             {
                 player1.ScissorsRockPaperBet = null;
@@ -247,7 +252,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 applicationDbContext.GamePlayer.Update(player1);
                 applicationDbContext.GamePlayer.Update(player2);
                 applicationDbContext.SaveChanges();
-                return SRPStatus.DRAW; 
+                return SRPState.DRAW; 
             }
 
             bool isPlayer1Loser = CheckIfPlayer1IsLoser(player1, player2);
@@ -257,7 +262,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             applicationDbContext.Game.Update(game);
             applicationDbContext.SaveChanges();
 
-            return isPlayer1Loser ? SRPStatus.LOST : SRPStatus.WON;
+            return isPlayer1Loser ? SRPState.LOST : SRPState.WON;
         }
         public bool CheckIfPlayer1IsLoser(GamePlayer player1, GamePlayer player2)
         {
@@ -307,6 +312,48 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             
             int[] countAndNextPlayer = { count, game.NextPlayer == gamePlayerId ? 1 : 0};
             return countAndNextPlayer;
+        }
+
+        public GameState CheckGameState(Guid gamePlayerId)
+        {
+            var gameState = GameState.ONGOING;
+            var game = (from g in applicationDbContext.GamePlayer
+                        where  g.Id.Equals(gamePlayerId)
+                        select g.Game).SingleOrDefault();
+            var shipsPlayer1  = (from gp in applicationDbContext.GamePlayer
+                                 join sp in applicationDbContext.ShipPosition on gp equals sp.GamePlayer
+                                 where gp.Game.Equals(game) && gp.Id.Equals(gamePlayerId)
+                                 select sp).ToList();
+            var shipsPlayer2 = (from gp in applicationDbContext.GamePlayer
+                                join sp in applicationDbContext.ShipPosition on gp equals sp.GamePlayer
+                                where gp.Game.Equals(game) && gp.Id != gamePlayerId
+                                select sp).ToList();
+            if (!CheckIfShipsThere(shipsPlayer2))
+            {
+                gameState = GameState.WON;
+            }
+            if (!CheckIfShipsThere(shipsPlayer1))
+            {
+                gameState = GameState.LOST;
+            }
+
+            if (gameState.ToString() != game.GameStatus)
+            {
+                game.GameStatus = gameState.ToString();
+                applicationDbContext.Game.Update(game);
+                applicationDbContext.SaveChanges();
+            }
+
+            return gameState;
+        }
+        public bool CheckIfShipsThere(List<ShipPosition> ships)
+        {
+            foreach(var sh in ships)
+            {
+                if (sh.Life != 0)
+                    return true;
+            }
+            return false;
         }
     }
 }

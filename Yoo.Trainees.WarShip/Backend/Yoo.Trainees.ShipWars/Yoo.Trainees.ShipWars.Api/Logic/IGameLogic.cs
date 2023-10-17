@@ -15,9 +15,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         List<SaveShotsDto> ShotsAll(Guid gamePlayerId);
         List<SaveShotsDto> ShotsAllOpponent(Guid gamePlayerId);
         void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId);
-        SRPStatus GetResultOfTheSRP(Guid gamePlayerId);
+        SRPState GetResultOfTheSRP(Guid gamePlayerId);
         bool CheckIfPlayer1IsLoser(GamePlayer player1, GamePlayer player2);
         ShipHit CheckIfShipHit(SaveShotsDto xy, Guid gamePlayerId, List<Ship> ships);
         int[] CountShotsInDB(Guid gamePlayerId);
+        GameState CheckGameState(Guid gamePlayerId);
+        bool CheckIfShipsThere(List<ShipPosition> ships);
     }
 }
