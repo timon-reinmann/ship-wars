@@ -179,11 +179,14 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         {
         }
 
-        // DELETE api/<GameController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        //
+        [HttpGet("{gamePlayerId}/CountShots")]
+        public IActionResult CountShots(Guid gamePlayerId)
         {
+            int[] countAndNextPlayer = gameLogic.CountShotsInDB(gamePlayerId);
+            return Ok(new { shots = countAndNextPlayer[0], nextPlayer = countAndNextPlayer[1] });
         }
+
         private static String CreateLink(Guid gameId, Guid gamePlayerId, Guid playerId)
         {
             return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId + "&playerId=" + playerId;

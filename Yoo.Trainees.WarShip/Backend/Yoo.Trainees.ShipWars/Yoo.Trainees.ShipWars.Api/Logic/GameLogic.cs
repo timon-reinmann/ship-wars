@@ -156,6 +156,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         public void VerifyAndExecuteShotOrThrow(SaveShotsDto xy, Guid gamePlayerId)
         {
             var game = (from gp in applicationDbContext.GamePlayer
+                        where gp.Id.Equals(gamePlayerId)
                         select gp.Game).FirstOrDefault();
             SaveShotsDto shot = new SaveShotsDto { X = xy.X, Y = xy.Y};
             var shots = (from s in applicationDbContext.Shot
@@ -292,6 +293,20 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             applicationDbContext.ShipPosition.Update(shipDB);
             applicationDbContext.SaveChanges();
             return ShipHit.HIT;
+        }
+        
+        public int[] CountShotsInDB(Guid gamePlayerId)
+        {
+            var game = (from gp in applicationDbContext.GamePlayer
+                        where gp.Id.Equals(gamePlayerId)
+                        select gp.Game).SingleOrDefault();
+            var count = (from gp in applicationDbContext.GamePlayer
+                         join s in applicationDbContext.Shot on gp equals s.Player
+                         where gp.GameId == game.Id
+                         select s).Count();
+            
+            int[] countAndNextPlayer = { count, game.NextPlayer == gamePlayerId ? 1 : 0};
+            return countAndNextPlayer;
         }
     }
 }

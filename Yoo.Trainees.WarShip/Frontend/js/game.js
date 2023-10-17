@@ -36,6 +36,7 @@ let currentField = null;
 let intervalid;
 let intervalSRP;
 let intervalShots;
+let intervalCounter;
 
 const draggables = document.querySelectorAll(".ship");
 const containers = document.querySelectorAll(".ownField");
@@ -192,13 +193,12 @@ opponentFields.forEach((opponentField) => {
     })
       .then((response) => response.json())
       .then((data) => {
+        if(data.hit === 1 || data.hit === 0) {
+          opponentField.classList.add("Field--hit");
+          intervalShots = setInterval(loadShotsFromOpponent, 2000);
+        } 
         if(data.hit === 1) {
-          opponentField.classList.add("Field--hit");
           opponentField.classList.add("Field--hit--ship");
-          intervalShots = setInterval(loadShotsFromOpponent, 2000);
-        } else if(data.hit === 0) {
-          opponentField.classList.add("Field--hit");
-          intervalShots = setInterval(loadShotsFromOpponent, 2000);
         }
       });
     }
@@ -690,6 +690,7 @@ async function CheckIfSRPIsSet() {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 1 || data.status === 2) {
+        intervalCounter = setInterval(countShots, 1000);
         clearInterval(intervalSRP);
         deleteLoadingScreenForSRP();
         return true;
@@ -701,6 +702,37 @@ async function CheckIfSRPIsSet() {
       return false;
     });
     return result;
+}
+
+function countShots(){
+  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/CountShots";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const counter = document.querySelector(".counter");
+      if(data.nextPlayer === 1) {
+        counter.classList.add("counter--active");
+      } else {
+        counter.classList.remove("counter--active");
+      }
+      if (data.shots) {
+        counter.innerHTML = data.shots;
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
 }
 
 function mapFrontendScissorsRockPaperToBackendEnum(choice) {

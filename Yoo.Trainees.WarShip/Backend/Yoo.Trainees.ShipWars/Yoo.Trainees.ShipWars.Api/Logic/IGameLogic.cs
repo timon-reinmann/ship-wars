@@ -18,5 +18,6 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         SRPStatus GetResultOfTheSRP(Guid gamePlayerId);
         bool CheckIfPlayer1IsLoser(GamePlayer player1, GamePlayer player2);
         ShipHit CheckIfShipHit(SaveShotsDto xy, Guid gamePlayerId, List<Ship> ships);
+        int[] CountShotsInDB(Guid gamePlayerId);
     }
 }
