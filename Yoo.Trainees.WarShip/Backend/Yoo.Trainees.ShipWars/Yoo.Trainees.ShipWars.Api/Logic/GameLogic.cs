@@ -328,13 +328,19 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                                 join sp in applicationDbContext.ShipPosition on gp equals sp.GamePlayer
                                 where gp.Game.Equals(game) && gp.Id != gamePlayerId
                                 select sp).ToList();
+            if( !CheckIfShipsThere(shipsPlayer1) || !CheckIfShipsThere(shipsPlayer2))
+            {
+                game.GameStatus = GameState.COMPLETE.ToString();
+                applicationDbContext.Game.Update(game);
+                applicationDbContext.SaveChanges();
+            }
             if (!CheckIfShipsThere(shipsPlayer2))
             {
-                gameState = GameState.WON;
+                return gameState = GameState.LOST;
             }
             if (!CheckIfShipsThere(shipsPlayer1))
             {
-                gameState = GameState.LOST;
+                return gameState = GameState.WON;
             }
 
             if (gameState.ToString() != game.GameStatus)

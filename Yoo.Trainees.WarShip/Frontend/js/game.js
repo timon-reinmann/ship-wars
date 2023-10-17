@@ -48,8 +48,6 @@ const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
 const SRP = document.querySelector(".SRP");
 
-let win;
-
 localStorage.setItem('srpReload', 'false');
 
 draggables.forEach((draggable) => {
@@ -740,9 +738,20 @@ function countShots(){
         winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
         document.body.style.margin = "0";
         document.body.style.overflow = "hidden";
-        win = document.querySelector(".win");
+        const win = document.querySelector(".win");
         win.addEventListener("click", () => {
           win.remove();
+          document.body.style.margin = "5";
+          document.body.style.overflowY = "visvible";
+        });
+      } else if (data.gameState === 2){
+        const looseContainer = document.querySelector(".container");
+        looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
+        document.body.style.margin = "0";
+        document.body.style.overflow = "hidden";
+        const lost = document.querySelector(".lost");
+        lost.addEventListener("click", () => {
+          lost.remove();
           document.body.style.margin = "5";
           document.body.style.overflowY = "visvible";
         });
