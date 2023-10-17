@@ -108,7 +108,8 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     ShipId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     X = table.Column<int>(type: "int", nullable: false),
                     Y = table.Column<int>(type: "int", nullable: false),
-                    Direction = table.Column<int>(type: "int", nullable: false)
+                    Direction = table.Column<int>(type: "int", nullable: false),
+                    Life = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -152,10 +153,10 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 columns: new[] { "Id", "Length", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("4b639ae9-e916-44d5-ab48-cd29143fba11"), 3, "Cruiser" },
-                    { new Guid("7796d5f5-3141-41ee-9fe9-91d04e694b6e"), 2, "Destroyer" },
-                    { new Guid("918ebf61-0fea-4571-a69b-5b58dfb13328"), 4, "Warship" },
-                    { new Guid("ca53cb84-709a-45cd-8c89-9d70cbae49c8"), 1, "Submarine" }
+                    { new Guid("45652d4e-10be-4b26-a8a8-c6de9a4e49af"), 1, "Submarine" },
+                    { new Guid("985497b3-353c-49d3-97a0-79232a270da0"), 3, "Cruiser" },
+                    { new Guid("a735b8ec-c868-45fa-81bc-942eda165a8f"), 2, "Destroyer" },
+                    { new Guid("eee6167b-6588-42d9-b657-7698a2f5ca40"), 4, "Warship" }
                 });
 
             migrationBuilder.CreateIndex(

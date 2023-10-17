@@ -14,14 +14,15 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         private readonly IGameLogic gameLogic;
         private readonly IEmailSender _emailSender;
         private Game Game;
-        // ToDo muss nich mit Marcel angeschaut werden
-        private readonly VerificationLogic verificationLogic = new VerificationLogic(new List<Ship>
-            {
+        private static List<Ship> Ships = new List<Ship>
+        {
                 new Ship { Length = 2, Name = "destroyer" },
                 new Ship { Length = 4, Name = "warship" },
                 new Ship { Length = 3, Name = "cruiser" },
                 new Ship { Length = 1, Name = "submarine" }
-            });
+        };
+        // ToDo muss nich mit Marcel angeschaut werden
+        private readonly VerificationLogic verificationLogic = new VerificationLogic(Ships);
 
         public GameController(IGameLogic gameLogic, IEmailSender emailSender)
         {
@@ -79,12 +80,13 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             try
             {
                 gameLogic.VerifyAndExecuteShotOrThrow(xy, gamePlayerId);
+                var shipHit = gameLogic.CheckIfShipHit(xy, gamePlayerId, Ships);
                 gameLogic.SaveShot(xy, gamePlayerId);
-                return Ok(new { good = 1 });
+                return Ok(new { hit = shipHit });
             } 
             catch (InvalidOperationException ex)
             {
-                return BadRequest(new { good = -1 });
+                return BadRequest(new { bad = -1 });
             }
         }
 
@@ -109,9 +111,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         public IActionResult CheckIfSRPIsSet(Guid gamePlayerId)
         {
             SRPStatus status = gameLogic.GetResultOfTheSRP(gamePlayerId);
-            if (status == SRPStatus.won)
+            if (status == SRPStatus.WON)
                 return Ok(new { status = status });
-            if (status == SRPStatus.lost)
+            if (status == SRPStatus.LOST)
                 return Ok(new { status = status });
             return BadRequest(new { status = status });
         }
@@ -184,7 +186,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
         private static String CreateLink(Guid gameId, Guid gamePlayerId, Guid playerId)
         {
-            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId + "&gamePlayerId=" + playerId;
+            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId + "&playerId=" + playerId;
         }
     }
 }

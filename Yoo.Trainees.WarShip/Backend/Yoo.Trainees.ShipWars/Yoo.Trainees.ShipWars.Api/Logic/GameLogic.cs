@@ -4,21 +4,27 @@ using System.Reflection.Metadata;
 ﻿using Microsoft.EntityFrameworkCore.Query.Internal;
 using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
+using System.Collections.Generic;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
 {
     public enum SRPStatus
     {
-        waiting,
-        lost,
-        won,
-        draw,
-        redo
+        WAITING,
+        LOST,
+        WON,
+        DRAW,
+        REDO
+    }
+    public enum ShipHit
+    {
+        MISSED,
+        HIT
     }
     public class GameLogic : IGameLogic
     {
         private readonly ApplicationDbContext applicationDbContext;
-        private readonly VerificationLogic verificationLogic = new VerificationLogic();
+        private VerificationLogic verificationLogic = new VerificationLogic();
         private Game Game;
 
         public GameLogic(ApplicationDbContext applicationDbContext)
@@ -90,7 +96,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                     ShipId = Guid.Parse(shipType.Id.ToString()),                                      // Weirde Fehler aber me hets müesse Caste well es die gliche enums sie müesse
                     X = Ship.X,                                                                      // Und well beides in anderne Files gmacht worde isch es genau gseh nid sgliche :(    
                     Y = Ship.Y,
-                    Direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship.Direction
+                    Direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship.Direction,
+                    Life = shipType.Length
                 };
                 id = shipPositio.GamePlayerId;
 
@@ -230,8 +237,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                         select g).SingleOrDefault();
 
 
-            if (player1.ScissorsRockPaperBet == null) return SRPStatus.redo;
-            if (player2.ScissorsRockPaperBet == null || game == null) return SRPStatus.waiting;
+            if (player1.ScissorsRockPaperBet == null) return SRPStatus.REDO;
+            if (player2.ScissorsRockPaperBet == null || game == null) return SRPStatus.WAITING;
             if (player1.ScissorsRockPaperBet == player2.ScissorsRockPaperBet) 
             {
                 player1.ScissorsRockPaperBet = null;
@@ -239,7 +246,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 applicationDbContext.GamePlayer.Update(player1);
                 applicationDbContext.GamePlayer.Update(player2);
                 applicationDbContext.SaveChanges();
-                return SRPStatus.draw; 
+                return SRPStatus.DRAW; 
             }
 
             bool isPlayer1Loser = CheckIfPlayer1IsLoser(player1, player2);
@@ -249,13 +256,42 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             applicationDbContext.Game.Update(game);
             applicationDbContext.SaveChanges();
 
-            return isPlayer1Loser ? SRPStatus.lost : SRPStatus.won;
+            return isPlayer1Loser ? SRPStatus.LOST : SRPStatus.WON;
         }
         public bool CheckIfPlayer1IsLoser(GamePlayer player1, GamePlayer player2)
         {
             return (player1.ScissorsRockPaperBet == ScissorsRockPaper.Scissors && player2.ScissorsRockPaperBet == ScissorsRockPaper.Rock) ||
                    (player1.ScissorsRockPaperBet == ScissorsRockPaper.Rock && player2.ScissorsRockPaperBet == ScissorsRockPaper.Paper) ||
                    (player1.ScissorsRockPaperBet == ScissorsRockPaper.Paper && player2.ScissorsRockPaperBet == ScissorsRockPaper.Scissors);
+        }
+        public ShipHit CheckIfShipHit(SaveShotsDto xy, Guid gamePlayerId, List<Ship> shipType)
+        {
+            var game = (from gp in applicationDbContext.GamePlayer
+                        where gp.Id == gamePlayerId
+                        select gp.Game).FirstOrDefault();
+
+            var player2 = (from gp in applicationDbContext.GamePlayer
+                           where gp.Id != gamePlayerId && gp.GameId.Equals(game.Id)
+                           select gp).FirstOrDefault();
+
+            this.verificationLogic = new VerificationLogic(shipType);
+            var ships = (from sp in applicationDbContext.ShipPosition
+                         where sp.GamePlayer.Id.Equals(player2.Id)
+                         select new SaveShipDto { Direction = (Yoo.Trainees.ShipWars.Api.Direction)sp.Direction, Id = sp.Id, ShipType = sp.Ship.Name ,
+                                                    X = sp.X, Y = sp.Y}).ToList();
+
+            var ship = verificationLogic.VerifyShipHit(ships, xy);
+            if(ship == null)
+            {
+                return ShipHit.MISSED;
+            }
+            var shipDB = (from sp in applicationDbContext.ShipPosition
+                          where sp.Id.Equals(ship.Id)
+                          select sp).FirstOrDefault();
+            shipDB.Life--;
+            applicationDbContext.ShipPosition.Update(shipDB);
+            applicationDbContext.SaveChanges();
+            return ShipHit.HIT;
         }
     }
 }

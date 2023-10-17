@@ -192,7 +192,11 @@ opponentFields.forEach((opponentField) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if(data.good === 1) {
+        if(data.hit === 1) {
+          opponentField.classList.add("Field--hit");
+          opponentField.classList.add("Field--hit--ship");
+          intervalShots = setInterval(loadShotsFromOpponent, 2000);
+        } else if(data.hit === 0) {
           opponentField.classList.add("Field--hit");
           intervalShots = setInterval(loadShotsFromOpponent, 2000);
         }

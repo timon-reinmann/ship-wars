@@ -131,25 +131,25 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ca53cb84-709a-45cd-8c89-9d70cbae49c8"),
+                            Id = new Guid("45652d4e-10be-4b26-a8a8-c6de9a4e49af"),
                             Length = 1,
                             Name = "Submarine"
                         },
                         new
                         {
-                            Id = new Guid("7796d5f5-3141-41ee-9fe9-91d04e694b6e"),
+                            Id = new Guid("a735b8ec-c868-45fa-81bc-942eda165a8f"),
                             Length = 2,
                             Name = "Destroyer"
                         },
                         new
                         {
-                            Id = new Guid("4b639ae9-e916-44d5-ab48-cd29143fba11"),
+                            Id = new Guid("985497b3-353c-49d3-97a0-79232a270da0"),
                             Length = 3,
                             Name = "Cruiser"
                         },
                         new
                         {
-                            Id = new Guid("918ebf61-0fea-4571-a69b-5b58dfb13328"),
+                            Id = new Guid("eee6167b-6588-42d9-b657-7698a2f5ca40"),
                             Length = 4,
                             Name = "Warship"
                         });
@@ -166,6 +166,9 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 
                     b.Property<Guid>("GamePlayerId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Life")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("ShipId")
                         .HasColumnType("uniqueidentifier");

@@ -158,6 +158,30 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return true;
         }
+
+        public SaveShipDto VerifyShipHit(List<SaveShipDto> shipsDB, SaveShotsDto shot)
+        {
+            foreach (var sh in shipsDB)
+            {
+                var shipLength = (from s in this.ships
+                                 where s.Name.ToLower() == sh.ShipType.ToLower()
+                                 select s.Length).SingleOrDefault();
+                var direction = sh.Direction;
+                var xShip = sh.X;
+                var yShip = sh.Y;
+                var yMaxLength = (direction == Direction.horizontal ? 1 : shipLength) + yShip; 
+                var xMaxLength = (direction == Direction.horizontal ? shipLength : 1) + xShip;
+                for(int y = yShip; y < yMaxLength; y++)
+                {
+                    for(int x = xShip; x < xMaxLength; x++)
+                    {
+                        if(shot.X == x && shot.Y == y)
+                            return sh;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }
 
