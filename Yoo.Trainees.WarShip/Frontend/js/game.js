@@ -35,6 +35,7 @@ let currentField = null;
 
 let intervalid;
 let intervalSRP;
+let intervalShots;
 
 const draggables = document.querySelectorAll(".ship");
 const containers = document.querySelectorAll(".ownField");
@@ -169,6 +170,7 @@ containers.forEach((container) => {
 
 opponentFields.forEach((opponentField) => {
   opponentField.addEventListener("click", async (e) => {
+    clearInterval(intervalShots);
     const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
     if(isReadyToShoot) {
     const currentX = parseInt(opponentField.getAttribute("data-x"));
@@ -191,7 +193,8 @@ opponentFields.forEach((opponentField) => {
       .then((response) => response.json())
       .then((data) => {
         if(data.good === 1) {
-          opponentField.classList.add("opponentField--hit");
+          opponentField.classList.add("Field--hit");
+          intervalShots = setInterval(loadShotsFromOpponent, 2000);
         }
       });
     }
@@ -514,7 +517,42 @@ function loadFiredShots(gamePlayerId) {
           const opponentField = opponentFields.querySelector(
             `[data-x="${X}"][data-y="${Y}"]`
           );
-          opponentField.classList.add("opponentField--hit");
+          opponentField.classList.add("Field--hit");
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+function loadShotsFromOpponent(){
+  loadShotsFromOpponentFromTheDB(gamePlayerId);
+}
+function loadShotsFromOpponentFromTheDB(gamePlayerId) {
+  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/LoadShotsFromOpponent";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        data.forEach((shots) => {
+          const X = shots.x;
+          const Y = shots.y;
+          const opponentFields = document.getElementById("game__board");
+          const opponentField = opponentFields.querySelector(
+            `[data-x="${X}"][data-y="${Y}"]`
+          );
+          opponentField.classList.add("Field--hit");
         });
       }
     })
