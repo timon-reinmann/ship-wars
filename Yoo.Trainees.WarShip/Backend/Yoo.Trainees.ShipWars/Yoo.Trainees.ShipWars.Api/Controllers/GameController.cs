@@ -40,32 +40,26 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         //[Route("FinishedGames")]
 
-        // GET api/<Game>/5
-        [HttpGet("{id}")]
-        public string Get(Guid id)
+        // Ready checks in the DB if all ships are placed.
+        [HttpGet("{gameId}/Ready")]
+        public IActionResult Ready(Guid gameId)
         {
-            return "value";
-        }
-        
-        [HttpGet("{id}/Ready")]
-        public IActionResult Ready(Guid id)
-        {
-            if (_gameLogic.IsReady(id))
+            if (_gameLogic.IsReady(gameId))
                 return Ok();
             return BadRequest();
         }
 
-        //
-        [HttpGet("{id}/BoardState")]
-        public IActionResult BoardState(Guid id)
+        // If Player reloads the Website it checks if he already has ships placed.
+        [HttpGet("{gamePlayerId}/BoardState")]
+        public IActionResult BoardState(Guid gamePlayerId)
         {
-            var board = _gameLogic.GetCompleteShipPositionsForGamePlayer(id);
+            var board = _gameLogic.GetCompleteShipPositionsForGamePlayer(gamePlayerId);
             if (board != null)
                 return Ok(board);
             return BadRequest();
         }
 
-        //
+        // It checks if gamePlayer is the NextPlayer --> Game.NextPlayer == gamePlayerId?
         [HttpGet("{gamePlayerId}/{gameId}/CheckReadyToShoot")]
         public IActionResult CheckReadyToShoot(Guid gameId, Guid gamePlayerId)
         {
@@ -74,7 +68,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return BadRequest();
         }
 
-        //
+        // It saves the Shot in the DB and returns if a ship was hit.
         [HttpPost("{gamePlayerId}/SaveShot")]
         public IActionResult SaveShot([FromBody] SaveShotsDto xy, Guid gamePlayerId)
         {
@@ -91,7 +85,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             }
         }
 
-        //
+        // To visualize the own Fields which got hit.
         [HttpGet("{gamePlayerId}/LoadShotsFromOpponent")]
         public IActionResult LoadShotsFromOpponent(Guid gamePlayerId)
         {
@@ -99,7 +93,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok(shots);
         }
 
-        //
+        // Get all yout Shots and visualize them.
         [HttpGet("{gamePlayerId}/LoadFiredShots")]
         public IActionResult LoadFiredShots(Guid gamePlayerId)
         {
@@ -107,7 +101,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok(shots);
         }
 
-        //
+        // Check if player2 already has made a decision (Rock-Paper-Scissors).
         [HttpGet("{gamePlayerId}/CheckIfSRPIsSet")]
         public IActionResult CheckIfSRPIsSet(Guid gamePlayerId)
         {
@@ -119,7 +113,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return BadRequest(new { status = status });
         }
 
-        //
+        // Save your Rock-Paper-Scissors choice.
         [HttpPut("{gamePlayerId}/SaveSRP")]
         public IActionResult SaveSRP([FromBody] ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
         {
@@ -127,7 +121,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok();
         }
 
-        // POST api/<GameController>
+        // POST api/<GameController>.
         [HttpPost]
         public IActionResult Post([FromBody] string name)
         {
@@ -143,7 +137,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok(links);
         }
 
-        // Post api/<Game>/5/SaveShips
+        // Post api/<Game>/5/SaveShips.
         [HttpPost("{id}/SaveShips")]
         public async Task<IActionResult> Post(Guid id, [FromBody] SaveShipsDto Ships)
         {
@@ -162,6 +156,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok();
         }
 
+        // Send Email.
         [Route("Email")]
         [HttpPost]
         public async Task<IActionResult> NotifyGameAsync([FromBody] EmailDto body)
@@ -174,13 +169,13 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok();
         }
 
-        // PUT api/<GameController>/5
+        // PUT api/<GameController>/5.
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        //
+        // Count ALL shots for the counter and also give information for the nextplayer and game state (Ongoing, Lost, Won, Prep, Complete).
         [HttpGet("{gamePlayerId}/CountShots")]
         public IActionResult CountShots(Guid gamePlayerId)
         {
@@ -191,6 +186,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok(new { shots = countAndNextPlayer.ShotCount, nextPlayer = countAndNextPlayer.IsNextPlayer, gameState = gameStateDB });
         }
 
+        // Create link for invitation.
         private static String CreateLink(Guid gameId, Guid gamePlayerId)
         {
             var serverURL = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=";
