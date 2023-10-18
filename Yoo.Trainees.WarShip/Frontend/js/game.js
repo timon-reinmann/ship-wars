@@ -2,7 +2,6 @@
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
-const playerId = urlParams.get("playerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
 
 isBoardSet(gamePlayerId);

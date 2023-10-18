@@ -131,8 +131,8 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         public IActionResult Post([FromBody] string name)
         {
             this.Game = gameLogic.CreateGame(name);
-            var linkPlayer1 = CreateLink(this.Game.Id, this.Game.GamePlayers.First().Id, Game.GamePlayers.First().PlayerId);
-            var linkPlayer2 = CreateLink(this.Game.Id, this.Game.GamePlayers.ToArray()[1].Id, this.Game.GamePlayers.ToArray()[1].PlayerId);
+            var linkPlayer1 = CreateLink(this.Game.Id, this.Game.GamePlayers.First().Id);
+            var linkPlayer2 = CreateLink(this.Game.Id, this.Game.GamePlayers.ToArray()[1].Id);
 
             var links = new 
             {
@@ -190,9 +190,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok(new { shots = countAndNextPlayer[0], nextPlayer = countAndNextPlayer[1], gameState = gameStateDB });
         }
 
-        private static String CreateLink(Guid gameId, Guid gamePlayerId, Guid playerId)
+        private static String CreateLink(Guid gameId, Guid gamePlayerId)
         {
-            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId + "&playerId=" + playerId;
+            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId;
         }
     }
 }
