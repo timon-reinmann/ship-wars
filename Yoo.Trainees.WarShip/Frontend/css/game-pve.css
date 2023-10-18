@@ -11,6 +11,21 @@
   src: url(../../font/BadGrunge.ttf);
 }
 
+body {
+  cursor: crosshair;
+}
+
+.cursor--active {
+  position: absolute;
+  background-image: url(../../Crosshair/crosshairGame.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  width: 50px;
+  height: 50px;
+  pointer-events: none;
+}
+
 .field {
   height: 50px;
   width: 50px;
@@ -55,7 +70,6 @@
   grid-template-columns: repeat(10, 1fr);
   align-self: center;
   position: relative;
-  cursor: crosshair;
 }
 
 .finish {
@@ -96,8 +110,7 @@
 .ship {
   background-color: rgba(128, 128, 128, 0.75);
   box-shadow: 0px 0px 5px 5px rgba(128, 128, 128, 0.25);
-  border: 2px solid #fefefe;
-  cursor: crosshair;
+  border: 2px solid var(--white);
 }
 .warship {
   height: calc(52px * 1);
