@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,6 +20,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     GameStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    NextPlayer = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Date = table.Column<DateTime>(type: "smalldatetime", nullable: false)
                 },
                 constraints: table =>
@@ -58,7 +59,8 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ScissorsRockPaperBet = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -106,7 +108,8 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     ShipId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     X = table.Column<int>(type: "int", nullable: false),
                     Y = table.Column<int>(type: "int", nullable: false),
-                    Direction = table.Column<int>(type: "int", nullable: false)
+                    Direction = table.Column<int>(type: "int", nullable: false),
+                    Life = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -150,10 +153,10 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                 columns: new[] { "Id", "Length", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("099e8e46-8561-4bcf-ba3c-76ea553d1010"), 4, "Warship" },
-                    { new Guid("396040e1-9eaa-4c91-bae3-ebad10e01770"), 1, "Submarine" },
-                    { new Guid("556e5b47-b623-46ca-8d5d-5f2527749840"), 3, "Cruiser" },
-                    { new Guid("c23e78f8-a1da-4041-8bc8-5a4cb060c9b9"), 2, "Destroyer" }
+                    { new Guid("45652d4e-10be-4b26-a8a8-c6de9a4e49af"), 1, "Submarine" },
+                    { new Guid("985497b3-353c-49d3-97a0-79232a270da0"), 3, "Cruiser" },
+                    { new Guid("a735b8ec-c868-45fa-81bc-942eda165a8f"), 2, "Destroyer" },
+                    { new Guid("eee6167b-6588-42d9-b657-7698a2f5ca40"), 4, "Warship" }
                 });
 
             migrationBuilder.CreateIndex(

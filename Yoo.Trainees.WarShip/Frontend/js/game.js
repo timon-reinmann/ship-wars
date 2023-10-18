@@ -1,7 +1,14 @@
+// API URL
+let api = "https://localhost:7118/api/Game/"
+
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
-const GamePlayerId = urlParams.get("playerId");
+const gamePlayerId = urlParams.get("gamePlayerId");
+const SRPChoice = document.querySelectorAll(".SRP-choice");
+
+CheckIfBoardSet(gamePlayerId);
+loadFiredShots(gamePlayerId);
 
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
@@ -16,6 +23,11 @@ const DirectionEnum = {
   HORIZONTAL: 0,
   VERTICAL: 1,
 };
+const ScissorsRockPaperEnum = {
+  Scissors: 0,
+  Rock: 1,
+  Paper: 2,
+};
 
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
@@ -23,9 +35,22 @@ createBoard(gameOpponent, false);
 let zIndexChange = 1;
 let currentField = null;
 
+let intervalid;
+let intervalSRP;
+let intervalShots;
+let intervalCounter;
+
 const draggables = document.querySelectorAll(".ship");
 const containers = document.querySelectorAll(".ownField");
 const shipSelection = document.querySelector(".ship__selection");
+const opponentFields = document.querySelectorAll(".opponentField");
+
+const scissors = document.querySelector(".scissors");
+const rock = document.querySelector(".rock");
+const paper = document.querySelector(".paper");
+const SRP = document.querySelector(".rock__paper__scissors");
+
+localStorage.setItem('srpReload', 'false');
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("click", (e) => {
@@ -47,11 +72,13 @@ draggables.forEach((draggable) => {
     }
   });
 
-  draggable.addEventListener("dragstart", (e) => {
+  function onDragg() {
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
     deleteShipHitBox(draggable.parentNode);
-  });
+  }
+
+  draggable.addEventListener("dragstart", onDragg);
 
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
@@ -144,6 +171,42 @@ containers.forEach((container) => {
   });
 });
 
+opponentFields.forEach((opponentField) => {
+  opponentField.addEventListener("click", async (e) => {
+    clearInterval(intervalShots);
+    const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
+    if(isReadyToShoot) {
+    const currentX = parseInt(opponentField.getAttribute("data-x"));
+    const currentY = parseInt(opponentField.getAttribute("data-y"));
+    const API_URL =
+      api + gamePlayerId + "/SaveShot";
+    fetch(API_URL, {
+      credentials: "omit",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+        Accept: "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+      },
+      body: JSON.stringify({ X: currentX, Y: currentY }),
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if(data.hit === 1 || data.hit === 0) {
+          opponentField.classList.add("Field--hit");
+          intervalShots = setInterval(loadShotsFromOpponent, 2000);
+        } 
+        if(data.hit === 1) {
+          opponentField.classList.add("Field--hit--ship");
+        }
+      });
+    }
+  });
+});
+
 shipSelection.addEventListener("dragover", (e) => {
   e.preventDefault();
   const draggable = document.querySelector(".dragging");
@@ -155,9 +218,9 @@ shipSelection.addEventListener("dragover", (e) => {
 
 function mapFrontendDirectionToBackendEnum(frontendDirection) {
   switch (frontendDirection) {
-    case 'horizontal':
+    case "horizontal":
       return DirectionEnum.HORIZONTAL;
-    case 'vertical':
+    case "vertical":
       return DirectionEnum.VERTICAL;
     default:
       // Handle ungültige Richtungen oder Fehlerbehandlung hier
@@ -233,6 +296,9 @@ function createBoard(gameBoard, isMyBoard) {
         div.id = `box${countingFields}`;
         div.dataset.ships = 0;
       }
+      if (!isMyBoard) {
+        div.classList.add("opponentField");
+      }
       gameBoard.appendChild(div);
       countingFields += 1;
     }
@@ -281,7 +347,7 @@ error_popup__wmark.addEventListener("click", () => {
 });
 
 async function sendShips(Ships) {
-  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/SaveShips";
+  const API_URL = api + gameId + "/SaveShips";
   await fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -292,19 +358,17 @@ async function sendShips(Ships) {
       "Content-Type": "application/json",
       "Sec-Fetch-Dest": "empty",
     },
-    body: JSON.stringify({ gameId, GamePlayerId, Ships }),
+    body: JSON.stringify({ gameId, GamePlayerId: gamePlayerId, Ships }),
     method: "POST",
-  })
-    .then((response) => {
-      if (!response.ok){
-        error_popup(commit_button);
-      } else {
-        finishField.classList.add("active-popup");
-        commit_button.classList.add("commit-button--active");
-      }
+  }).then((response) => {
+    if (!response.ok) {
+      error_popup(commit_button);
+    } else {
+      createLoadingScreen();
+      intervalid = setInterval(checkIfPlayerReady, 1000);
+    }
   });
 }
-
 async function commitShips(commit_button) {
   finishField = document.querySelector(".finish");
   const ships = document.getElementsByClassName("ship");
@@ -314,11 +378,10 @@ async function commitShips(commit_button) {
     Y: ship?.parentNode.dataset.y,
     Direction: mapFrontendDirectionToBackendEnum(ship?.dataset.direction),
     Id: ship?.Id,
-  }))
+  }));
 
   try {
     await sendShips(ship_positions);
-    
   } catch (error) {
     console.error("failed to send ships", error);
     error_popup(commit_button);
@@ -349,7 +412,7 @@ function createLoadingScreen() {
 }
 
 function checkIfPlayerReady() {
-  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/Ready";
+  const API_URL = api + gameId + "/Ready";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -384,7 +447,7 @@ function screenBlocker() {
 }
 
 async function checkReadyToShoot(gamePlayerId) {
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/" + gameId + "/CheckReadyToShoot";
+  const API_URL = api + gamePlayerId + "/" + gameId + "/CheckReadyToShoot";
   const test = fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -409,8 +472,8 @@ async function checkReadyToShoot(gamePlayerId) {
     return test;
 }
 
-function isBoardSet(gameId) {
-  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/BoardState";
+function CheckIfBoardSet(gameId) {
+  const API_URL = api + gameId + "/BoardState";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -437,7 +500,7 @@ function isBoardSet(gameId) {
 }
 
 function loadFiredShots(gamePlayerId) {
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/LoadFiredShots";
+  const API_URL = api + gamePlayerId + "/LoadFiredShots";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -472,7 +535,7 @@ function loadShotsFromOpponent(){
   loadShotsFromOpponentFromTheDB(gamePlayerId);
 }
 function loadShotsFromOpponentFromTheDB(gamePlayerId) {
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/LoadShotsFromOpponent";
+  const API_URL = api + gamePlayerId + "/LoadShotsFromOpponent";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -546,7 +609,7 @@ function loadGameBoard(data) {
 }
 
 async function ScissorsRockPaper() {
-  SRPFindished = await CheckIfSRPIsSet(gamePlayerId); 
+  SRPFindished = await IsSRPIsSet(gamePlayerId); 
   if(!SRPFindished) {
     scissors.classList.add("scissors--active");
     rock.classList.add("rock--active");
@@ -589,7 +652,7 @@ SRPChoice.forEach((srp) => {
     );
 
     const API_URL =
-      "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveSRP";
+      api + gamePlayerId + "/SaveSRP";
     fetch(API_URL, {
       credentials: "omit",
       headers: {
@@ -603,17 +666,16 @@ SRPChoice.forEach((srp) => {
       body: JSON.stringify(choice),
       method: "Put",
     })
-      .then((response) => response.json())
       .then((data) => {
-        if (data.ok) {
+        if (data) {
           createLoadingScreenForSRP()
-          intervalSRP = setInterval(CheckIfSRPIsSet, 1000);
+          intervalSRP = setInterval(IsSRPIsSet, 1000);
         }
       });
   });
 });
-async function CheckIfSRPIsSet() {
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/CheckIfSRPIsSet";
+async function IsSRPIsSet() {
+  const API_URL = api + gamePlayerId + "/CheckIfSRPIsSet";
   const result = fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -644,7 +706,7 @@ async function CheckIfSRPIsSet() {
 }
 
 function countShots(){
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/CountShots";
+  const API_URL = api + gamePlayerId + "/CountShots";
   fetch(API_URL, {
     credentials: "omit",
     headers: {

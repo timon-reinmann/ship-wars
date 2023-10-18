@@ -1,7 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿            using System.ComponentModel.DataAnnotations;
 
 namespace Yoo.Trainees.ShipWars.DataBase.Entities
 {
+
+    public enum ScissorsRockPaper
+    {
+        Scissors,
+        Rock,
+        Paper
+    }
     public class GamePlayer
     {
         [Key]
@@ -13,6 +20,6 @@ namespace Yoo.Trainees.ShipWars.DataBase.Entities
         // Navigation properties
         public Game Game { get; set; }
         public Player Player { get; set; }
-
+        public ScissorsRockPaper? ScissorsRockPaperBet { get; set; }
     }
 }
