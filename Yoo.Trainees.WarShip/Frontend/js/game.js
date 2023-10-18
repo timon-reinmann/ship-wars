@@ -29,6 +29,8 @@ const ScissorsRockPaperEnum = {
   Paper: 2,
 };
 
+const sound = new Audio("../sound/pewpew.mp3")
+
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
 
@@ -195,6 +197,12 @@ opponentFields.forEach((opponentField) => {
     })
       .then((response) => response.json())
       .then((data) => {
+        sound.play();
+        const cursor = document.querySelector('.cursor');
+        cursor.classList.add('recoil-animation');
+        setTimeout(() => {
+          cursor.classList.remove('recoil-animation');
+        }, 200);
         if(data.hit === 1 || data.hit === 0) {
           opponentField.classList.add("Field--hit");
           intervalShots = setInterval(loadShotsFromOpponent, 2000);

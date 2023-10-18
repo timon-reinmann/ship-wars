@@ -19,6 +19,18 @@
   }
 }
 
+@keyframes recoil {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(0px, -15px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
 @font-face {
   font-family: "walkingdead";
   src: url(../../font/BadGrunge.ttf);
@@ -37,6 +49,9 @@ body {
   width: 50px;
   height: 50px;
   pointer-events: none;
+}
+.recoil-animation {
+  animation: recoil 0.2s linear;
 }
 
 .field {
