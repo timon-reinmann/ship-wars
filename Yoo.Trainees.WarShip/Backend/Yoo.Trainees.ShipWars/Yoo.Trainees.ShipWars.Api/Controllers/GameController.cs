@@ -11,10 +11,10 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
     [ApiController]
     public class GameController : ControllerBase
     {
-        private readonly IGameLogic gameLogic;
+        private readonly IGameLogic _gameLogic;
         private readonly IEmailSender _emailSender;
-        private Game Game;
-        private static List<Ship> Ships = new List<Ship>
+        private Game _Game;
+        public static List<Ship> Ships = new List<Ship>
         {
                 new Ship { Length = 2, Name = "destroyer" },
                 new Ship { Length = 4, Name = "warship" },
@@ -22,12 +22,13 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 new Ship { Length = 1, Name = "submarine" }
         };
         // ToDo muss nich mit Marcel angeschaut werden
-        private readonly VerificationLogic verificationLogic = new VerificationLogic(Ships);
+        private readonly IVerificationLogic _verificationLogic;
 
-        public GameController(IGameLogic gameLogic, IEmailSender emailSender)
+        public GameController(IGameLogic gameLogic, IEmailSender emailSender, IVerificationLogic verificationLogic)
         {
-            this.gameLogic = gameLogic;
+            this._gameLogic = gameLogic;
             this._emailSender = emailSender;
+            this._verificationLogic = verificationLogic;
         }
 
         // GET: api/Game
@@ -49,7 +50,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{id}/Ready")]
         public IActionResult Ready(Guid id)
         {
-            if (gameLogic.IsReady(id))
+            if (_gameLogic.IsReady(id))
                 return Ok();
             return BadRequest();
         }
@@ -58,7 +59,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{id}/BoardState")]
         public IActionResult BoardState(Guid id)
         {
-            var board = gameLogic.IsComplete(id);
+            var board = _gameLogic.GetCompleteShipPositionsForGamePlayer(id);
             if (board != null)
                 return Ok(board);
             return BadRequest();
@@ -68,20 +69,20 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{gamePlayerId}/{gameId}/CheckReadyToShoot")]
         public IActionResult CheckReadyToShoot(Guid gameId, Guid gamePlayerId)
         {
-            if (gameLogic.CheckShots(gameId, gamePlayerId))
+            if (_gameLogic.UpdateAndCheckNextPlayer(gameId, gamePlayerId))
                 return Ok();
             return BadRequest();
         }
 
         //
-        [HttpPost("{gamePlayerId}/SaveShotInDB")]
-        public IActionResult SaveShotInDB([FromBody] SaveShotsDto xy, Guid gamePlayerId)
+        [HttpPost("{gamePlayerId}/SaveShot")]
+        public IActionResult SaveShot([FromBody] SaveShotsDto xy, Guid gamePlayerId)
         {
             try
             {
-                gameLogic.VerifyAndExecuteShotOrThrow(xy, gamePlayerId);
-                var shipHit = gameLogic.CheckIfShipHit(xy, gamePlayerId, Ships);
-                gameLogic.SaveShot(xy, gamePlayerId);
+                _gameLogic.VerifyAndExecuteShotOrThrow(xy, gamePlayerId);
+                var shipHit = _gameLogic.CheckIfShipHit(xy, gamePlayerId);
+                _gameLogic.SaveShot(xy, gamePlayerId);
                 return Ok(new { hit = shipHit });
             } 
             catch (InvalidOperationException ex)
@@ -94,7 +95,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{gamePlayerId}/LoadShotsFromOpponent")]
         public IActionResult LoadShotsFromOpponent(Guid gamePlayerId)
         {
-            var shots = gameLogic.ShotsAllOpponent(gamePlayerId);
+            var shots = _gameLogic.GetAllShotsOfOpponent(gamePlayerId);
             return Ok(shots);
         }
 
@@ -102,7 +103,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{gamePlayerId}/LoadFiredShots")]
         public IActionResult LoadFiredShots(Guid gamePlayerId)
         {
-            var shots = gameLogic.ShotsAll(gamePlayerId);
+            var shots = _gameLogic.ShotsAll(gamePlayerId);
             return Ok(shots);
         }
 
@@ -110,10 +111,10 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{gamePlayerId}/CheckIfSRPIsSet")]
         public IActionResult CheckIfSRPIsSet(Guid gamePlayerId)
         {
-            SRPState status = gameLogic.GetResultOfTheSRP(gamePlayerId);
-            if (status == SRPState.WON)
+            RockPaperScissorsState status = _gameLogic.GetResultOfTheSRP(gamePlayerId);
+            if (status == RockPaperScissorsState.Won)
                 return Ok(new { status = status });
-            if (status == SRPState.LOST)
+            if (status == RockPaperScissorsState.Lost)
                 return Ok(new { status = status });
             return BadRequest(new { status = status });
         }
@@ -122,17 +123,17 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpPut("{gamePlayerId}/SaveSRP")]
         public IActionResult SaveSRP([FromBody] ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
         {
-            gameLogic.SaveChoiceIntoDB(scissorsRockPaperBet, gamePlayerId);
-            return Ok(new { ok = true});
+            _gameLogic.SaveChoiceIntoDB(scissorsRockPaperBet, gamePlayerId);
+            return Ok();
         }
 
         // POST api/<GameController>
         [HttpPost]
         public IActionResult Post([FromBody] string name)
         {
-            this.Game = gameLogic.CreateGame(name);
-            var linkPlayer1 = CreateLink(this.Game.Id, this.Game.GamePlayers.First().Id);
-            var linkPlayer2 = CreateLink(this.Game.Id, this.Game.GamePlayers.ToArray()[1].Id);
+            this._Game = _gameLogic.CreateGame(name);
+            var linkPlayer1 = CreateLink(this._Game.Id, this._Game.GamePlayers.First().Id);
+            var linkPlayer2 = CreateLink(this._Game.Id, this._Game.GamePlayers.ToArray()[1].Id);
 
             var links = new 
             {
@@ -151,13 +152,13 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 return BadRequest("Mismatched game ID");
             }
 
-            bool isValidRequest = verificationLogic.VerifyEverything(Ships.Ships);
+            bool isValidRequest = _verificationLogic.VerifyEverything(Ships.Ships);
             if (!isValidRequest)
             {
                 return BadRequest();
             }
 
-            gameLogic.CreateBoard(Ships);
+            _gameLogic.CreateBoard(Ships);
             return Ok();
         }
 
@@ -183,16 +184,17 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{gamePlayerId}/CountShots")]
         public IActionResult CountShots(Guid gamePlayerId)
         {
-            int[] countAndNextPlayer = gameLogic.CountShotsInDB(gamePlayerId);
+            ShotInfoDto countAndNextPlayer = _gameLogic.CountShotsInDB(gamePlayerId);
 
-            GameState gameStateDB = gameLogic.CheckGameState(gamePlayerId);
+            var gameStateDB = _gameLogic.GetGameState(gamePlayerId);
 
-            return Ok(new { shots = countAndNextPlayer[0], nextPlayer = countAndNextPlayer[1], gameState = gameStateDB });
+            return Ok(new { shots = countAndNextPlayer.ShotCount, nextPlayer = countAndNextPlayer.IsNextPlayer, gameState = gameStateDB });
         }
 
         private static String CreateLink(Guid gameId, Guid gamePlayerId)
         {
-            return "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=" + gameId + "&gamePlayerId=" + gamePlayerId;
+            var serverURL = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=";
+            return serverURL + gameId + "&gamePlayerId=" + gamePlayerId;
         }
     }
 }

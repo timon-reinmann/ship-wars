@@ -2,7 +2,7 @@
 
 namespace Yoo.Trainees.ShipWars.Api
 {
-    public class BoardStateDto
+    public class ShipPositionDto
     {
         public int X { get; set; }
 

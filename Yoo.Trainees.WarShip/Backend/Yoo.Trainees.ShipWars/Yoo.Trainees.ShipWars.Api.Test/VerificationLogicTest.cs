@@ -5,24 +5,10 @@ namespace Yoo.Trainees.ShipWars.Api.Test
 {
     public class VerificationLogicTest
     {
-        private List<Ship> _ships;
-
-        [SetUp]
-        public void Setup()
-        {
-            _ships = new List<Ship>
-            {
-                new Ship { Length = 2, Name = "Destroyer" },
-                new Ship { Length = 4, Name = "Warship" },
-                new Ship { Length = 3, Name = "Cruiser" },
-                new Ship { Length = 1, Name = "Submarine" }
-            };
-        }
-
         [Test]
         public void TestVerifyEmptyList_ShouldReturnFalse()
         {
-            var verificationLogic = new VerificationLogic(_ships);
+            var verificationLogic = new VerificationLogic();
 
             var shipDtos = new SaveShipDto[] {};
 
@@ -32,7 +18,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
         [Test]
         public void TestVerifyCorrectFilledList_ShouldReturnTrue()
         {
-            var verificationLogic = new VerificationLogic(_ships);
+            var verificationLogic = new VerificationLogic();
 
             var shipDtos = new SaveShipDto[]
             {
@@ -54,7 +40,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
         [Test]
         public void TestVerifyOverlappingShips_ShouldReturnFalse()
         {
-            var verificationLogic = new VerificationLogic(_ships);
+            var verificationLogic = new VerificationLogic();
 
             var shipDtos = new SaveShipDto[]
             {
@@ -76,7 +62,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
         [Test]
         public void TestVerifyeOutOfBound_ShouldReturnFalse()
         {
-            var verificationLogic = new VerificationLogic(_ships);
+            var verificationLogic = new VerificationLogic();
 
             var shipDtos = new SaveShipDto[]
             {
@@ -98,7 +84,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
         [Test]
         public void TestVerifyeUnkownShips_ShouldReturnFalse()
         {
-            var verificationLogic = new VerificationLogic(_ships);
+            var verificationLogic = new VerificationLogic();
 
             var shipDtos = new SaveShipDto[]
             {
@@ -120,7 +106,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
         [Test]
         public void TestVerifyeToManyShipsFromSameType_ShouldReturnFalse()
         {
-            var verificationLogic = new VerificationLogic(_ships);
+            var verificationLogic = new VerificationLogic();
 
             var shipDtos = new SaveShipDto[]
             {
@@ -198,7 +184,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
         [Test]
         public void TestVerifyShipNotHit_ShouldReturnFalse()
         {
-            var verificationLogic = new VerificationLogic(_ships);
+            var verificationLogic = new VerificationLogic();
 
             var shipDtos = new List<SaveShipDto>
             {
@@ -222,7 +208,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
         [Test]
         public void TestVerifyShipHit_ShouldReturnTrue()
         {
-            var verificationLogic = new VerificationLogic(_ships);
+            var verificationLogic = new VerificationLogic();
 
             var shipDtos = new List<SaveShipDto>
             {
