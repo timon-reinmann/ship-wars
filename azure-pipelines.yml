@@ -12,5 +12,8 @@ steps:
     command: 'restore'
     projects: '**/Yoo.Trainees.ShipWars.Api.csproj'
     feedsToUse: 'select'
-
-
+    
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: '**/Yoo.Trainees.ShipWars.Api.csproj'
