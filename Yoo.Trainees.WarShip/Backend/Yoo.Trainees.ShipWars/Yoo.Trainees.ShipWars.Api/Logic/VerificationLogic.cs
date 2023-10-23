@@ -2,24 +2,17 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
 using System.Data;
+using Yoo.Trainees.ShipWars.Api.Controllers;
 using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
 {
-    public class VerificationLogic
+    public class VerificationLogic : IVerificationLogic
     {
-        private List<Ship> ships;
+        private List<Ship> ships = GameController.Ships;
         private DataTable dtShip = default;
         private readonly ApplicationDbContext applicationDbContext;
-
-       public VerificationLogic()
-        {
-        }
-        public VerificationLogic(List<Ship> ships)
-        {
-            this.ships = ships;
-        }
 
         public bool VerifyEverything(SaveShipDto[] shipDtos)
         {
@@ -144,39 +137,39 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return true;
         }
 
-        public bool VerifyShot(List<SaveShotsDto> shotsDto, SaveShotsDto shot)
+        public bool VerifyShot(List<SaveShotsDto> shots, SaveShotsDto shot)
         {
-            foreach(var sh in shotsDto)
+            var validShotAreaMin = 0;
+            var validShotAreaMax = 9;
+            foreach(var sh in shots)
             {
-                if (shot.X > 9 || shot.X < 0 || shot.Y > 9 || shot.Y < 0)
+                if (shot.X > validShotAreaMax || shot.X < validShotAreaMin || shot.Y > validShotAreaMax || shot.Y < validShotAreaMin)
                     return false;
                 if (sh.X == shot.X && sh.Y == shot.Y)
                     return false;
-                if(shotsDto == null || shot == null)
+                if(shots == null || shot == null)
                     return false;
             }
 
             return true;
         }
 
-        public SaveShipDto VerifyShipHit(List<SaveShipDto> shipsDB, SaveShotsDto shot)
+        public SaveShipDto VerifyShipHit(List<SaveShipDto> ships, SaveShotsDto shot)
         {
-            foreach (var sh in shipsDB)
+            foreach (var ship in ships)
             {
                 var shipLength = (from s in this.ships
-                                 where s.Name.ToLower() == sh.ShipType.ToLower()
+                                 where s.Name.ToLower() == ship.ShipType.ToLower()
                                  select s.Length).SingleOrDefault();
-                var direction = sh.Direction;
-                var xShip = sh.X;
-                var yShip = sh.Y;
-                var yMaxLength = (direction == Direction.horizontal ? 1 : shipLength) + yShip; 
-                var xMaxLength = (direction == Direction.horizontal ? shipLength : 1) + xShip;
-                for(int y = yShip; y < yMaxLength; y++)
+                var direction = ship.Direction;
+                var yMaxLength = (direction == Direction.horizontal ? 1 : shipLength) + ship.Y; 
+                var xMaxLength = (direction == Direction.horizontal ? shipLength : 1) + ship.X;
+                for(int y = ship.Y; y < yMaxLength; y++)
                 {
-                    for(int x = xShip; x < xMaxLength; x++)
+                    for(int x = ship.X; x < xMaxLength; x++)
                     {
                         if(shot.X == x && shot.Y == y)
-                            return sh;
+                            return ship;
                     }
                 }
             }

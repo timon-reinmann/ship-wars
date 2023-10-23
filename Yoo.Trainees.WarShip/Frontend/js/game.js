@@ -1,10 +1,13 @@
+// API URL
+let api = "https://localhost:7118/api/Game/"
+
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
 
-isBoardSet(gamePlayerId);
+CheckIfBoardSet(gamePlayerId);
 loadFiredShots(gamePlayerId);
 
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
@@ -45,7 +48,7 @@ const opponentFields = document.querySelectorAll(".opponentField");
 const scissors = document.querySelector(".scissors");
 const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
-const SRP = document.querySelector(".SRP");
+const SRP = document.querySelector(".rock__paper__scissors");
 
 localStorage.setItem('srpReload', 'false');
 
@@ -176,7 +179,7 @@ opponentFields.forEach((opponentField) => {
     const currentX = parseInt(opponentField.getAttribute("data-x"));
     const currentY = parseInt(opponentField.getAttribute("data-y"));
     const API_URL =
-      "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveShotInDB";
+      api + gamePlayerId + "/SaveShot";
     fetch(API_URL, {
       credentials: "omit",
       headers: {
@@ -344,7 +347,7 @@ error_popup__wmark.addEventListener("click", () => {
 });
 
 async function sendShips(Ships) {
-  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/SaveShips";
+  const API_URL = api + gameId + "/SaveShips";
   await fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -409,7 +412,7 @@ function createLoadingScreen() {
 }
 
 function checkIfPlayerReady() {
-  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/Ready";
+  const API_URL = api + gameId + "/Ready";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -444,7 +447,7 @@ function screenBlocker() {
 }
 
 async function checkReadyToShoot(gamePlayerId) {
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/" + gameId + "/CheckReadyToShoot";
+  const API_URL = api + gamePlayerId + "/" + gameId + "/CheckReadyToShoot";
   const test = fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -469,8 +472,8 @@ async function checkReadyToShoot(gamePlayerId) {
     return test;
 }
 
-function isBoardSet(gameId) {
-  const API_URL = "https://localhost:7118/api/Game/" + gameId + "/BoardState";
+function CheckIfBoardSet(gameId) {
+  const API_URL = api + gameId + "/BoardState";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -497,7 +500,7 @@ function isBoardSet(gameId) {
 }
 
 function loadFiredShots(gamePlayerId) {
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/LoadFiredShots";
+  const API_URL = api + gamePlayerId + "/LoadFiredShots";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -532,7 +535,7 @@ function loadShotsFromOpponent(){
   loadShotsFromOpponentFromTheDB(gamePlayerId);
 }
 function loadShotsFromOpponentFromTheDB(gamePlayerId) {
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/LoadShotsFromOpponent";
+  const API_URL = api + gamePlayerId + "/LoadShotsFromOpponent";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -606,7 +609,7 @@ function loadGameBoard(data) {
 }
 
 async function ScissorsRockPaper() {
-  SRPFindished = await CheckIfSRPIsSet(gamePlayerId); 
+  SRPFindished = await IsSRPIsSet(gamePlayerId); 
   if(!SRPFindished) {
     scissors.classList.add("scissors--active");
     rock.classList.add("rock--active");
@@ -649,7 +652,7 @@ SRPChoice.forEach((srp) => {
     );
 
     const API_URL =
-      "https://localhost:7118/api/Game/" + gamePlayerId + "/SaveSRP";
+      api + gamePlayerId + "/SaveSRP";
     fetch(API_URL, {
       credentials: "omit",
       headers: {
@@ -663,17 +666,16 @@ SRPChoice.forEach((srp) => {
       body: JSON.stringify(choice),
       method: "Put",
     })
-      .then((response) => response.json())
       .then((data) => {
-        if (data.ok) {
+        if (data) {
           createLoadingScreenForSRP()
-          intervalSRP = setInterval(CheckIfSRPIsSet, 1000);
+          intervalSRP = setInterval(IsSRPIsSet, 1000);
         }
       });
   });
 });
-async function CheckIfSRPIsSet() {
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/CheckIfSRPIsSet";
+async function IsSRPIsSet() {
+  const API_URL = api + gamePlayerId + "/CheckIfSRPIsSet";
   const result = fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -704,7 +706,7 @@ async function CheckIfSRPIsSet() {
 }
 
 function countShots(){
-  const API_URL = "https://localhost:7118/api/Game/" + gamePlayerId + "/CountShots";
+  const API_URL = api + gamePlayerId + "/CountShots";
   fetch(API_URL, {
     credentials: "omit",
     headers: {
