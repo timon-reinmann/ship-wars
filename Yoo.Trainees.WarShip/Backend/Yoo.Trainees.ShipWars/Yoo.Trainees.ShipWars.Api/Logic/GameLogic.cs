@@ -245,7 +245,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             bool isPlayer1Loser = CheckIfPlayer1IsLoser(player1, player2);
 
-            if (game.GameStatus != GameState.Ongoing.ToString())
+            if (game.GameStatus
+                != GameState.Ongoing.ToString())
             game.NextPlayer = isPlayer1Loser ? player2.Id : player1.Id;
 
             _applicationDbContext.Game.Update(game);

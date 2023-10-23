@@ -461,6 +461,8 @@ function showExplosionAnimation(fieldElement) {
   // Erstelle ein neues <img> Element
   const img = document.createElement('img');
   img.src = '../img/explosion.gif';
+  img.style.height = '50px';
+  img.style.width = '50px';
   
   // Füge das <img> Element zum Ziel-Feld hinzu
   fieldElement.appendChild(img);
