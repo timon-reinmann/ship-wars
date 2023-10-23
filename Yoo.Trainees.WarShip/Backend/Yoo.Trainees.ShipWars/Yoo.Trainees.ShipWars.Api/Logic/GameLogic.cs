@@ -272,6 +272,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         }
         public ShipHit CheckIfShipHit(SaveShotsDto xy, Guid gamePlayerId, List<Ship> shipType)
         {
+            var game1 = applicationDbContext.GamePlayer.FirstOrDefault(x => x.Id == gamePlayerId).Game;
+
             var game = (from gp in applicationDbContext.GamePlayer
                         where gp.Id == gamePlayerId
                         select gp.Game).FirstOrDefault();
