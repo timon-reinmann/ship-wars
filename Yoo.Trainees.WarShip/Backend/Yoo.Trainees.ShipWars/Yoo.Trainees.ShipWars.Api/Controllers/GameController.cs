@@ -85,6 +85,14 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             }
         }
 
+        //
+        [HttpGet("{gamePlayerId}/LoadHitShips")]
+        public IActionResult LoadHitShips(Guid gamePlayerId)
+        {
+            var hitFields = _gameLogic.GetAllHitShipFields(gamePlayerId);
+            return Ok(hitFields);
+        }
+
         // To visualize the own Fields which got hit.
         [HttpGet("{gamePlayerId}/LoadShotsFromOpponent")]
         public IActionResult LoadShotsFromOpponent(Guid gamePlayerId)

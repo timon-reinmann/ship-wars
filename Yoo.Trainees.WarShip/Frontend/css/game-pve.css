@@ -42,7 +42,7 @@ body {
 
 .cursor--active {
   position: absolute;
-  background-image: url(../../Crosshair/crosshairGame.png);
+  background-image: url(../../Crosshair/crosshairGameWhite.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;

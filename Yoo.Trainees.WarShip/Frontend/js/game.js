@@ -9,6 +9,8 @@ const SRPChoice = document.querySelectorAll(".SRP-choice");
 
 CheckIfBoardSet(gamePlayerId);
 loadFiredShots(gamePlayerId);
+loadHitShips(gamePlayerId);
+
 
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
@@ -596,6 +598,7 @@ function loadGameBoard(data) {
             `[data-x="${i}"][data-y="${j}"]`
           );
           container.appendChild(ship);
+
           ship.setAttribute(
             "data-direction",
             Direction === 0 ? "horizontal" : "vertical"
@@ -614,6 +617,36 @@ function loadGameBoard(data) {
       }
     }
   });
+}
+
+function loadHitShips(gamePlayerId) {
+  const API_URL =
+      api + gamePlayerId + "/LoadHitShips";
+    fetch(API_URL, {
+      credentials: "omit",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+        Accept: "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+      },
+      method: "GET",
+    }).then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          data.forEach((shots) => {
+            const X = shots.x;
+            const Y = shots.y;
+            const opponentFields = document.getElementById("opponent__board");
+            const opponentField = opponentFields.querySelector(
+              `[data-x="${X}"][data-y="${Y}"]`
+            );
+            opponentField.classList.add("Field--hit--ship");
+          });
+        }
+      });
 }
 
 async function ScissorsRockPaper() {
@@ -672,7 +705,7 @@ SRPChoice.forEach((srp) => {
         "Sec-Fetch-Dest": "empty",
       },
       body: JSON.stringify(choice),
-      method: "Put",
+      method: "PUT",
     })
       .then((data) => {
         if (data) {
