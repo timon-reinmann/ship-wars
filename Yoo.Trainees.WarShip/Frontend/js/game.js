@@ -3,6 +3,9 @@ const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const GamePlayerId = urlParams.get("playerId");
 
+const muteButton = document.querySelector(".mute__button");
+let mute = false;
+
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
@@ -164,6 +167,24 @@ function mapFrontendDirectionToBackendEnum(frontendDirection) {
       throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }
+
+muteButton.addEventListener("mouseover", () => {
+  muteButton.classList.add("fa-bounce");
+});
+muteButton.addEventListener("mouseout", () => {
+  muteButton.classList.remove("fa-bounce");
+});
+muteButton.addEventListener("click", () => {
+  mute = !mute;
+  if(mute) {
+    muteButton.children[0].classList.add("fa-volume-xmark");
+    muteButton.children[0].classList.remove("fa-volume-high");
+  } else {
+    muteButton.children[0].classList.remove("fa-volume-xmark");
+    muteButton.children[0].classList.add("fa-volume-high");
+  }
+});
+
 
 function deleteShipHitBox(container) {
   if (originField) {
