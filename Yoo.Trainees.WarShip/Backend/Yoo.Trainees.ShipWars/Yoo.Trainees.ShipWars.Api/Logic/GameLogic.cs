@@ -262,7 +262,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return isPlayer1Loser ? RockPaperScissorsState.Lost : RockPaperScissorsState.Won;
         }
-        public bool CheckIfPlayer1IsLoser(GamePlayer player1, GamePlayer player2)
+        private static bool CheckIfPlayer1IsLoser(GamePlayer player1, GamePlayer player2)
         {
             return (player1.ScissorsRockPaperBet == ScissorsRockPaper.Scissors && player2.ScissorsRockPaperBet == ScissorsRockPaper.Rock) ||
                    (player1.ScissorsRockPaperBet == ScissorsRockPaper.Rock && player2.ScissorsRockPaperBet == ScissorsRockPaper.Paper) ||
@@ -350,7 +350,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return gameState;
         }
-        public bool CheckIfShipsThere(List<ShipPosition> ships)
+        private bool CheckIfShipsThere(List<ShipPosition> ships)
         {
             return ships.Any(x => x.Life > 0);
         }

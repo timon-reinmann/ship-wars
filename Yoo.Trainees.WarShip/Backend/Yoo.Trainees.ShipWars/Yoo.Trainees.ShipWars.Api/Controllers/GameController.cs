@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Any;
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
@@ -11,6 +12,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
     [ApiController]
     public class GameController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
         private readonly IGameLogic _gameLogic;
         private readonly IEmailSender _emailSender;
         private Game _Game;
@@ -24,11 +26,12 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         // ToDo muss nich mit Marcel angeschaut werden
         private readonly IVerificationLogic _verificationLogic;
 
-        public GameController(IGameLogic gameLogic, IEmailSender emailSender, IVerificationLogic verificationLogic)
+        public GameController(IGameLogic gameLogic, IEmailSender emailSender, IConfiguration configuration, IVerificationLogic verificationLogic)
         {
             this._gameLogic = gameLogic;
             this._emailSender = emailSender;
             this._verificationLogic = verificationLogic;
+            this._configuration = configuration;
         }
 
         // GET: api/Game
@@ -187,10 +190,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
 
         // Create link for invitation.
-        private static String CreateLink(Guid gameId, Guid gamePlayerId)
+        private String CreateLink(Guid gameId, Guid gamePlayerId)
         {
-            var serverURL = "http://127.0.0.1:5500/Frontend/html/game-pvp.html?gameId=";
-            return serverURL + gameId + "&gamePlayerId=" + gamePlayerId;
+            return _configuration["Link:URL"] + gameId + "&gamePlayerId=" + gamePlayerId;
         }
     }
 }
