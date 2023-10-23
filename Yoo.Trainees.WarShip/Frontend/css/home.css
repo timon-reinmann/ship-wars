@@ -12,6 +12,13 @@
   }
 }
 
+.direction {
+  margin-top: 1px;
+  margin-bottom: 10px;
+  font-size: 100px;
+  font-family: walkingdead;
+}
+
 .shipwars__title {
   font-family: "walkingdead", Brush Script MT, Brush Script Std, cursive;
   position: relative;
@@ -119,7 +126,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  height: 100vh;
+  height: 81.8%;
   width: 40%;
   padding: 5%;
   background-color: white;
@@ -170,6 +177,10 @@
 .modal {
   max-width: 500ch;
   border: 3px solid black;
+  position: absolute;
+  top: 10%;
+  max-height: 70%;
+  overflow-y: auto;
 
   & > * {
     margin: 0 0 0.5rem 0;
@@ -177,21 +188,21 @@
 }
 
 .modal::backdrop {
-  background: rgb(0 0 0 / 0.4);
+  background-color: #fc000075;
 }
 
 .button {
-  border: 0.5;
   cursor: pointer;
-  background: gray 8;
-  color: gray 2;
-  font-weight: 700;
-  padding: 2px 4px;
+  background: transparent;
+  border: none;
+  font-size: 40px;
+  color: #fafafa;
+  font-family: walkingdead;
 }
 
-.button:hover,
-.button:focus {
-  background: cyan 9;
+.button:hover {
+  transform: scale(1.1);
+  text-decoration: underline;
 }
 
 form {
@@ -208,7 +219,7 @@ form {
   border: 2px solid black;
   position: absolute;
   top: -0.3%;
-  right: 94.7%;
+  right: 95.3%;
   z-index: 100;
 }
 .sidebar-close--active {
@@ -219,26 +230,24 @@ form {
   cursor: pointer;
 }
 
-.homescreen-img {
-  width: 500px;
-}
-
-.lobbyname {
-  width: 400px;
-}
-
+.lobbyname,
+.playingfield,
+.hitornot,
+.rockpaperscissors,
+.loadingscreen,
+.commit,
+.clicktosendemail,
+.sendemail,
+.copied,
+.homescreen-img,
 .copylink {
-  width: 500px;
+  width: 430px;
 }
 
-.copied {
-  width: 400px;
+.player2turn {
+  width: 215px;
 }
 
-.sendemail {
-  width: 400px;
-}
-
-.clicktosendemail {
-  width: 400px;
+.yourturn {
+  width: 233px;
 }

@@ -39,17 +39,19 @@
           <p class="btn-text">Directions</p>
         </button>
         <selection id="sidebar" class="sidebar-text">
-          <h1>Directions</h1>
+          <p class="direction">Directions</p>
           <br />
           <p>Click on the topic that interests you.</p>
           <button id="sidebarBtn-close" class="sidebar-close">
             <i class="fa-solid fa-xmark-large fa-2xl"></i>
           </button>
           <div class="direction-btn">
+            <br />
             <!------------------------------- homescreen ----------------------------------->
             <div class="container">
-              -
-              <button class="button open-button">Homescreen</button>
+              <button class="button open-button">
+                <p>- Homescreen</p>
+              </button>
 
               <dialog class="modal" id="modal">
                 <h2>Homescreen</h2>
@@ -73,25 +75,22 @@
                 <button class="button close-button">close modal</button>
               </dialog>
             </div>
-            <br />
-            <br />
             <!------------------------------- VS Bot ----------------------------------->
             <div class="container">
-              -
-              <button class="button open-button">VS Bot</button>
+              <button class="button open-button">
+                <p>- VS Bot</p>
+              </button>
 
-              <dialog class="modal-pvp" id="modal-pvp">
+              <dialog class="modal" id="modal-pvp">
                 <h2>VS Bot</h2>
 
                 <button class="button close-button">close modal</button>
               </dialog>
             </div>
-            <br />
-            <br />
+
             <!------------------------------- Create Game ----------------------------------->
             <div class="container">
-              -
-              <button class="button open-button">VS Player</button>
+              <button class="button open-button"><p>- VS Player</p></button>
 
               <dialog class="modal" id="modal-pvp">
                 <h2>VS PLayer</h2>
@@ -101,8 +100,8 @@
                   create the game
                   <br />
                 </p>
-                <img class="lobbyname" src="img/lobbyname.png" alt="" />
-                <img src="img/created.png" alt="" />
+                <img class="lobbyname" src="img/lobbyname.png" alt="" /> <br />
+                <img src="img/created.png" alt="" /> <br />
                 <p>
                   Once you have created the game you can copy the link for
                   players
@@ -113,34 +112,101 @@
                   you can join the game yourself using the JoinGame button
                   <br />
                 </p>
-                <img class="copylink" src="img/copylink.png" alt="" />
+                <img class="copylink" src="img/copylink.png" alt="" /> <br />
                 <img class="copied" src="img/copied.png" alt="" /> <br />
-                <img class="sendemail" src="img/sendemail.png" alt="" />
+                <img class="sendemail" src="img/sendemail.png" alt="" /><br />
                 <img
                   src="img/clicktosendemail.png"
                   alt=""
                   class="clicktosendemail"
                 />
+                <br />
                 <button class="button close-button">close modal</button>
               </dialog>
             </div>
-            <br />
-            <br />
             <!------------------------------- How to Play ----------------------------------->
             <div class="container">
-              -
-              <button class="button open-button">How to Play</button>
+              <button class="button open-button"><p>- How to Play</p></button>
 
-              <dialog class="modal-pvp" id="modal-rules">
+              <dialog class="modal" id="modal-rules">
                 <h2>How to Play</h2>
-
-                <p></p>
-
+                <p>
+                  At the beginning you have to place all ships. You can rotate
+                  <br />
+                  the ships by clicking on the box that has the end of the ship
+                  <br />
+                  in it. Make sure that all ships are at least one space apart
+                  <br />
+                  (edge ​​excluded). When you have placed all the ships you can
+                  <br />
+                  press the commit button to submit the positions <br />
+                </p>
+                <img class="commit" src="/Frontend/img/Commit.png" alt="" />
+                <p>
+                  If everything is correct there will be a loading screen. Then
+                  <br />
+                  wait until the other player has also given up his ships <br />
+                </p>
+                <img
+                  class="loadingscreen"
+                  src="/Frontend/img/Loading screen.png"
+                  alt=""
+                />
+                <p>
+                  then you play rock paper scissors to choose who goes first
+                  <br />
+                  regulate: <br />
+                  Scissors => paper <br />
+                  Paper => stone <br />
+                  Rock => scissors <br />
+                </p>
+                <img
+                  class="rockpaperscissors"
+                  src="/Frontend/img/Scherensteinpapier.png"
+                  alt=""
+                />
+                <p>
+                  Above you can see how many times a shot has already been
+                  <br />
+                  taken, if the background of this field is red it is the <br />
+                  opponent's turn, if it is green it is your turn <br />
+                </p>
+                <img
+                  class="player2turn"
+                  src="/Frontend/img/DerGegnerIstDran.png"
+                  alt=""
+                />
+                <img
+                  class="yourturn"
+                  src="/Frontend/img/DuBistDran.png"
+                  alt=""
+                />
+                <p>
+                  If you have shot, this field turns red, if this field is
+                  <br />
+                  transparent red then you didn't hit, but you can clearly see
+                  <br />
+                  that you hit <br />
+                </p>
+                <img
+                  class="hitornot"
+                  src="/Frontend/img/getrofen oder nicht.png"
+                  alt=""
+                />
+                <p>
+                  You have to shoot into the right field, in the left you can
+                  <br />
+                  see your ships and where your opponent has already shot <br />
+                </p>
+                <img
+                  class="playingfield"
+                  src="/Frontend/img/BeideSpielfelder.png"
+                  alt=""
+                />
+                <br />
                 <button class="button close-button">close modal</button>
               </dialog>
             </div>
-            <br />
-            <br />
           </div>
         </selection>
       </div>
