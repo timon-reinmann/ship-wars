@@ -157,7 +157,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return nextPlayerId == gamePlayerId;
         }
 
-        public void VerifyAndExecuteShotOrThrow(SaveShotsDto xy, Guid gamePlayerId)
+        public void VerifyAndSaveShot(SaveShotsDto xy, Guid gamePlayerId)
         {
             var game = (from gp in _applicationDbContext.GamePlayer
                         where gp.Id.Equals(gamePlayerId)

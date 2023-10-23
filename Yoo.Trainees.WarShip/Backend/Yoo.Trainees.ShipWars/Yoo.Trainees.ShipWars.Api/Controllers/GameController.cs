@@ -14,6 +14,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IGameLogic _gameLogic;
+        private readonly IVerificationLogic _verificationLogic;
         private readonly IEmailSender _emailSender;
         private Game _Game;
         public static List<Ship> Ships = new List<Ship>
@@ -23,8 +24,6 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 new Ship { Length = 3, Name = "cruiser" },
                 new Ship { Length = 1, Name = "submarine" }
         };
-        // ToDo muss nich mit Marcel angeschaut werden
-        private readonly IVerificationLogic _verificationLogic;
 
         public GameController(IGameLogic gameLogic, IEmailSender emailSender, IConfiguration configuration, IVerificationLogic verificationLogic)
         {
