@@ -8,12 +8,19 @@ trigger:
 
 steps:
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
   inputs:
     command: 'restore'
     projects: '**/Yoo.Trainees.ShipWars.Api.csproj'
     feedsToUse: 'select'
     
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
   inputs:
     command: 'build'
     projects: '**/Yoo.Trainees.ShipWars.Api.csproj'
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    command: 'test'
+    projects: '**/Yoo.Trainees.ShipWars.Api.Test.csproj'
