@@ -211,6 +211,7 @@ opponentFields.forEach((opponentField) => {
         } 
         if(data.hit === 1) {
           opponentField.classList.add("Field--hit--ship");
+          showExplosionAnimation(opponentField);
         }
       });
     }
@@ -454,6 +455,20 @@ function screenBlocker() {
   finishField.classList.remove("active-popup");
   screenBlocker.classList.add("screen-blocker--active");
   ScissorsRockPaper();
+}
+
+function showExplosionAnimation(fieldElement) {
+  // Erstelle ein neues <img> Element
+  const img = document.createElement('img');
+  img.src = '../img/explosion.gif';
+  
+  // Füge das <img> Element zum Ziel-Feld hinzu
+  fieldElement.appendChild(img);
+  
+  // Entferne das <img> Element nach einer bestimmten Zeit (z.B. 3 Sekunden)
+  setTimeout(() => {
+    fieldElement.removeChild(img);
+  }, 800); // 3000 Millisekunden = 3 Sekunden
 }
 
 async function checkReadyToShoot(gamePlayerId) {

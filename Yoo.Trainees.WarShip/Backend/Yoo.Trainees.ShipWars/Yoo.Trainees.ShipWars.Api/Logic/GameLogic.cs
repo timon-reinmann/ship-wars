@@ -195,10 +195,10 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         {
             var game = GetGame(gamePlayerId);
             var player2 = (from gp in _applicationDbContext.GamePlayer
-                           where gp.GameId.Equals(game) && gp.Id != gamePlayerId
+                           where gp.GameId.Equals(game.Id) && gp.Id != gamePlayerId
                            select gp).SingleOrDefault(); 
             var shots = (from s in _applicationDbContext.Shot
-                         where s.Player.Id.Equals(player2.Id) 
+                         where s.Player != null && s.Player.Id.Equals(player2.Id)
                          select new SaveShotsDto { X = s.X, Y = s.Y }).ToList();
             return shots;
         }
@@ -245,6 +245,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             bool isPlayer1Loser = CheckIfPlayer1IsLoser(player1, player2);
 
+            if (game.GameStatus != GameState.Ongoing.ToString())
             game.NextPlayer = isPlayer1Loser ? player2.Id : player1.Id;
 
             _applicationDbContext.Game.Update(game);
