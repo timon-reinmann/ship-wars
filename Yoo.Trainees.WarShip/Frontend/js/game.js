@@ -175,7 +175,7 @@ opponentFields.forEach((opponentField) => {
   opponentField.addEventListener("click", async (e) => {
     clearInterval(intervalShots);
     const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
-    if(isReadyToShoot) {
+    if(!isReadyToShoot) {return}
     const currentX = parseInt(opponentField.getAttribute("data-x"));
     const currentY = parseInt(opponentField.getAttribute("data-y"));
     const API_URL =
@@ -203,7 +203,6 @@ opponentFields.forEach((opponentField) => {
           opponentField.classList.add("Field--hit--ship");
         }
       });
-    }
   });
 });
 
