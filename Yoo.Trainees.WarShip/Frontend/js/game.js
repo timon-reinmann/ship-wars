@@ -567,7 +567,7 @@ function loadShotsFromOpponentFromTheDB(gamePlayerId) {
 }
 
 function loadGameBoard(data) {
-  // playe the ships on the board and wait for the other player
+  // place the ships on the board and wait for the other player
   data.forEach((ships) => {
     let shipFound = false;
     const X = ships.x;
