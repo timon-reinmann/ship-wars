@@ -48,7 +48,7 @@ const opponentFields = document.querySelectorAll(".opponentField");
 const scissors = document.querySelector(".scissors");
 const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
-const SRP = document.querySelector(".rock__paper__scissors");
+const SRP = document.querySelector(".rock-paper-scissors-container");
 
 localStorage.setItem('srpReload', 'false');
 

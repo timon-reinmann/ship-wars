@@ -322,7 +322,7 @@ span {
   transform: scale(1);
 }
 
-.rock__paper__scissors {
+.rock-paper-scissors-container {
   background-color: rgba(65, 91, 42, 0.76);
   height: 100%;
   width: 100%;
