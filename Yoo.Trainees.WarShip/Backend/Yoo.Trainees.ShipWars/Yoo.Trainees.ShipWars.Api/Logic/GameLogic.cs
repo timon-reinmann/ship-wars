@@ -29,6 +29,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     public class GameLogic : IGameLogic
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IConfiguration _configuration;
         private IVerificationLogic _verificationLogic;
         private Game _Game;
 
@@ -112,8 +113,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             _applicationDbContext.SaveChanges();
         }
         public bool IsReady(Guid gameId)
-        {
-            var maxShipsInGame = 20;
+        { 
             var gamePlayers = from s in _applicationDbContext.GamePlayer
                       where s.GameId == gameId
                       select s;
@@ -126,7 +126,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             var count = gamePlayer1.Count() + gamePlayer2.Count();
             
-            return count == maxShipsInGame;
+            return count == int.Parse(_configuration["Ships:MaxShips"]);
         }
         public ShipPositionDto[] GetCompleteShipPositionsForGamePlayer(Guid gamePlayerId)
         {
