@@ -13,5 +13,6 @@ public sealed class ChatHub : Hub<IChatClient>
     {
         await Clients.All.ReceiveMessage($"{Context.ConnectionId}: {message}");
     }
+   
 }
 

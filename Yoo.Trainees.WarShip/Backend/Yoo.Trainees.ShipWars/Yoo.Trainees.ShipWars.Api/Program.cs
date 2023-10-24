@@ -68,6 +68,7 @@ namespace Yoo.Trainees.ShipWars.Api
 
                 return Results.NoContent();
             });
+
             app.UseHttpsRedirection();
             app.MapHub<ChatHub>("chat-hub");
             app.UseAuthorization();

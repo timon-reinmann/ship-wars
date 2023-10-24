@@ -1,5 +1,7 @@
 // API URL
-let api = "https://localhost:7118/api/Game/"
+let api = "https://localhost:7118/api/Game/";
+
+const stateLabel = document.getElementById("socketState");
 
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -50,7 +52,7 @@ const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
 const SRP = document.querySelector(".rock__paper__scissors");
 
-localStorage.setItem('srpReload', 'false');
+localStorage.setItem("srpReload", "false");
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("click", (e) => {
@@ -175,34 +177,33 @@ opponentFields.forEach((opponentField) => {
   opponentField.addEventListener("click", async (e) => {
     clearInterval(intervalShots);
     const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
-    if(isReadyToShoot) {
-    const currentX = parseInt(opponentField.getAttribute("data-x"));
-    const currentY = parseInt(opponentField.getAttribute("data-y"));
-    const API_URL =
-      api + gamePlayerId + "/SaveShot";
-    fetch(API_URL, {
-      credentials: "omit",
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-        Accept: "*/*",
-        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-        "Content-Type": "application/json",
-        "Sec-Fetch-Dest": "empty",
-      },
-      body: JSON.stringify({ X: currentX, Y: currentY }),
-      method: "POST",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if(data.hit === 1 || data.hit === 0) {
-          opponentField.classList.add("Field--hit");
-          intervalShots = setInterval(loadShotsFromOpponent, 2000);
-        } 
-        if(data.hit === 1) {
-          opponentField.classList.add("Field--hit--ship");
-        }
-      });
+    if (isReadyToShoot) {
+      const currentX = parseInt(opponentField.getAttribute("data-x"));
+      const currentY = parseInt(opponentField.getAttribute("data-y"));
+      const API_URL = api + gamePlayerId + "/SaveShot";
+      fetch(API_URL, {
+        credentials: "omit",
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+          Accept: "*/*",
+          "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+          "Content-Type": "application/json",
+          "Sec-Fetch-Dest": "empty",
+        },
+        body: JSON.stringify({ X: currentX, Y: currentY }),
+        method: "POST",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.hit === 1 || data.hit === 0) {
+            opponentField.classList.add("Field--hit");
+            intervalShots = setInterval(loadShotsFromOpponent, 2000);
+          }
+          if (data.hit === 1) {
+            opponentField.classList.add("Field--hit--ship");
+          }
+        });
     }
   });
 });
@@ -469,7 +470,7 @@ async function checkReadyToShoot(gamePlayerId) {
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
-    return test;
+  return test;
 }
 
 function CheckIfBoardSet(gameId) {
@@ -531,7 +532,7 @@ function loadFiredShots(gamePlayerId) {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
 }
-function loadShotsFromOpponent(){
+function loadShotsFromOpponent() {
   loadShotsFromOpponentFromTheDB(gamePlayerId);
 }
 function loadShotsFromOpponentFromTheDB(gamePlayerId) {
@@ -609,8 +610,8 @@ function loadGameBoard(data) {
 }
 
 async function ScissorsRockPaper() {
-  SRPFindished = await IsSRPIsSet(gamePlayerId); 
-  if(!SRPFindished) {
+  SRPFindished = await IsSRPIsSet(gamePlayerId);
+  if (!SRPFindished) {
     scissors.classList.add("scissors--active");
     rock.classList.add("rock--active");
     paper.classList.add("paper--active");
@@ -634,25 +635,24 @@ function createLoadingScreenForSRP() {
 }
 
 function deleteLoadingScreenForSRP() {
-    const finish = document.querySelector(".finish");
-    const commit_button = document.querySelector(".commit-button");
-    const ring = document.querySelector(".ring");
-    const shipSelection = document.querySelector(".ship__selection");
-    shipSelection.classList.remove("ship__selection");
-    ring.classList.remove("ring--active");
-    finish.classList.remove("active-popup");
-    remove(commit_button);
+  const finish = document.querySelector(".finish");
+  const commit_button = document.querySelector(".commit-button");
+  const ring = document.querySelector(".ring");
+  const shipSelection = document.querySelector(".ship__selection");
+  shipSelection.classList.remove("ship__selection");
+  ring.classList.remove("ring--active");
+  finish.classList.remove("active-popup");
+  remove(commit_button);
 }
 
 SRPChoice.forEach((srp) => {
   srp.addEventListener("click", function () {
-    localStorage.setItem('srpReload', 'true');
+    localStorage.setItem("srpReload", "true");
     const choice = mapFrontendScissorsRockPaperToBackendEnum(
       srp.dataset.choice
     );
 
-    const API_URL =
-      api + gamePlayerId + "/SaveSRP";
+    const API_URL = api + gamePlayerId + "/SaveSRP";
     fetch(API_URL, {
       credentials: "omit",
       headers: {
@@ -665,13 +665,12 @@ SRPChoice.forEach((srp) => {
       },
       body: JSON.stringify(choice),
       method: "Put",
-    })
-      .then((data) => {
-        if (data) {
-          createLoadingScreenForSRP()
-          intervalSRP = setInterval(IsSRPIsSet, 1000);
-        }
-      });
+    }).then((data) => {
+      if (data) {
+        createLoadingScreenForSRP();
+        intervalSRP = setInterval(IsSRPIsSet, 1000);
+      }
+    });
   });
 });
 async function IsSRPIsSet() {
@@ -696,16 +695,19 @@ async function IsSRPIsSet() {
         deleteLoadingScreenForSRP();
         return true;
       }
-      if((data.status === 4 || data.status === 3) && localStorage.getItem('srpReload') === 'true'){
-        localStorage.setItem('srpReload', 'false');
+      if (
+        (data.status === 4 || data.status === 3) &&
+        localStorage.getItem("srpReload") === "true"
+      ) {
+        localStorage.setItem("srpReload", "false");
         location.reload();
       }
       return false;
     });
-    return result;
+  return result;
 }
 
-function countShots(){
+function countShots() {
   const API_URL = api + gamePlayerId + "/CountShots";
   fetch(API_URL, {
     credentials: "omit",
@@ -722,7 +724,7 @@ function countShots(){
     .then((response) => response.json())
     .then((data) => {
       const counter = document.querySelector(".counter");
-      if(data.nextPlayer === 1) {
+      if (data.nextPlayer === 1) {
         counter.classList.add("counter--active");
       } else {
         counter.classList.remove("counter--active");
@@ -730,11 +732,11 @@ function countShots(){
       if (data.shots) {
         counter.innerHTML = data.shots;
       }
-      if(data.gameState === 1 || data.gameState === 2) {
+      if (data.gameState === 1 || data.gameState === 2) {
         clearInterval(intervalCounter);
         clearInterval(intervalShots);
       }
-      if(data.gameState === 1){
+      if (data.gameState === 1) {
         const winContainer = document.querySelector(".container");
         winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
         document.body.style.margin = "0";
@@ -745,7 +747,7 @@ function countShots(){
           document.body.style.margin = "5";
           document.body.style.overflowY = "visvible";
         });
-      } else if (data.gameState === 2){
+      } else if (data.gameState === 2) {
         const looseContainer = document.querySelector(".container");
         looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
         document.body.style.margin = "0";
@@ -776,3 +778,80 @@ function mapFrontendScissorsRockPaperToBackendEnum(choice) {
       throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }
+
+const API_URL = "https://localhost:7118/broadcast";
+const result = fetch(API_URL, {
+  credentials: "omit",
+  headers: {
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+    Accept: "*/*",
+    "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+    "Content-Type": "application/json",
+    "Sec-Fetch-Dest": "empty",
+  },
+  body: JSON.stringify({ message: "Hallo" }),
+  method: "POST",
+})
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+  });
+
+// const socket = new WebSocket("wss://localhost:7118/chat-hub");
+// socket.onopen = function (e) {
+//   console.log("open");
+//   lockSocketState();
+// };
+// socket.onmessage = function (e) {
+//   console.log(e.data);
+// };
+
+// setTimeout(() => {
+//   socket.send('{protocol":"json","version":1}');
+// }, 5000);
+
+// function lockSocketState() {
+//   switch (socket.readyState) {
+//     case WebSocket.CLOSED:
+//       stateLabel.innerHTML = "Closed";
+
+//       break;
+//     case WebSocket.CLOSING:
+//       stateLabel.innerHTML = "Closing...";
+//       break;
+//     case WebSocket.CONNECTING:
+//       stateLabel.innerHTML = "Connecting...";
+//       break;
+//     case WebSocket.OPEN:
+//       stateLabel.innerHTML = "Open";
+//       break;
+//     default:
+//       stateLabel.innerHTML =
+//         "Unknown WebSocket State: " + htmlEscape(socket.readyState);
+//       break;
+//   }
+// }
+
+setTimeout(() => {
+  var connection = $.connection("/chat-hub");
+  connection.received(function (data) {
+    console.log(data);
+  });
+  connection.error(function (error) {
+    console.warn(error);
+  });
+  connection.stateChanged(function (change) {
+    if (change.newState === $.signalR.connectionState.reconnecting) {
+      console.log("Re-connecting");
+    } else if (change.newState === $.signalR.connectionState.connected) {
+      console.log("The server is online");
+    }
+  });
+  connection.reconnected(function () {
+    console.log("Reconnected");
+  });
+  connection.start(function () {
+    console.log("connection started!");
+  });
+}, 5000);
