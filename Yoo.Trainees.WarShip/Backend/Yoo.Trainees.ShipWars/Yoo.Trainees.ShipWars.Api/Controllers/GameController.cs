@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Any;
+using System.Security.Cryptography.Xml;
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
@@ -76,7 +77,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         {
             try
             {
-                _gameLogic.VerifyAndExecuteShotOrThrow(xy, gamePlayerId);
+                _gameLogic.VerifyAndSaveShot(xy, gamePlayerId);
                 var shipHit = _gameLogic.CheckIfShipHit(xy, gamePlayerId);
                 _gameLogic.SaveShot(xy, gamePlayerId);
                 return Ok(new { hit = shipHit });

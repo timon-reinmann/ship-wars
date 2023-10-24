@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Yoo.Trainees.ShipWars.Api.Logic;
@@ -16,6 +17,8 @@ namespace Yoo.Trainees.ShipWars.Api
             builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.AddTransient<IVerificationLogic, VerificationLogic>();
             builder.Services.AddTransient<IGameLogic, GameLogic>();
+
+            builder.Services.AddSignalR();
 
             builder.Services.AddCors();
 
@@ -59,7 +62,14 @@ namespace Yoo.Trainees.ShipWars.Api
                 db.Database.Migrate();
             }
 
+            app.MapPost("broadcast", async (string message, IHubContext<ChatHub, IChatClient> context) =>
+            {
+                 await context.Clients.All.ReceiveMessage(message);
+
+                return Results.NoContent();
+            });
             app.UseHttpsRedirection();
+            app.MapHub<ChatHub>("chat-hub");
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
