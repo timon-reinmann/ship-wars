@@ -23,11 +23,35 @@ createBoard(gameOpponent, false);
 let zIndexChange = 1;
 let currentField = null;
 
+let hoverTimer = null;
+
 const draggables = document.querySelectorAll(".ship");
 const containers = document.querySelectorAll(".ownField");
 const shipSelection = document.querySelector(".ship__selection");
 
 draggables.forEach((draggable) => {
+  draggable.addEventListener("mouseover", (e) => {
+    let currentShip = draggable.parentNode;
+    const currentX = parseInt(currentShip.getAttribute("data-x"));
+    const currentY = parseInt(currentShip.getAttribute("data-y"));
+    const isValid = canChangeDirection(
+      draggable,
+      currentX,
+      currentY,
+      parseInt(draggable.getAttribute("data-size"))
+    );
+    if(isValid){
+      draggable.style.setProperty("--opacityBefore", 1);
+      hoverTimer = setTimeout(() => {
+        draggable.style.setProperty("--opacityAfter", 1);
+      }, 3000);
+    }
+  });
+  draggable.addEventListener("mouseout", (e) => {
+    draggable.style.setProperty("--opacityBefore", 0);
+    draggable.style.setProperty("--opacityAfter", 0);
+    clearTimeout(hoverTimer);
+  });
   draggable.addEventListener("click", (e) => {
     let currentShip = draggable.parentNode;
     const currentX = parseInt(currentShip.getAttribute("data-x"));
@@ -48,6 +72,10 @@ draggables.forEach((draggable) => {
   });
 
   draggable.addEventListener("dragstart", (e) => {
+    let img = new Image();
+    const imgName = draggable.getAttribute("data-name");
+    img.src = "../img/"+imgName+".png";
+    e.dataTransfer.setDragImage(img, 0, 0);
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
     deleteShipHitBox(draggable.parentNode);
