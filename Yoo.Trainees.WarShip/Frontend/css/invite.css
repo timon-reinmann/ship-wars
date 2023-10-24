@@ -295,3 +295,12 @@
 .join__button.active {
   opacity: 1;
 }
+
+#movingButton {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  transition: left 2s linear;
+  color: transparent;
+}
