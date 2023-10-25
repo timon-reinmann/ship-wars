@@ -89,7 +89,7 @@ function updateGameArea() {
     }
   }
   myGameArea.clear();
-  myGameArea.frameNo += 100;
+  myGameArea.frameNo += 1;
   if (myGameArea.frameNo == 1 || everyinterval(150)) {
     x = myGameArea.canvas.width;
     minHeight = 20;
