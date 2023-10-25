@@ -94,7 +94,7 @@ draggables.forEach((draggable) => {
     }
   });
 
-  draggable.addEventListener("dragstart", (e) => {
+  function onDragg() {
     let img = new Image();
     const imgName = draggable.getAttribute("data-name");
     img.src = "../img/"+imgName+".png";
@@ -102,7 +102,9 @@ draggables.forEach((draggable) => {
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
     deleteShipHitBox(draggable.parentNode);
-  } );
+  }
+
+  draggable.addEventListener("dragstart", onDragg);
 
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
