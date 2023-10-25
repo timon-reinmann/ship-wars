@@ -173,7 +173,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 game.NextPlayer = gamePlayerId;
                 _applicationDbContext.Game.Update(game);
                 _applicationDbContext.SaveChanges();
-                throw new InvalidOperationException("Ungültiger Schuss");
+                throw new InvalidOperationException("Shot not valid");
             }
         }
         public void SaveShot(SaveShotsDto shot, Guid gamePlayerId)
@@ -326,17 +326,17 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                                 join sp in _applicationDbContext.ShipPosition on gp equals sp.GamePlayer
                                 where gp.Game.Equals(game) && gp.Id != gamePlayerId
                                 select sp).ToList();
-            if( !CheckIfShipsThere(shipsPlayer1) || !CheckIfShipsThere(shipsPlayer2))
+            if( !IsAnyShipAlive(shipsPlayer1) || !IsAnyShipAlive(shipsPlayer2))
             {
                 game.GameStatus = GameState.Complete.ToString();
                 _applicationDbContext.Game.Update(game);
                 _applicationDbContext.SaveChanges();
             }
-            if (!CheckIfShipsThere(shipsPlayer2))
+            if (!IsAnyShipAlive(shipsPlayer2))
             {
                 return gameState = GameState.Lost;
             }
-            if (!CheckIfShipsThere(shipsPlayer1))
+            if (!IsAnyShipAlive(shipsPlayer1))
             {
                 return gameState = GameState.Won;
             }
@@ -350,7 +350,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return gameState;
         }
-        private bool CheckIfShipsThere(List<ShipPosition> ships)
+        private bool IsAnyShipAlive(List<ShipPosition> ships)
         {
             return ships.Any(x => x.Life > 0);
         }
