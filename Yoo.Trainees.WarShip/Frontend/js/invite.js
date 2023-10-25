@@ -104,7 +104,6 @@ send_email.addEventListener("click", async () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log("Daten");
     })
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
