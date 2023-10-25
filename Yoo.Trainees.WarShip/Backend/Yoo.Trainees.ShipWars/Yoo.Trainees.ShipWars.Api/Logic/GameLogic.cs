@@ -1,4 +1,5 @@
-﻿using Yoo.Trainees.ShipWars.DataBase;
+﻿using Microsoft.Extensions.Configuration;
+using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 
@@ -33,10 +34,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         private IVerificationLogic _verificationLogic;
         private Game _Game;
 
-        public GameLogic(ApplicationDbContext applicationDbContext, IVerificationLogic verificationLogic)
+        public GameLogic(ApplicationDbContext applicationDbContext, IVerificationLogic verificationLogic, IConfiguration configuration)
         {
             this._applicationDbContext = applicationDbContext;
             this._verificationLogic = verificationLogic;
+            this._configuration = configuration;
         }
 
         public Game CreateGame(string name)
@@ -134,7 +136,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                              join g in _applicationDbContext.Ship on sp.ShipId equals g.Id
                              where sp.GamePlayerId.Equals(gamePlayerId)
                              select new ShipPositionDto { X = sp.X, Y = sp.Y, Direction = (Yoo.Trainees.ShipWars.Api.Direction)sp.Direction, Name = g.Name };
-            if (gamePlayer.Count() == 10)
+            if (gamePlayer.Count() == int.Parse(_configuration["Player:PlayerCount"]))
                 return gamePlayer.ToArray();
             return null;
         }
