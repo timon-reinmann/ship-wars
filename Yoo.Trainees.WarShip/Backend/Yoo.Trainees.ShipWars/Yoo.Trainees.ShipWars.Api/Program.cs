@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase;
-using Microsoft.Extensions.DependencyInjection;
-
 
 namespace Yoo.Trainees.ShipWars.Api
 {
@@ -19,15 +17,7 @@ namespace Yoo.Trainees.ShipWars.Api
             builder.Services.AddTransient<IVerificationLogic, VerificationLogic>();
             builder.Services.AddTransient<IGameLogic, GameLogic>();
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("MyPolicy", builder =>
-                {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyMethod()
-                           .AllowAnyHeader();
-                });
-            });
+            builder.Services.AddCors();
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -52,15 +42,9 @@ namespace Yoo.Trainees.ShipWars.Api
 
             var app = builder.Build();
 
-            //app.UseCors(
-            //    options => options.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()
-            //);
-
-
-
-            // In Configure-Methode
-            app.UseCors("MyPolicy");
-
+            app.UseCors(
+                options => options.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()
+            );
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

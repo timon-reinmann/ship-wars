@@ -10,12 +10,6 @@ const joinGame = document.querySelector(".join__button");
 const input = copyText.querySelector("input.text");
 const API = "yoo-shipwars-api-dev.azurewebsites.net";
 
-const express = require("express");
-const cors = require("cors");
-
-const app = express();
-app.use(cors());
-
 let link = null;
 let lobbyName = null;
 
@@ -109,7 +103,8 @@ send_email.addEventListener("click", async () => {
     method: "POST",
   })
     .then((response) => response.json())
-    .then((data) => {})
+    .then((data) => {
+    })
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
