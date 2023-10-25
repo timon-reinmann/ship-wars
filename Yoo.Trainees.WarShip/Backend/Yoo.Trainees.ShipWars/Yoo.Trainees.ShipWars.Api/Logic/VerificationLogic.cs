@@ -50,7 +50,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
                 foreach (var j in shipDtos)
                 {
-                    var jShipType = ships.SingleOrDefault(x => x.Name == j.ShipType);
+                    var jShipType = ships.SingleOrDefault(x => x.Name.ToLower() == j.ShipType.ToLower());
                     int jLength = jShipType.Length;
                     //var jShipType = ships.SingleOrDefault(x => x.Name == j.ShipType);
                     for (int i = 0; i < jLength ; i++)

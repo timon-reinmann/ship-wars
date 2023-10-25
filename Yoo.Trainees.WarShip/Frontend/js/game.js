@@ -1,5 +1,5 @@
 // API URL
-let api = "https://localhost:7118/api/Game/"
+let api = "https://yoo-shipwars-api-dev.azurewebsites.net/api/Game/";
 
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -7,10 +7,8 @@ const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
 
-CheckIfBoardSet(gamePlayerId);
-loadFiredShots(gamePlayerId);
+Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)])
 loadHitShips(gamePlayerId);
-
 
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
@@ -43,6 +41,7 @@ let intervalid;
 let intervalSRP;
 let intervalShots;
 let intervalCounter;
+let hoverTimer = null;
 
 const draggables = document.querySelectorAll(".ship");
 const containers = document.querySelectorAll(".ownField");
@@ -52,17 +51,39 @@ const opponentFields = document.querySelectorAll(".opponentField");
 const scissors = document.querySelector(".scissors");
 const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
-const SRP = document.querySelector(".rock__paper__scissors");
+const SRP = document.querySelector(".rock-paper-scissors-container");
 
 localStorage.setItem('srpReload', 'false');
 
 draggables.forEach((draggable) => {
+  draggable.addEventListener("mouseover", (e) => {
+    let currentShip = draggable.parentNode;
+    const currentX = parseInt(currentShip.getAttribute("data-x"));
+    const currentY = parseInt(currentShip.getAttribute("data-y"));
+    const isValid = isDirectionChangeAllowed(
+      draggable,
+      currentX,
+      currentY,
+      parseInt(draggable.getAttribute("data-size"))
+    );
+    if(isValid){
+      draggable.style.setProperty("--opacityBefore", 1);
+      hoverTimer = setTimeout(() => {
+        draggable.style.setProperty("--opacityAfter", 1);
+      }, 3000);
+    }
+  });
+  draggable.addEventListener("mouseout", (e) => {
+    draggable.style.setProperty("--opacityBefore", 0);
+    draggable.style.setProperty("--opacityAfter", 0);
+    clearTimeout(hoverTimer);
+  });
   draggable.addEventListener("click", (e) => {
     let currentShip = draggable.parentNode;
     const currentX = parseInt(currentShip.getAttribute("data-x"));
     const currentY = parseInt(currentShip.getAttribute("data-y"));
     const shipSize = parseInt(currentShip.firstChild.getAttribute("data-size"));
-    const isValid = canChangeDirection(
+    const isValid = isDirectionChangeAllowed(
       draggable,
       currentX,
       currentY,
@@ -76,13 +97,15 @@ draggables.forEach((draggable) => {
     }
   });
 
-  function onDragg() {
+  draggable.addEventListener("dragstart", (e) => {
+    let img = new Image();
+    const imgName = draggable.getAttribute("data-name");
+    img.src = "../img/"+imgName+".png";
+    e.dataTransfer.setDragImage(img, 0, 0);
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
     deleteShipHitBox(draggable.parentNode);
-  }
-
-  draggable.addEventListener("dragstart", onDragg);
+  });
 
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
@@ -179,7 +202,7 @@ opponentFields.forEach((opponentField) => {
   opponentField.addEventListener("click", async (e) => {
     clearInterval(intervalShots);
     const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
-    if(isReadyToShoot) {
+    if(!isReadyToShoot) {return}
     const currentX = parseInt(opponentField.getAttribute("data-x"));
     const currentY = parseInt(opponentField.getAttribute("data-y"));
     const API_URL =
@@ -214,7 +237,6 @@ opponentFields.forEach((opponentField) => {
           showExplosionAnimation(opponentField);
         }
       });
-    }
   });
 });
 
@@ -316,7 +338,7 @@ function createBoard(gameBoard, isMyBoard) {
   }
 }
 
-function canChangeDirection(draggable, currentX, currentY, shipSize) {
+function isDirectionChangeAllowed(draggable, currentX, currentY, shipSize) {
   const nextPossibleField = 2; // Because all ships need 1 field apart from each other so we check on the field 2 0, 1 ,2 <-- 2 is the next possible field
   const isVertical = draggable.dataset.direction === "vertical";
   const tinyShip = shipSize === 2 ? 1 : 0; // if we compare i < shipSize we see that its false because i = 2 and shipSize = 2 so we need to treat this case differently
@@ -501,7 +523,7 @@ async function checkReadyToShoot(gamePlayerId) {
 
 function CheckIfBoardSet(gameId) {
   const API_URL = api + gameId + "/BoardState";
-  fetch(API_URL, {
+  return fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -528,7 +550,7 @@ function CheckIfBoardSet(gameId) {
 
 function loadFiredShots(gamePlayerId) {
   const API_URL = api + gamePlayerId + "/LoadFiredShots";
-  fetch(API_URL, {
+  return fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -595,7 +617,7 @@ function loadShotsFromOpponentFromTheDB(gamePlayerId) {
 }
 
 function loadGameBoard(data) {
-  // playe the ships on the board and wait for the other player
+  // place the ships on the board and wait for the other player
   data.forEach((ships) => {
     let shipFound = false;
     const X = ships.x;
