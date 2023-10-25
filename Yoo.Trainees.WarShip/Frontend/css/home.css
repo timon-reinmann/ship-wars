@@ -12,6 +12,25 @@
   }
 }
 
+@keyframes slideout {
+  from {
+    right: 0%;
+  }
+  to {
+    right: -60%;
+    display: none;
+  }
+}
+
+@keyframes slidein {
+  from {
+    right: -60%;
+  }
+  to {
+    right: 0%;
+  }
+}
+
 .shipwars__title {
   font-family: "walkingdead", Brush Script MT, Brush Script Std, cursive;
   position: relative;
@@ -138,29 +157,10 @@
   animation-fill-mode: forwards;
 }
 
-@keyframes slidein {
-  from {
-    right: -60%;
-  }
-  to {
-    right: 0%;
-  }
-}
-
 .slide-out {
   animation-duration: 0.8s;
   animation-name: slideout;
   animation-fill-mode: forwards;
-}
-
-@keyframes slideout {
-  from {
-    right: 0%;
-  }
-  to {
-    right: -60%;
-    display: none;
-  }
 }
 
 .sidebar-text {
