@@ -34,7 +34,7 @@ draggables.forEach((draggable) => {
     let currentShip = draggable.parentNode;
     const currentX = parseInt(currentShip.getAttribute("data-x"));
     const currentY = parseInt(currentShip.getAttribute("data-y"));
-    const isValid = canChangeDirection(
+    const isValid = isDirectionChangeAllowed(
       draggable,
       currentX,
       currentY,
@@ -57,7 +57,7 @@ draggables.forEach((draggable) => {
     const currentX = parseInt(currentShip.getAttribute("data-x"));
     const currentY = parseInt(currentShip.getAttribute("data-y"));
     const shipSize = parseInt(currentShip.firstChild.getAttribute("data-size"));
-    const isValid = canChangeDirection(
+    const isValid = isDirectionChangeAllowed(
       draggable,
       currentX,
       currentY,
@@ -267,7 +267,7 @@ function createBoard(gameBoard, isMyBoard) {
   }
 }
 
-function canChangeDirection(draggable, currentX, currentY, shipSize) {
+function isDirectionChangeAllowed(draggable, currentX, currentY, shipSize) {
   const nextPossibleField = 2; // Because all ships need 1 field apart from each other so we check on the field 2 0, 1 ,2 <-- 2 is the next possible field
   const isVertical = draggable.dataset.direction === "vertical";
   const tinyShip = shipSize === 2 ? 1 : 0; // if we compare i < shipSize we see that its false because i = 2 and shipSize = 2 so we need to treat this case differently
