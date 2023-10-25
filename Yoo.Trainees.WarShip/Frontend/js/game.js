@@ -7,8 +7,10 @@ const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
 
-CheckIfBoardSet(gamePlayerId);
-loadFiredShots(gamePlayerId);
+Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)])
+.catch((error) => {
+  console.error("Es gab einen Fehler bei der Anfrage:", error);
+});
 
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
@@ -473,7 +475,7 @@ async function checkReadyToShoot(gamePlayerId) {
 
 function CheckIfBoardSet(gameId) {
   const API_URL = api + gameId + "/BoardState";
-  fetch(API_URL, {
+  return fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -500,7 +502,7 @@ function CheckIfBoardSet(gameId) {
 
 function loadFiredShots(gamePlayerId) {
   const API_URL = api + gamePlayerId + "/LoadFiredShots";
-  fetch(API_URL, {
+  return fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
