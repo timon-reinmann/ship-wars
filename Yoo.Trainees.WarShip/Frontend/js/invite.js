@@ -8,7 +8,7 @@ const btnPopup = document.querySelector(".btnLogin-popup");
 const iconClose = document.querySelector(".icon-close");
 const joinGame = document.querySelector(".join__button");
 const input = copyText.querySelector("input.text");
-const API = "yoo-shipwars-api-dev.azurewebsites.net";
+const API = "localhost:7118";
 
 let link = null;
 let lobbyName = null;

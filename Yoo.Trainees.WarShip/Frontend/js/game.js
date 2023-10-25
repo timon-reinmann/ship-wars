@@ -1,5 +1,5 @@
 // API URL
-let api = "https://yoo-shipwars-api-dev.azurewebsites.net/api/Game/";
+let api = "https://localhost:7118/api/Game/";
 
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -97,7 +97,7 @@ draggables.forEach((draggable) => {
     }
   });
 
-  function onDragg() {
+  draggable.addEventListener("dragstart", (e) => {
     let img = new Image();
     const imgName = draggable.getAttribute("data-name");
     img.src = "../img/"+imgName+".png";
@@ -105,9 +105,7 @@ draggables.forEach((draggable) => {
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
     deleteShipHitBox(draggable.parentNode);
-  }
-
-  draggable.addEventListener("dragstart", onDragg);
+  });
 
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
