@@ -19,23 +19,18 @@ namespace Yoo.Trainees.ShipWars.Api
             builder.Services.AddTransient<IVerificationLogic, VerificationLogic>();
             builder.Services.AddTransient<IGameLogic, GameLogic>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
 
             // Add services to the container.
             builder.Services.AddControllers();
-
-             void ConfigureServices(IServiceCollection services)
-            {
-                services.AddCors(options =>
-                {
-                    options.AddPolicy("MyPolicy", builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
-                    });
-                });
-            }
-
 
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var environmentName = builder.Environment.EnvironmentName;
