@@ -8,9 +8,6 @@ const gamePlayerId = urlParams.get("gamePlayerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
 
 Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)])
-.catch((error) => {
-  console.error("Es gab einen Fehler bei der Anfrage:", error);
-});
 
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
