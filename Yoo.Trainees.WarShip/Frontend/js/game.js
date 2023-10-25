@@ -1,5 +1,5 @@
 // API URL
-let api = "https://localhost:7118/api/Game/"
+let api = "https://yoo-shipwars-api-dev.azurewebsites.net/api/Game/";
 
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);

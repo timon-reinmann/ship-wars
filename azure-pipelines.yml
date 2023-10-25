@@ -29,4 +29,16 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
+    projects: '**/Yoo.Trainees.ShipWars.Api.csproj'
+    arguments: '--output $(Build.ArtifactStagingDirectory)'
     publishWebProjects: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'Yoo.Trainees.WarShip/Frontend'
+    ArtifactName: 'frontend'
