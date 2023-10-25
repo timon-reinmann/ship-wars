@@ -12,6 +12,25 @@
   }
 }
 
+@keyframes slideout {
+  from {
+    right: 0%;
+  }
+  to {
+    right: -60%;
+    display: none;
+  }
+}
+
+@keyframes slidein {
+  from {
+    right: -60%;
+  }
+  to {
+    right: 0%;
+  }
+}
+
 .shipwars__title {
   font-family: "walkingdead", Brush Script MT, Brush Script Std, cursive;
   position: relative;
@@ -78,4 +97,148 @@
   right: 0px;
   bottom: 0px;
   opacity: 1;
+}
+
+.btn {
+  width: 20rem;
+  height: 5rem;
+  transform: skew(-30deg) translate(-50%, -50%);
+  border: 1px solid #fefefe;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  left: 50%;
+  top: 5rem;
+  margin-bottom: 3rem;
+  background-color: rgba(128, 128, 128, 0.5);
+  font-size: x-large;
+  transition: all 0.3s ease-in-out;
+  box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
+}
+
+.btn-text {
+  color: white;
+  transform: skew(30deg);
+  opacity: 1;
+  font-family: walkingdead;
+  font-size: 60px;
+}
+
+.btn:hover {
+  background: white;
+  transform: scale(1.01) skew(-30deg) translate(-45%, -45%);
+  cursor: help;
+  .btn-text {
+    color: black;
+  }
+}
+
+#sidebar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  width: 40%;
+  padding: 5%;
+  background-color: white;
+  border-radius: 1em 0 0 1em;
+  border: 2px solid black;
+  transform: scale(0);
+  overflow: hidden;
+  color: #fafafa;
+  background-color: rgba(68, 68, 68, 0.9);
+}
+
+.slide-in {
+  transform: scale(1) !important;
+  animation-duration: 0.8s;
+  animation-name: slidein;
+  animation-fill-mode: forwards;
+}
+
+.slide-out {
+  animation-duration: 0.8s;
+  animation-name: slideout;
+  animation-fill-mode: forwards;
+}
+
+.sidebar-text {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.modal {
+  max-width: 500ch;
+  border: 3px solid black;
+
+  & > * {
+    margin: 0 0 0.5rem 0;
+  }
+}
+
+.modal::backdrop {
+  background: rgb(0 0 0 / 0.4);
+}
+
+.button {
+  border: 0.5;
+  cursor: pointer;
+  background: gray 8;
+  color: gray 2;
+  font-weight: 700;
+  padding: 2px 4px;
+}
+
+.button:hover,
+.button:focus {
+  background: cyan 9;
+}
+
+form {
+  display: grid;
+  gap: 1em;
+}
+
+.sidebar-close {
+  transform: scale(0);
+  width: 50px;
+  height: 50px;
+  border-radius: 1rem 0 1rem 0;
+  background-color: rgb(61, 61, 61, 0.7);
+  border: 2px solid black;
+  position: absolute;
+  top: -0.3%;
+  right: 94.7%;
+  z-index: 100;
+}
+.sidebar-close--active {
+  transform: scale(1);
+}
+
+.sidebar-close:hover {
+  cursor: pointer;
+}
+
+.homescreen-img {
+  width: 500px;
+}
+
+.lobbyname {
+  width: 400px;
+}
+
+.copylink {
+  width: 500px;
+}
+
+.copied {
+  width: 400px;
+}
+
+.sendemail {
+  width: 400px;
+}
+
+.clicktosendemail {
+  width: 400px;
 }
