@@ -14,6 +14,8 @@ namespace Yoo.Trainees.ShipWars.DataBase.Entities
         [MaxLength(20)]
         public string GameStatus { get; set; }
 
+        public Guid? NextPlayer {  get; set; }
+
         //smalldatetime => 1900-01-01 00:00:00 bis 2079-06-06 23:59:59
         [Column(TypeName = "smalldatetime")]
         public DateTime Date { get; set; }

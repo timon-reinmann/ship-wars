@@ -14,6 +14,8 @@ namespace Yoo.Trainees.ShipWars.Api
             // Email
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
+            builder.Services.AddTransient<IVerificationLogic, VerificationLogic>();
+            builder.Services.AddTransient<IGameLogic, GameLogic>();
 
             builder.Services.AddCors();
 

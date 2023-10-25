@@ -25,10 +25,10 @@
           </ul>
         </div>
       </nav>
-
+      <div class="counter">0</div>
       <!-- Alle Schiffe werden implementiert -->
-      <div class="middle" id="ship_container">
-        <div class="ship__selection" droppable="true">
+      <main class="middle" id="ship_container">
+        <aside class="ship__selection" droppable="true">
           <div
             class="ship warship"
             data-direction="horizontal"
@@ -109,15 +109,21 @@
             draggable="true"
             id="submarine4"
           ></div>
-        </div>
+        </aside>
 
         <button class="commit-button" id="commit_button">Commit</button>
 
         <div id="game__board" class="board" droppable="true">
           <div class="finish">
-            <p>You're finished!!! Waiting for the Bot</p>
+            <p>You're finished!!! Waiting...</p>
           </div>
           <div class="error-popup__screen-blocker"></div>
+          <div class="screen-blocker"></div>
+        </div>
+
+        <div class="ring">
+          Loading
+          <span></span>
         </div>
 
         <div id="opponent__board" class="board"></div>
@@ -134,12 +140,19 @@
           </div>
         </div>
 
+        <div class="SRP">
+          <p>Play scissors rock paper to choos who starts</p>
+          <button class="scissors SRP-choice" data-choice="scissors">✂️</button>
+          <button class="rock SRP-choice" data-choice="rock">🪨</button>
+          <button class="paper SRP-choice" data-choice="paper">📄</button>
+        </div>
+
         <script src="../js/game.js"></script>
         <script
           src="https://kit.fontawesome.com/d6df3707cf.js"
           crossorigin="anonymous"
         ></script>
-      </div>
+      </main>
     </div>
   </body>
 </html>

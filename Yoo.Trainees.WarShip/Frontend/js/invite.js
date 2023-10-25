@@ -8,11 +8,10 @@ const btnPopup = document.querySelector(".btnLogin-popup");
 const iconClose = document.querySelector(".icon-close");
 const joinGame = document.querySelector(".join__button");
 const input = copyText.querySelector("input.text");
-
+const API = "yoo-shipwars-api-dev.azurewebsites.net";
 
 let link = null;
 let lobbyName = null;
-
 
 copyText.querySelector("button").addEventListener("click", () => {
   joinGame.classList.add("active");
@@ -53,7 +52,7 @@ submit_button.addEventListener("click", async function () {
 
   lobbyName = JSON.stringify(document.getElementById("lobbyname").value);
   ("use strict");
-  const API_URL = "https://localhost:7118/api/Game";
+  const API_URL = "https://" + API + "/api/Game";
   await fetch(API_URL, {
     credentials: "omit",
     headers: {
@@ -89,7 +88,7 @@ send_email.addEventListener("click", async () => {
   daten = JSON.stringify(daten);
   ("use strict");
 
-  const API_URL_Email = "https://localhost:7118/api/Game/Email";
+  const API_URL_Email = "https://" + API + "/api/Game/Email";
   fetch(API_URL_Email, {
     credentials: "omit",
     headers: {
@@ -105,7 +104,6 @@ send_email.addEventListener("click", async () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log("Daten");
     })
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);

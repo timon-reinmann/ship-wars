@@ -19,6 +19,8 @@
 
         public Direction Direction { get; set; }
 
+        public int Life { get; set; }
+
         public Ship Ship { get; set; }
 
         public GamePlayer GamePlayer { get; set; }
