@@ -45,16 +45,29 @@ body {
   width: 15rem;
 }
 
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 770px) {
   .shipwars__logo {
-    height: 10rem !important;
+    height: 10rem;
     width: 10rem;
+  }
+  .navbar__list ul {
+    display: none !important;
+    width: 3rem;
+  }
+  .hamburger {
+    display: block;
+    transform: skew(-30deg);
   }
 }
 
 .shipwars__navbar {
   display: flex;
   justify-content: space-between;
+}
+
+.hamburger {
+  display: none;
+  color: var(--white);
 }
 
 .navbar__list {
@@ -66,7 +79,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: xx-large;
+  font-size: clamp(0.5rem, 1rem + 5vw, 2.5rem);
   font-weight: bold;
   text-shadow: 2px 2px 2px black;
   margin-bottom: 3rem;
