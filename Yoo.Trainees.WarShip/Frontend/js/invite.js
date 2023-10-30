@@ -1,9 +1,3 @@
-const invitationLink = window.location.hostname;
-const invitationLinkToArray = invitationLink.split("-");
-
-let api = null; 
-createApiLink(invitationLinkToArray);
-
 const copyText = document.querySelector(".copy__text");
 const submit_button = document.getElementById("lobbyinput");
 const send_email = document.getElementById("email");
@@ -14,7 +8,6 @@ const btnPopup = document.querySelector(".btnLogin-popup");
 const iconClose = document.querySelector(".icon-close");
 const joinGame = document.querySelector(".join__button");
 const input = copyText.querySelector("input.text");
-const API = "localhost:7118";
 
 let link = null;
 let lobbyName = null;
@@ -58,8 +51,7 @@ submit_button.addEventListener("click", async function () {
 
   lobbyName = JSON.stringify(document.getElementById("lobbyname").value);
   ("use strict");
-  const API_URL = "https://" + API + "/api/Game";
-  await fetch(API_URL, {
+  await fetch(api, {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -94,7 +86,7 @@ send_email.addEventListener("click", async () => {
   daten = JSON.stringify(daten);
   ("use strict");
 
-  const API_URL_Email = "https://" + API + "/api/Game/Email";
+  const API_URL_Email = api + "Email";
   fetch(API_URL_Email, {
     credentials: "omit",
     headers: {
@@ -115,13 +107,3 @@ send_email.addEventListener("click", async () => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
 });
-
-function createApiLink(invitationLinkToArray) {
-  if(invitationLinkToArray[0] === "yoo") {
-    invitationLink = invitationLink.replace("web", "api");
-    api = "https://" + invitationLink + "/api/Game";
-  }
-  if(invitationLinkToArray[0] === "127.0.0.1") {
-    api = "https://" + invitationLink + "/api/Game";
-  }
-}

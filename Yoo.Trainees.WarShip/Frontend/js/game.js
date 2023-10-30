@@ -1,9 +1,3 @@
-const invitationLink = window.location.hostname;
-const invitationLinkToArray = invitationLink.split("-");
-
-let api = null; 
-createApiLink(invitationLinkToArray);
-
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
@@ -800,15 +794,5 @@ function mapFrontendScissorsRockPaperToBackendEnum(choice) {
     default:
       // Handle ungültige Richtungen oder Fehlerbehandlung hier
       throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
-  }
-}
-
-function createApiLink(invitationLinkToArray) {
-  if(invitationLinkToArray[0] === "yoo") {
-    invitationLink = invitationLink.replace("web", "api");
-    api = "https://" + invitationLink + "/api/Game";
-  }
-  if(invitationLinkToArray[0] === "127.0.0.1") {
-    api = "https://" + invitationLink + "/api/Game";
   }
 }
