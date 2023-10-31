@@ -1,6 +1,3 @@
-// API URL
-let api = "https://localhost:7118/api/Game/";
-
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
