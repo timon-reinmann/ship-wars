@@ -19,7 +19,6 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         ShipHit CheckIfShipHit(SaveShotsDto xy, Guid gamePlayerId);
         public ShotInfoDto CountShotsInDB(Guid gamePlayerId);
         GameState GetGameState(Guid gamePlayerId);
-        bool CheckIfShipsThere(List<ShipPosition> ships);
         List<SaveShotsDto> GetAllHitShipFields(Guid gamePlayerId);
     }
 }

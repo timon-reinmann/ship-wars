@@ -339,8 +339,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return gameState;
         }
 
-        {
-        private Game? GetGame(Guid gamePlayerId)
+        private Game? GetGame(Guid gamePlayerId) { 
             return (from g in _applicationDbContext.GamePlayer
                     where g.Id.Equals(gamePlayerId)
                     select g.Game).SingleOrDefault();
