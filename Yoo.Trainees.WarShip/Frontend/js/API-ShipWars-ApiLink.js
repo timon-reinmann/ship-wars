@@ -17,5 +17,7 @@ function getApiUrlByEnv(env) {
     throw new Error("Unknown enviroment");
   }
   const baseUrl = enviroments[env];
-  return `https://${baseUrl}/api/Game`.replace("web", "api");
+  if(baseUrl === "127.0.0.1")
+    return `https://localhost:7118/api/Game/`;
+  return `https://${baseUrl}/api/Game/`.replace("web", "api");
 }

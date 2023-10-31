@@ -64,7 +64,8 @@ body {
 }
 .recoil-animation {
   animation: recoil 0.2s linear;
-/* Mute Button */
+}
+
 .mute__button {
   position: absolute;
   width: 75px;
