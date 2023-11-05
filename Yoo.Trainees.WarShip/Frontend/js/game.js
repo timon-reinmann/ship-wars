@@ -272,12 +272,13 @@ muteButton.addEventListener("click", () => {
   if(mute) {
     muteButton.children[0].classList.add("fa-volume-xmark");
     muteButton.children[0].classList.remove("fa-volume-high");
+    sound.volume = 0;
   } else {
     muteButton.children[0].classList.remove("fa-volume-xmark");
     muteButton.children[0].classList.add("fa-volume-high");
+    sound.volume = 1;
   }
 });
-
 
 function deleteShipHitBox(container) {
   if (originField) {
@@ -714,7 +715,6 @@ async function ScissorsRockPaper() {
     paper.classList.add("paper--active");
     SRP.classList.add("SRP--active");
   }
-  console.log("dfasiöj");
 }
 
 function createLoadingScreenForSRP() {
