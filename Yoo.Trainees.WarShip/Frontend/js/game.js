@@ -707,13 +707,14 @@ function loadHitShips(gamePlayerId) {
 }
 
 async function ScissorsRockPaper() {
-  SRPFindished = await IsSRPIsSet(gamePlayerId); 
+  let SRPFindished = await IsSRPIsSet(gamePlayerId); 
   if(!SRPFindished) {
     scissors.classList.add("scissors--active");
     rock.classList.add("rock--active");
     paper.classList.add("paper--active");
     SRP.classList.add("SRP--active");
   }
+  console.log("dfasiöj");
 }
 
 function createLoadingScreenForSRP() {
@@ -774,7 +775,7 @@ SRPChoice.forEach((srp) => {
 });
 async function IsSRPIsSet() {
   const API_URL = api + gamePlayerId + "/CheckIfSRPIsSet";
-  const result = fetch(API_URL, {
+  const result = await fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
