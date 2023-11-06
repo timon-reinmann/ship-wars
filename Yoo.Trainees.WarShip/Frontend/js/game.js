@@ -708,7 +708,7 @@ function loadHitShips(gamePlayerId) {
 }
 
 async function ScissorsRockPaper() {
-  let SRPFindished = await IsSRPIsSet(gamePlayerId); 
+  const SRPFindished = await IsSRPIsSet(gamePlayerId); 
   if(!SRPFindished) {
     scissors.classList.add("scissors--active");
     rock.classList.add("rock--active");

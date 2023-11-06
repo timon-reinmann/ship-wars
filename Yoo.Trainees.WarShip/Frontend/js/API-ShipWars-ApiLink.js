@@ -2,6 +2,8 @@ const enviroments = { localhost: "127.0.0.1", dev: "yoo-shipwars-web-dev.azurewe
 const hostname = window.location.hostname;
 const env = getEnvByHostname(hostname);
 
+const LOCALHOST_IP = "127.0.0.1";
+
 const api = getApiUrlByEnv(env);
 
 function getEnvByHostname(hostname) {
@@ -17,7 +19,8 @@ function getApiUrlByEnv(env) {
     throw new Error("Unknown enviroment");
   }
   const baseUrl = enviroments[env];
-  if(baseUrl === "127.0.0.1")
+  if(baseUrl === LOCALHOST_IP){
     return `https://localhost:7118/api/Game/`;
+  }
   return `https://${baseUrl}/api/Game/`.replace("web", "api");
 }
