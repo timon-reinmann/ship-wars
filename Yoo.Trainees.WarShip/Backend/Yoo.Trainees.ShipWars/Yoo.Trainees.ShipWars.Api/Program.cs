@@ -62,15 +62,15 @@ namespace Yoo.Trainees.ShipWars.Api
                 db.Database.Migrate();
             }
 
-            app.MapPost("broadcast", async (string message, IHubContext<ChatHub, IChatClient> context) =>
+            app.MapPost("broadcast", async (string message, IHubContext<ChatHub> context) =>
             {
-                 await context.Clients.All.ReceiveMessage(message);
+                 await context.Clients.All.SendAsync(message);
 
                 return Results.NoContent();
             });
 
             app.UseHttpsRedirection();
-            app.MapHub<ChatHub>("chat-hub");
+            app.MapHub<ChatHub>("/chatHub");
             app.UseAuthorization();
             app.MapControllers();
             app.Run();

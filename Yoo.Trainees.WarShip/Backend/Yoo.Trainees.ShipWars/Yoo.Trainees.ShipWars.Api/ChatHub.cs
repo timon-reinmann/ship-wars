@@ -2,17 +2,16 @@
 
 namespace Yoo.Trainees.ShipWars.Api;
 
-public sealed class ChatHub : Hub<IChatClient>
+public sealed class ChatHub : Hub
 {
     public override async Task OnConnectedAsync()
     {
-         await Clients.All.ReceiveMessage($"{Context.ConnectionId} has joined");
+         await Clients.All.SendAsync($"{Context.ConnectionId} has joined");
     }
 
-    public async Task SendMessage(string message)
+    public async Task SendMessage(string user, string message)
     {
-        await Clients.All.ReceiveMessage($"{Context.ConnectionId}: {message}");
+        await Clients.All.SendAsync("ReceiveMessage", user, message);
     }
-   
 }
 
