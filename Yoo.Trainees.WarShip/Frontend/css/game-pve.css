@@ -66,6 +66,27 @@ body {
   animation: recoil 0.2s linear;
 }
 
+.mute__button {
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  background-color: rgba(128, 128, 128, 0.5);
+  border: 1px solid var(--white);
+  box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
+  border-radius: 50%;
+  bottom: 5%;
+  left: 5%;
+}
+.mute__button:hover {
+  background-color: var(--white) 0.75;
+  color: black;
+  cursor: pointer;
+}
+.mute__button i {
+  color: var(--white);
+  font-size: 2rem;
+}
+
 .field {
   height: 50px;
   width: 50px;

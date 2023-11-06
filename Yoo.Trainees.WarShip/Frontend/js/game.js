@@ -7,6 +7,9 @@ const SRPChoice = document.querySelectorAll(".SRP-choice");
 Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)])
 loadHitShips(gamePlayerId);
 
+const muteButton = document.querySelector(".mute__button");
+let mute = false;
+
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
@@ -257,6 +260,25 @@ function mapFrontendDirectionToBackendEnum(frontendDirection) {
       throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }
+
+muteButton.addEventListener("mouseover", () => {
+  muteButton.classList.add("fa-bounce");
+});
+muteButton.addEventListener("mouseout", () => {
+  muteButton.classList.remove("fa-bounce");
+});
+muteButton.addEventListener("click", () => {
+  mute = !mute;
+  if(mute) {
+    muteButton.children[0].classList.add("fa-volume-xmark");
+    muteButton.children[0].classList.remove("fa-volume-high");
+    sound.volume = 0;
+  } else {
+    muteButton.children[0].classList.remove("fa-volume-xmark");
+    muteButton.children[0].classList.add("fa-volume-high");
+    sound.volume = 1;
+  }
+});
 
 function deleteShipHitBox(container) {
   if (originField) {
@@ -686,7 +708,7 @@ function loadHitShips(gamePlayerId) {
 }
 
 async function ScissorsRockPaper() {
-  SRPFindished = await IsSRPIsSet(gamePlayerId); 
+  const SRPFindished = await IsSRPIsSet(gamePlayerId); 
   if(!SRPFindished) {
     scissors.classList.add("scissors--active");
     rock.classList.add("rock--active");
@@ -753,7 +775,7 @@ SRPChoice.forEach((srp) => {
 });
 async function IsSRPIsSet() {
   const API_URL = api + gamePlayerId + "/CheckIfSRPIsSet";
-  const result = fetch(API_URL, {
+  const result = await fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
