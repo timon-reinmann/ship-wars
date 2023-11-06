@@ -1,4 +1,3 @@
-console.log("hallo");
 window.addEventListener("DOMContentLoaded", () => {
   const sidebarBtn = document.getElementById("sidebarBtn");
   const sidebarBtnClose = document.getElementById("sidebarBtn-close");
