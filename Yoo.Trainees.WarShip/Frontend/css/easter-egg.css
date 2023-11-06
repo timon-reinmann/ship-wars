@@ -10,7 +10,7 @@ canvas--active {
   transform: scale(0);
 }
 
-.prise {
+.gift {
   font-size: 100px;
   width: 500px;
   height: 250px;
@@ -20,13 +20,13 @@ canvas--active {
   transform: scale(0);
 }
 
-.prise:hover,
+.gift:hover,
 a:hover {
   background-color: transparent;
   border: transparent;
   color: transparent;
 }
 
-.prise--active {
+.gift--active {
   transform: scale(1);
 }

@@ -115,7 +115,6 @@ function updateGameArea() {
   myGamePiece.update();
 
   if (myGameArea.frameNo == 5000) {
-    console.log("hallo");
     accelerateBtn.classList.add("accelerate-btn--active");
     finish();
   }
@@ -133,6 +132,6 @@ function accelerate(n) {
 }
 
 function finish() {
-  const prise = document.querySelector(".prise");
-  prise.classList.add("prise--active");
+  const gift = document.querySelector(".gift");
+  gift.classList.add("gift--active");
 }

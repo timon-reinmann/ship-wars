@@ -4,7 +4,7 @@ const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
 
-Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)])
+Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
 loadHitShips(gamePlayerId);
 
 const muteButton = document.querySelector(".mute__button");
@@ -53,7 +53,7 @@ const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
 const SRP = document.querySelector(".rock-paper-scissors-container");
 
-localStorage.setItem('srpReload', 'false');
+localStorage.setItem("srpReload", "false");
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("mouseover", (e) => {
@@ -66,7 +66,7 @@ draggables.forEach((draggable) => {
       currentY,
       parseInt(draggable.getAttribute("data-size"))
     );
-    if(isValid){
+    if (isValid) {
       draggable.style.setProperty("--opacityBefore", 1);
       hoverTimer = setTimeout(() => {
         draggable.style.setProperty("--opacityAfter", 1);
@@ -100,7 +100,7 @@ draggables.forEach((draggable) => {
   draggable.addEventListener("dragstart", (e) => {
     let img = new Image();
     const imgName = draggable.getAttribute("data-name");
-    img.src = "../img/"+imgName+".png";
+    img.src = "../img/" + imgName + ".png";
     e.dataTransfer.setDragImage(img, 0, 0);
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
@@ -202,11 +202,12 @@ opponentFields.forEach((opponentField) => {
   opponentField.addEventListener("click", async (e) => {
     clearInterval(intervalShots);
     const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
-    if(!isReadyToShoot) {return}
+    if (!isReadyToShoot) {
+      return;
+    }
     const currentX = parseInt(opponentField.getAttribute("data-x"));
     const currentY = parseInt(opponentField.getAttribute("data-y"));
-    const API_URL =
-      api + gamePlayerId + "/SaveShot";
+    const API_URL = api + gamePlayerId + "/SaveShot";
     fetch(API_URL, {
       credentials: "omit",
       headers: {
@@ -223,16 +224,16 @@ opponentFields.forEach((opponentField) => {
       .then((response) => response.json())
       .then((data) => {
         sound.play();
-        const cursor = document.querySelector('.cursor');
-        cursor.classList.add('recoil-animation');
+        const cursor = document.querySelector(".cursor");
+        cursor.classList.add("recoil-animation");
         setTimeout(() => {
-          cursor.classList.remove('recoil-animation');
+          cursor.classList.remove("recoil-animation");
         }, 200);
-        if(data.hit === 1 || data.hit === 0) {
+        if (data.hit === 1 || data.hit === 0) {
           opponentField.classList.add("Field--hit");
           intervalShots = setInterval(loadShotsFromOpponent, 2000);
-        } 
-        if(data.hit === 1) {
+        }
+        if (data.hit === 1) {
           opponentField.classList.add("Field--hit--ship");
           showExplosionAnimation(opponentField);
         }
@@ -269,7 +270,7 @@ muteButton.addEventListener("mouseout", () => {
 });
 muteButton.addEventListener("click", () => {
   mute = !mute;
-  if(mute) {
+  if (mute) {
     muteButton.children[0].classList.add("fa-volume-xmark");
     muteButton.children[0].classList.remove("fa-volume-high");
     sound.volume = 0;
@@ -537,7 +538,7 @@ async function checkReadyToShoot(gamePlayerId) {
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
-    return test;
+  return test;
 }
 
 function CheckIfBoardSet(gameId) {
@@ -599,7 +600,7 @@ function loadFiredShots(gamePlayerId) {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
 }
-function loadShotsFromOpponent(){
+function loadShotsFromOpponent() {
   loadShotsFromOpponentFromTheDB(gamePlayerId);
 }
 function loadShotsFromOpponentFromTheDB(gamePlayerId) {
@@ -708,8 +709,8 @@ function loadHitShips(gamePlayerId) {
 }
 
 async function ScissorsRockPaper() {
-  const SRPFindished = await IsSRPIsSet(gamePlayerId); 
-  if(!SRPFindished) {
+  const SRPFindished = await IsSRPIsSet(gamePlayerId);
+  if (!SRPFindished) {
     scissors.classList.add("scissors--active");
     rock.classList.add("rock--active");
     paper.classList.add("paper--active");
@@ -733,25 +734,24 @@ function createLoadingScreenForSRP() {
 }
 
 function deleteLoadingScreenForSRP() {
-    const finish = document.querySelector(".finish");
-    const commit_button = document.querySelector(".commit-button");
-    const ring = document.querySelector(".ring");
-    const shipSelection = document.querySelector(".ship__selection");
-    shipSelection.classList.remove("ship__selection");
-    ring.classList.remove("ring--active");
-    finish.classList.remove("active-popup");
-    remove(commit_button);
+  const finish = document.querySelector(".finish");
+  const commit_button = document.querySelector(".commit-button");
+  const ring = document.querySelector(".ring");
+  const shipSelection = document.querySelector(".ship__selection");
+  shipSelection.classList.remove("ship__selection");
+  ring.classList.remove("ring--active");
+  finish.classList.remove("active-popup");
+  remove(commit_button);
 }
 
 SRPChoice.forEach((srp) => {
   srp.addEventListener("click", function () {
-    localStorage.setItem('srpReload', 'true');
+    localStorage.setItem("srpReload", "true");
     const choice = mapFrontendScissorsRockPaperToBackendEnum(
       srp.dataset.choice
     );
 
-    const API_URL =
-      api + gamePlayerId + "/SaveSRP";
+    const API_URL = api + gamePlayerId + "/SaveSRP";
     fetch(API_URL, {
       credentials: "omit",
       headers: {
@@ -764,13 +764,12 @@ SRPChoice.forEach((srp) => {
       },
       body: JSON.stringify(choice),
       method: "PUT",
-    })
-      .then((data) => {
-        if (data) {
-          createLoadingScreenForSRP()
-          intervalSRP = setInterval(IsSRPIsSet, 1000);
-        }
-      });
+    }).then((data) => {
+      if (data) {
+        createLoadingScreenForSRP();
+        intervalSRP = setInterval(IsSRPIsSet, 1000);
+      }
+    });
   });
 });
 async function IsSRPIsSet() {
@@ -795,16 +794,19 @@ async function IsSRPIsSet() {
         deleteLoadingScreenForSRP();
         return true;
       }
-      if((data.status === 4 || data.status === 3) && localStorage.getItem('srpReload') === 'true'){
-        localStorage.setItem('srpReload', 'false');
+      if (
+        (data.status === 4 || data.status === 3) &&
+        localStorage.getItem("srpReload") === "true"
+      ) {
+        localStorage.setItem("srpReload", "false");
         location.reload();
       }
       return false;
     });
-    return result;
+  return result;
 }
 
-function countShots(){
+function countShots() {
   const API_URL = api + gamePlayerId + "/CountShots";
   fetch(API_URL, {
     credentials: "omit",
@@ -821,7 +823,7 @@ function countShots(){
     .then((response) => response.json())
     .then((data) => {
       const counter = document.querySelector(".counter");
-      if(data.nextPlayer === 1) {
+      if (data.nextPlayer === 1) {
         counter.classList.add("counter--active");
         document.querySelector(".cursor").classList.add("cursor--active");
         document.body.style.cursor = "none";
@@ -833,11 +835,11 @@ function countShots(){
       if (data.shots) {
         counter.innerHTML = data.shots;
       }
-      if(data.gameState === 1 || data.gameState === 2) {
+      if (data.gameState === 1 || data.gameState === 2) {
         clearInterval(intervalCounter);
         clearInterval(intervalShots);
       }
-      if(data.gameState === 1){
+      if (data.gameState === 1) {
         const winContainer = document.querySelector(".container");
         winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
         document.body.style.margin = "0";
@@ -848,7 +850,7 @@ function countShots(){
           document.body.style.margin = "5";
           document.body.style.overflowY = "visvible";
         });
-      } else if (data.gameState === 2){
+      } else if (data.gameState === 2) {
         const looseContainer = document.querySelector(".container");
         looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
         document.body.style.margin = "0";
@@ -885,7 +887,6 @@ var playButton = document.getElementById("playButton");
 const videoNice = document.querySelector(".video");
 
 playButton.addEventListener("click", function () {
-  // Überprüfen, ob das Video bereits beendet wurde, und es auf den Anfang zurücksetzen, wenn ja
   if (video.ended) {
     video.currentTime = 0;
   }
