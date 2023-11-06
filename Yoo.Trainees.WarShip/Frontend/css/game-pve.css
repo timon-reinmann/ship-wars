@@ -486,3 +486,8 @@ span {
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
+
+.chatBox {
+  border: 1px solid black;
+  background: white;
+}
