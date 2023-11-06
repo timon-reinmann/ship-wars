@@ -108,7 +108,7 @@ send_email.addEventListener("click", async () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const button = document.getElementById("movingButton");
+  const button = document.getElementById("moving-button");
   moveButton();
 
   function moveButton() {
