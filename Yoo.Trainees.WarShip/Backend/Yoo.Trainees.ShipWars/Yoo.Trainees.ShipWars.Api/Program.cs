@@ -46,7 +46,11 @@ namespace Yoo.Trainees.ShipWars.Api
             var app = builder.Build();
 
             app.UseCors(
-                options => options.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()
+                options => options
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials()
+                            .SetIsOriginAllowed((host) => true)
             );
 
             // Configure the HTTP request pipeline.
