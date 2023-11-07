@@ -503,6 +503,8 @@ span {
   height: 660px;
   width: 300px;
   background-color: rgba(128, 128, 128, 0.5);
+  overflow-y: visible;
+  overflow-x: hidden;
 }
 
 .message-text {
@@ -519,6 +521,11 @@ span {
   background-color: transparent;
   border: none;
   grid-area: send;
+}
+
+.send-button:hover {
+  cursor: pointer;
+  transform: matrix();
 }
 
 .message-list {
