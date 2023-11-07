@@ -358,6 +358,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                            select gp).ToList(); 
             var messages = (from m in _applicationDbContext.Message
                             where m.GamePlayers.Id.Equals(players[0].Id) || m.GamePlayers.Id.Equals(players[1].Id)
+                            orderby m.Date ascending
                             select new MessageDto { Date = m.Date, Text = m.Text, User = m.GamePlayers.Player.Name}).ToList();
             return messages;
         }
