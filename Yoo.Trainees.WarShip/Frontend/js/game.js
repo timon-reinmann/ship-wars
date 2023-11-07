@@ -779,25 +779,6 @@ function mapFrontendScissorsRockPaperToBackendEnum(choice) {
   }
 }
 
-const API_URL = "https://localhost:7118/broadcast";
-const result = fetch(API_URL, {
-  credentials: "omit",
-  headers: {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-    Accept: "*/*",
-    "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-    "Content-Type": "application/json",
-    "Sec-Fetch-Dest": "empty",
-  },
-  body: JSON.stringify({ message: "Hallo" }),
-  method: "POST",
-})
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
-  });
-
 function checkIfMessageIsThere(gameId) {
   const API_URL = api + gameId + "/Message";
   fetch(API_URL, {
@@ -829,50 +810,48 @@ function checkIfMessageIsThere(gameId) {
     });
 }
 
-setTimeout(() => {
-  //----------------------------------------
-  var connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:7118/chatHub")
-    .build();
+var connection = new signalR.HubConnectionBuilder()
+  .withUrl("https://localhost:7118/chatHub")
+  .build();
 
-  //Disable the send button until connection is established.
-  document.getElementById("sendButton").disabled = true;
+//Disable the send button until connection is established.
+document.getElementById("sendButton").disabled = true;
 
-  checkIfMessageIsThere(gameId);
+checkIfMessageIsThere(gameId);
 
-  connection.on("ReceiveMessage", function (user, message, time) {
-    if (message.trim() !== "") {
-      const timeHHMMSS = time.split("T")[1].split(":");
-      var li = document.createElement("li");
-      document.getElementById("messagesList").appendChild(li);
-      // We can assign user-supplied strings to an element's textContent because it
-      // is not interpreted as markup. If you're assigning in any other way, you
-      // should be aware of possible script injection concerns.
-      li.innerHTML = `<u>${timeHHMMSS[0]}:${timeHHMMSS[1]}  &ensp; ${user}:</u> ${message}`;
-      li.scrollTop = li.scrollHeight;
-    }
-  });
+connection.on("ReceiveMessage", function (user, message, time) {
+  if (message.trim() !== "") {
+    // split date from yyyy.mm.ddThh:mm:ss to hh:mm:ss
+    const timeHHMMSS = time.split("T")[1].split(":");
+    var li = document.createElement("li");
+    document.getElementById("messagesList").appendChild(li);
 
-  connection
-    .start()
-    .then(function () {
-      connection.invoke("JoinGroup", gameId).catch(function (err) {
-        return console.error(err.toString());
-      });
-      document.getElementById("sendButton").disabled = false;
-    })
-    .catch(function (err) {
+    // get hh:mm
+    li.innerHTML = `<u>${timeHHMMSS[0]}:${timeHHMMSS[1]}  &ensp; ${user}:</u> ${message}`;
+    li.scrollTop = li.scrollHeight;
+  }
+});
+
+// create group for the game so that only the players can see the messages
+connection
+  .start()
+  .then(function () {
+    connection.invoke("JoinGroup", gameId).catch(function (err) {
       return console.error(err.toString());
     });
+    document.getElementById("sendButton").disabled = false;
+  })
+  .catch(function (err) {
+    return console.error(err.toString());
+  });
 
-  document
-    .getElementById("sendButton")
-    .addEventListener("click", function (event) {
-      var user = gamePlayerId;
-      var message = document.getElementById("messageInput").value;
-      connection.invoke("SendMessage", user, message).catch(function (err) {
-        return console.error(err.toString());
-      });
-      event.preventDefault();
+document
+  .getElementById("sendButton")
+  .addEventListener("click", function (event) {
+    var user = gamePlayerId;
+    var message = document.getElementById("messageInput").value;
+    connection.invoke("SendMessage", user, message).catch(function (err) {
+      return console.error(err.toString());
     });
-}, 5000);
+    event.preventDefault();
+  });
