@@ -76,10 +76,10 @@ function EventListernerClose(Item) {
 }
 
 var video = document.getElementById("myVideo");
-var playButton = document.getElementById("playButton");
+var play-button = document.getElementById("play-button");
 const videoNice = document.querySelector(".video");
 
-playButton.addEventListener("click", function () {
+play-button.addEventListener("click", function () {
   console.log("worke:)");
   if (video.ended) {
     video.currentTime = 0;
