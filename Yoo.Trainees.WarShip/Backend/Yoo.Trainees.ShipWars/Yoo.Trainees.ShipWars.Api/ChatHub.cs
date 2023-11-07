@@ -31,13 +31,13 @@ public sealed class ChatHub : Hub
         var player = (from p in _applicationDbContext.Player
                       where p.Id == gamePlayer.PlayerId
                       select p).SingleOrDefault();
-        await Clients.Group(gamePlayer.GameId.ToString()).SendAsync("ReceiveMessage", player.Name, message);
         var messageDB = new Message() { 
             Id = Guid.NewGuid(),
             Text = message,
             Date = DateTime.Now,
             GamePlayers = gamePlayer
         };
+        await Clients.Group(gamePlayer.GameId.ToString()).SendAsync("ReceiveMessage", player.Name, messageDB.Text, messageDB.Date);
         _applicationDbContext.Message.Add(messageDB);
         await _applicationDbContext.SaveChangesAsync();
     }

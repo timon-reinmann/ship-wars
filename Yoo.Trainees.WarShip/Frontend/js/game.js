@@ -815,12 +815,13 @@ function checkIfMessageIsThere(gameId) {
     .then((response) => response.json())
     .then((data) => {
       data.forEach((message) => {
+        const timeHHMMSS = message.date.split("T")[1].split(":");
         var li = document.createElement("li");
         document.getElementById("messagesList").appendChild(li);
         // We can assign user-supplied strings to an element's textContent because it
         // is not interpreted as markup. If you're assigning in any other way, you
         // should be aware of possible script injection concerns.
-        li.textContent = `${message.user} says ${message.text}`;
+        li.innerHTML = `<u>${timeHHMMSS[0]}:${timeHHMMSS[1]}  &ensp; ${message.user}:</u> ${message.text}`;
       });
     })
     .catch((error) => {
@@ -839,14 +840,15 @@ setTimeout(() => {
 
   checkIfMessageIsThere(gameId);
 
-  connection.on("ReceiveMessage", function (user, message) {
+  connection.on("ReceiveMessage", function (user, message, time) {
     if (message.trim() !== "") {
+      const timeHHMMSS = time.split("T")[1].split(":");
       var li = document.createElement("li");
       document.getElementById("messagesList").appendChild(li);
       // We can assign user-supplied strings to an element's textContent because it
       // is not interpreted as markup. If you're assigning in any other way, you
       // should be aware of possible script injection concerns.
-      li.innerHTML = `<u>${user}:</u> ${message}`;
+      li.innerHTML = `<u>${timeHHMMSS[0]}:${timeHHMMSS[1]}  &ensp; ${user}:</u> ${message}`;
       li.scrollTop = li.scrollHeight;
     }
   });
