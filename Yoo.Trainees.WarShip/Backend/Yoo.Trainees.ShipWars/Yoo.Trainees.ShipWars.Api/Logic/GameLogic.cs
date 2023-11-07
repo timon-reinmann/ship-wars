@@ -350,6 +350,17 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return gameState;
         }
+
+        public List<MessageDto> GetAllMessages(Guid gameId)
+        {
+            var players = (from gp in _applicationDbContext.GamePlayer
+                           where gp.GameId.Equals(gameId)
+                           select gp).ToList(); 
+            var messages = (from m in _applicationDbContext.Message
+                            where m.GamePlayers.Id.Equals(players[0].Id) || m.GamePlayers.Id.Equals(players[1].Id)
+                            select new MessageDto { Date = m.Date, Text = m.Text, User = m.GamePlayers.Player.Name}).ToList();
+            return messages;
+        }
         private bool CheckIfShipsThere(List<ShipPosition> ships)
         {
             return ships.Any(x => x.Life > 0);
