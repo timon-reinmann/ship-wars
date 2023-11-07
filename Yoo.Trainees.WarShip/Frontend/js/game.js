@@ -881,18 +881,4 @@ function mapFrontendScissorsRockPaperToBackendEnum(choice) {
       throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }
-
-var video = document.getElementById("myVideo");
-var play-button = document.getElementById("play-button");
-const videoNice = document.querySelector(".video");
-
-play-button.addEventListener("click", function () {
-  if (video.ended) {
-    video.currentTime = 0;
-  }
-  videoNice.classList.add("video--active");
-  video.play();
-  setTimeout(function () {
-    videoNice.classList.remove("video--active");
-  }, 2500);
-});
+let timer = 2500;

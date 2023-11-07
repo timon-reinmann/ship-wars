@@ -75,18 +75,4 @@ function EventListernerClose(Item) {
   });
 }
 
-var video = document.getElementById("myVideo");
-var play-button = document.getElementById("play-button");
-const videoNice = document.querySelector(".video");
-
-play-button.addEventListener("click", function () {
-  console.log("worke:)");
-  if (video.ended) {
-    video.currentTime = 0;
-  }
-  videoNice.classList.add("video--active");
-  video.play();
-  setTimeout(function () {
-    videoNice.classList.remove("video--active");
-  }, 199200);
-});
+let timer = 199200;
