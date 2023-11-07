@@ -828,7 +828,9 @@ connection.on("ReceiveMessage", function (user, message, time) {
 
     // get hh:mm
     li.innerHTML = `<u>${timeHHMMSS[0]}:${timeHHMMSS[1]}  &ensp; ${user}:</u> ${message}`;
-    li.scrollTop = li.scrollHeight;
+
+    var chatBox = document.querySelector(".chatBox");
+    chatBox.scrollTop = chatBox.scrollHeight;
   }
 });
 
