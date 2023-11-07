@@ -52,6 +52,14 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return BadRequest();
         }
 
+        //
+        [HttpGet("{gameId}/Message")]
+        public IActionResult Message(Guid gameId)
+        {
+            var messages = _gameLogic.GetAllMessages(gameId);
+            return Ok(messages);
+        }
+
         // If Player reloads the Website it checks if he already has ships placed.
         [HttpGet("{gamePlayerId}/BoardState")]
         public IActionResult BoardState(Guid gamePlayerId)

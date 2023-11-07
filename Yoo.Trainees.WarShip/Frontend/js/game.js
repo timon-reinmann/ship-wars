@@ -798,40 +798,35 @@ const result = fetch(API_URL, {
     console.log(data);
   });
 
-// const socket = new WebSocket("wss://localhost:7118/chat-hub");
-// socket.onopen = function (e) {
-//   console.log("open");
-//   lockSocketState();
-// };
-// socket.onmessage = function (e) {
-//   console.log(e.data);
-// };
-
-// setTimeout(() => {
-//   socket.send('{protocol":"json","version":1}');
-// }, 5000);
-
-// function lockSocketState() {
-//   switch (socket.readyState) {
-//     case WebSocket.CLOSED:
-//       stateLabel.innerHTML = "Closed";
-
-//       break;
-//     case WebSocket.CLOSING:
-//       stateLabel.innerHTML = "Closing...";
-//       break;
-//     case WebSocket.CONNECTING:
-//       stateLabel.innerHTML = "Connecting...";
-//       break;
-//     case WebSocket.OPEN:
-//       stateLabel.innerHTML = "Open";
-//       break;
-//     default:
-//       stateLabel.innerHTML =
-//         "Unknown WebSocket State: " + htmlEscape(socket.readyState);
-//       break;
-//   }
-// }
+function checkIfMessageIsThere(gameId) {
+  const API_URL = api + gameId + "/Message";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((message) => {
+        var li = document.createElement("li");
+        document.getElementById("messagesList").appendChild(li);
+        // We can assign user-supplied strings to an element's textContent because it
+        // is not interpreted as markup. If you're assigning in any other way, you
+        // should be aware of possible script injection concerns.
+        li.textContent = `${message.user} says ${message.text}`;
+      });
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
 
 setTimeout(() => {
   //----------------------------------------
@@ -841,6 +836,8 @@ setTimeout(() => {
 
   //Disable the send button until connection is established.
   document.getElementById("sendButton").disabled = true;
+
+  checkIfMessageIsThere(gameId);
 
   connection.on("ReceiveMessage", function (user, message) {
     var li = document.createElement("li");
