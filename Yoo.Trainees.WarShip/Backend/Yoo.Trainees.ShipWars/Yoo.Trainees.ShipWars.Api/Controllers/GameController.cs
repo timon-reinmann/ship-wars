@@ -34,13 +34,6 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             this._configuration = configuration;
         }
 
-        // GET: api/Game
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
         //[Route("FinishedGames")]
 
         // Ready checks in the DB if all ships are placed.
@@ -52,7 +45,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return BadRequest();
         }
 
-        //
+        // Get all Messages if some one reloads the website
         [HttpGet("{gameId}/Message")]
         public IActionResult Message(Guid gameId)
         {
@@ -150,7 +143,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // Post api/<Game>/5/SaveShips.
         [HttpPost("{id}/SaveShips")]
-        public async Task<IActionResult> Post(Guid id, [FromBody] SaveShipsDto Ships)
+        public async Task<IActionResult> SaveShips(Guid id, [FromBody] SaveShipsDto Ships)
         {
             if (id != Ships.GameId)
             {
@@ -178,12 +171,6 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 $"Du wurdest zu einem Spiel namens {body.LobbyName} eingeladen! Link zum Spiel: {body.Link}"
             );
             return Ok();
-        }
-
-        // PUT api/<GameController>/5.
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
         }
 
         // Count ALL shots for the counter and also give information for the nextplayer and game state (Ongoing, Lost, Won, Prep, Complete).
