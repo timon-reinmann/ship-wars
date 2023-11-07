@@ -1,17 +1,37 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Yoo.Trainees.ShipWars.DataBase;
+using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api;
 
 public sealed class ChatHub : Hub
 {
-    public override async Task OnConnectedAsync()
+    private readonly ApplicationDbContext _applicationDbContext;
+    public ChatHub(ApplicationDbContext applicationDbContext)
     {
-         await Clients.All.SendAsync($"{Context.ConnectionId} has joined");
+        _applicationDbContext = applicationDbContext;
     }
 
-    public async Task SendMessage(string user, string message)
+    public override async Task OnConnectedAsync()
     {
-        await Clients.All.SendAsync("ReceiveMessage", user, message);
+        await Clients.All.SendAsync($"{Context.ConnectionId} has joined");
+    }
+
+    public async Task JoinGroup(string groupName)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+        await Clients.Group(groupName).SendAsync($"{Context.ConnectionId} has joined");
+    }
+
+    public async Task SendMessage(Guid user, string message)
+    {
+        var gamePlayer = (from gp in _applicationDbContext.GamePlayer
+                          where gp.Id == user
+                          select gp).SingleOrDefault();
+        var player = (from p in _applicationDbContext.Player
+                      where p.Id == gamePlayer.PlayerId
+                      select p).SingleOrDefault();
+        await Clients.Group(gamePlayer.GameId.ToString()).SendAsync("ReceiveMessage", player.Name, message);
     }
 }
 
