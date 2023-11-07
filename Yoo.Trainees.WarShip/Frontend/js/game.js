@@ -843,12 +843,15 @@ setTimeout(() => {
   document.getElementById("sendButton").disabled = true;
 
   connection.on("ReceiveMessage", function (user, message) {
-    var li = document.createElement("li");
-    document.getElementById("messagesList").appendChild(li);
-    // We can assign user-supplied strings to an element's textContent because it
-    // is not interpreted as markup. If you're assigning in any other way, you
-    // should be aware of possible script injection concerns.
-    li.textContent = `${user} says ${message}`;
+    if (message.trim() !== "") {
+      var li = document.createElement("li");
+      document.getElementById("messagesList").appendChild(li);
+      // We can assign user-supplied strings to an element's textContent because it
+      // is not interpreted as markup. If you're assigning in any other way, you
+      // should be aware of possible script injection concerns.
+      li.innerHTML = `<u>${user}:</u> ${message}`;
+      li.scrollTop = li.scrollHeight;
+    }
   });
 
   connection
@@ -870,18 +873,4 @@ setTimeout(() => {
       });
       event.preventDefault();
     });
-  //----------------------------------------
-  // connection.received(function (data) {
-  //   console.log(data);
-  // });
-  // connection.error(function (error) {
-  //   console.warn(error);
-  // });
-  // connection.stateChanged(function (change) {
-  //   if (change.newState === $.signalR.connectionState.reconnecting) {
-  //     console.log("Re-connecting");
-  //   } else if (change.newState === $.signalR.connectionState.connected) {
-  //     console.log("The server is online");
-  //   }
-  // });
 }, 5000);
