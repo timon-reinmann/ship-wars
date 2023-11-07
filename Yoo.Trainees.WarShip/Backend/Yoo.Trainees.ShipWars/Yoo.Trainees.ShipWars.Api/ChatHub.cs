@@ -32,6 +32,14 @@ public sealed class ChatHub : Hub
                       where p.Id == gamePlayer.PlayerId
                       select p).SingleOrDefault();
         await Clients.Group(gamePlayer.GameId.ToString()).SendAsync("ReceiveMessage", player.Name, message);
+        var messageDB = new Message() { 
+            Id = Guid.NewGuid(),
+            Text = message,
+            Date = DateTime.Now,
+            GamePlayers = gamePlayer
+        };
+        _applicationDbContext.Message.Add(messageDB);
+        await _applicationDbContext.SaveChangesAsync();
     }
 }
 
