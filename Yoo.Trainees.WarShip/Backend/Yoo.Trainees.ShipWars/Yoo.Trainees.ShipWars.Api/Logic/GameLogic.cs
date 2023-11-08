@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Yoo.Trainees.ShipWars.DataBase;
+﻿using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 
@@ -13,6 +12,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         Draw,
         Redo
     }
+
     public enum ShipHit
     {
         Missed,
@@ -27,12 +27,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         Prep,
         Complete
     }
+
     public class GameLogic : IGameLogic
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IConfiguration _configuration;
         private IVerificationLogic _verificationLogic;
-        private Game _Game;
 
         public GameLogic(ApplicationDbContext applicationDbContext, IVerificationLogic verificationLogic, IConfiguration configuration)
         {
@@ -69,7 +69,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 PlayerId = player2.Id
             });
 
-            this._Game = new Game
+            var game = new Game
             {
                 Id = gameId,
                 Name = name,
@@ -81,17 +81,17 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             _applicationDbContext.Player.Add(player1);
             _applicationDbContext.Player.Add(player2);
-            _applicationDbContext.Game.Add(this._Game);
+            _applicationDbContext.Game.Add(game);
             _applicationDbContext.SaveChanges();
 
-            return this._Game;
+            return game;
         }
         public void CreateBoard(SaveShipsDto SwaggerData)
         {
             var game = _applicationDbContext.Game.Find(SwaggerData.GameId);
             if (game == null)
             {
-                throw new Exception("_Game not found");
+                throw new Exception("game not found");
             }
             Guid id = new Guid();
             for (var i = 0; i < SwaggerData.Ships.Length; i++)

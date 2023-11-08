@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
@@ -24,17 +23,17 @@ public sealed class ChatHub : Hub
         await Clients.Group(groupName).SendAsync($"{Context.ConnectionId} has joined");
     }
 
-    public async Task SendMessage(Guid user, string message)
+    public async Task SendMessage(Guid userId, string message)
     {
         // get gamePlayer from the DB with the same ID like the ${user}
         var gamePlayer = (from gp in _applicationDbContext.GamePlayer
-                          where gp.Id == user
-                          select gp).SingleOrDefault();
+                          where gp.Id == userId
+                          select gp).Single();
 
         // get player from gamePlayer
         var player = (from p in _applicationDbContext.Player
                       where p.Id == gamePlayer.PlayerId
-                      select p).SingleOrDefault();
+                      select p).Single();
 
         // create new Message in DB
         var messageDB = new Message() { 

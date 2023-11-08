@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.OpenApi.Any;
-using System.Security.Cryptography.Xml;
+﻿using Microsoft.AspNetCore.Mvc; 
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
@@ -17,7 +14,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         private readonly IGameLogic _gameLogic;
         private readonly IVerificationLogic _verificationLogic;
         private readonly IEmailSender _emailSender;
-        private Game _Game;
+
         public static List<Ship> Ships = new List<Ship>
         {
                 new Ship { Length = 2, Name = "destroyer" },
@@ -33,8 +30,6 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             this._verificationLogic = verificationLogic;
             this._configuration = configuration;
         }
-
-        //[Route("FinishedGames")]
 
         // Ready checks in the DB if all ships are placed.
         [HttpGet("{gameId}/Ready")]
@@ -137,9 +132,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] string name)
         {
-            this._Game = _gameLogic.CreateGame(name);
-            var linkPlayer1 = CreateLink(this._Game.Id, this._Game.GamePlayers.First().Id);
-            var linkPlayer2 = CreateLink(this._Game.Id, this._Game.GamePlayers.ToArray()[1].Id);
+            var game = _gameLogic.CreateGame(name);
+            var linkPlayer1 = CreateLink(game.Id, game.GamePlayers.First().Id);
+            var linkPlayer2 = CreateLink(game.Id, game.GamePlayers.ToArray()[1].Id);
 
             var links = new 
             {

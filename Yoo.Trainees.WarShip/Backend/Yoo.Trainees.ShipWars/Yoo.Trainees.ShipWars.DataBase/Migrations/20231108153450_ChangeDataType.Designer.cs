@@ -12,8 +12,8 @@ using Yoo.Trainees.ShipWars.DataBase;
 namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231108111313_ChangeDateType")]
-    partial class ChangeDateType
+    [Migration("20231108153450_ChangeDataType")]
+    partial class ChangeDataType
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -134,25 +134,25 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4dfc0747-1b3a-4b9e-b478-4df9899abde6"),
+                            Id = new Guid("45652d4e-10be-4b26-a8a8-c6de9a4e49af"),
                             Length = 1,
                             Name = "Submarine"
                         },
                         new
                         {
-                            Id = new Guid("4310e2d7-db12-473f-ac98-da27457b629e"),
+                            Id = new Guid("a735b8ec-c868-45fa-81bc-942eda165a8f"),
                             Length = 2,
                             Name = "Destroyer"
                         },
                         new
                         {
-                            Id = new Guid("2d54d923-62db-4949-88cc-9d01904aed7e"),
+                            Id = new Guid("985497b3-353c-49d3-97a0-79232a270da0"),
                             Length = 3,
                             Name = "Cruiser"
                         },
                         new
                         {
-                            Id = new Guid("b1e25182-425a-4bdf-a35e-4860edcbba7e"),
+                            Id = new Guid("eee6167b-6588-42d9-b657-7698a2f5ca40"),
                             Length = 4,
                             Name = "Warship"
                         });
