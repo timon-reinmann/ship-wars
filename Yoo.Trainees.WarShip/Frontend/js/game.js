@@ -973,9 +973,9 @@ connection.on("ReceiveMessage", function (user, message, time) {
         li.innerHTML = `<p class="li--message">${message}</p>`;
       } else {
         li.innerHTML = `<p class="li--time">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user">${user}:</p> <p class="li--message">${message}</p>`;
-        div = document.createElement("div");
+        messageBox = document.createElement("div");
         messageBox.style.marginTop = "10px";
-        document.getElementById("message-list").appendChild(div);
+        document.getElementById("message-list").appendChild(messageBox);
       }
       messageBox.classList.add("li--right");
       messageBox.appendChild(li);
@@ -989,12 +989,11 @@ connection.on("ReceiveMessage", function (user, message, time) {
         messageBox.style.marginTop = "10px";
         messageBox = document.createElement("div");
         document.getElementById("message-list").appendChild(messageBox);
-        messageBox;
-        messageBox.classList.add("li--left");
-        messageBox.appendChild(li);
-        activeWordCount1 = 0;
-        activeWordCount2 = 1;
       }
+      messageBox.classList.add("li--left");
+      messageBox.appendChild(li);
+      activeWordCount1 = 0;
+      activeWordCount2 = 1;
     }
     var messageList = document.getElementById("message-list");
     messageList.scrollTop = messageList.scrollHeight;

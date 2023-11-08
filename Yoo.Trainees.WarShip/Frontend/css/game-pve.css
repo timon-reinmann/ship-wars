@@ -574,7 +574,7 @@ span {
   border: 4px solid var(--white);
   display: grid;
   grid-template-areas:
-    "user "
+    "user user"
     "message send";
   flex-direction: column;
   align-items: center;
