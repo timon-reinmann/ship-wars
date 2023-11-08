@@ -1,6 +1,3 @@
-// API URL
-let api = "https://localhost:7118/api/Game/";
-
 const stateLabel = document.getElementById("socketState");
 
 let player1 = null;
@@ -14,8 +11,11 @@ const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
 
-CheckIfBoardSet(gamePlayerId);
-loadFiredShots(gamePlayerId);
+Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)])
+loadHitShips(gamePlayerId);
+
+const muteButton = document.querySelector(".mute__button");
+let mute = false;
 
 getUser(gamePlayerId);
 
@@ -39,6 +39,8 @@ const ScissorsRockPaperEnum = {
   Paper: 2,
 };
 
+const sound = new Audio("../sound/pewpew.mp3")
+
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
 
@@ -49,6 +51,7 @@ let intervalid;
 let intervalSRP;
 let intervalShots;
 let intervalCounter;
+let hoverTimer = null;
 
 const draggables = document.querySelectorAll(".ship");
 const containers = document.querySelectorAll(".ownField");
@@ -58,17 +61,39 @@ const opponentFields = document.querySelectorAll(".opponentField");
 const scissors = document.querySelector(".scissors");
 const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
-const SRP = document.querySelector(".rock__paper__scissors");
+const SRP = document.querySelector(".rock-paper-scissors-container");
 
 localStorage.setItem("srpReload", "false");
 
 draggables.forEach((draggable) => {
+  draggable.addEventListener("mouseover", (e) => {
+    let currentShip = draggable.parentNode;
+    const currentX = parseInt(currentShip.getAttribute("data-x"));
+    const currentY = parseInt(currentShip.getAttribute("data-y"));
+    const isValid = isDirectionChangeAllowed(
+      draggable,
+      currentX,
+      currentY,
+      parseInt(draggable.getAttribute("data-size"))
+    );
+    if(isValid){
+      draggable.style.setProperty("--opacityBefore", 1);
+      hoverTimer = setTimeout(() => {
+        draggable.style.setProperty("--opacityAfter", 1);
+      }, 3000);
+    }
+  });
+  draggable.addEventListener("mouseout", (e) => {
+    draggable.style.setProperty("--opacityBefore", 0);
+    draggable.style.setProperty("--opacityAfter", 0);
+    clearTimeout(hoverTimer);
+  });
   draggable.addEventListener("click", (e) => {
     let currentShip = draggable.parentNode;
     const currentX = parseInt(currentShip.getAttribute("data-x"));
     const currentY = parseInt(currentShip.getAttribute("data-y"));
     const shipSize = parseInt(currentShip.firstChild.getAttribute("data-size"));
-    const isValid = canChangeDirection(
+    const isValid = isDirectionChangeAllowed(
       draggable,
       currentX,
       currentY,
@@ -82,13 +107,15 @@ draggables.forEach((draggable) => {
     }
   });
 
-  function onDragg() {
+  draggable.addEventListener("dragstart", (e) => {
+    let img = new Image();
+    const imgName = draggable.getAttribute("data-name");
+    img.src = "../img/"+imgName+".png";
+    e.dataTransfer.setDragImage(img, 0, 0);
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
     deleteShipHitBox(draggable.parentNode);
-  }
-
-  draggable.addEventListener("dragstart", onDragg);
+  });
 
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
@@ -185,34 +212,41 @@ opponentFields.forEach((opponentField) => {
   opponentField.addEventListener("click", async (e) => {
     clearInterval(intervalShots);
     const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
-    if (isReadyToShoot) {
-      const currentX = parseInt(opponentField.getAttribute("data-x"));
-      const currentY = parseInt(opponentField.getAttribute("data-y"));
-      const API_URL = api + gamePlayerId + "/SaveShot";
-      fetch(API_URL, {
-        credentials: "omit",
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-          Accept: "*/*",
-          "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-          "Content-Type": "application/json",
-          "Sec-Fetch-Dest": "empty",
-        },
-        body: JSON.stringify({ X: currentX, Y: currentY }),
-        method: "POST",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.hit === 1 || data.hit === 0) {
-            opponentField.classList.add("Field--hit");
-            intervalShots = setInterval(loadShotsFromOpponent, 2000);
-          }
-          if (data.hit === 1) {
-            opponentField.classList.add("Field--hit--ship");
-          }
-        });
-    }
+    if(!isReadyToShoot) {return}
+    const currentX = parseInt(opponentField.getAttribute("data-x"));
+    const currentY = parseInt(opponentField.getAttribute("data-y"));
+    const API_URL =
+      api + gamePlayerId + "/SaveShot";
+    fetch(API_URL, {
+      credentials: "omit",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+        Accept: "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+      },
+      body: JSON.stringify({ X: currentX, Y: currentY }),
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        sound.play();
+        const cursor = document.querySelector('.cursor');
+        cursor.classList.add('recoil-animation');
+        setTimeout(() => {
+          cursor.classList.remove('recoil-animation');
+        }, 200);
+        if(data.hit === 1 || data.hit === 0) {
+          opponentField.classList.add("Field--hit");
+          intervalShots = setInterval(loadShotsFromOpponent, 2000);
+        } 
+        if(data.hit === 1) {
+          opponentField.classList.add("Field--hit--ship");
+          showExplosionAnimation(opponentField);
+        }
+      });
   });
 });
 
@@ -236,6 +270,25 @@ function mapFrontendDirectionToBackendEnum(frontendDirection) {
       throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }
+
+muteButton.addEventListener("mouseover", () => {
+  muteButton.classList.add("fa-bounce");
+});
+muteButton.addEventListener("mouseout", () => {
+  muteButton.classList.remove("fa-bounce");
+});
+muteButton.addEventListener("click", () => {
+  mute = !mute;
+  if(mute) {
+    muteButton.children[0].classList.add("fa-volume-xmark");
+    muteButton.children[0].classList.remove("fa-volume-high");
+    sound.volume = 0;
+  } else {
+    muteButton.children[0].classList.remove("fa-volume-xmark");
+    muteButton.children[0].classList.add("fa-volume-high");
+    sound.volume = 1;
+  }
+});
 
 function deleteShipHitBox(container) {
   if (originField) {
@@ -314,7 +367,7 @@ function createBoard(gameBoard, isMyBoard) {
   }
 }
 
-function canChangeDirection(draggable, currentX, currentY, shipSize) {
+function isDirectionChangeAllowed(draggable, currentX, currentY, shipSize) {
   const nextPossibleField = 2; // Because all ships need 1 field apart from each other so we check on the field 2 0, 1 ,2 <-- 2 is the next possible field
   const isVertical = draggable.dataset.direction === "vertical";
   const tinyShip = shipSize === 2 ? 1 : 0; // if we compare i < shipSize we see that its false because i = 2 and shipSize = 2 so we need to treat this case differently
@@ -455,6 +508,22 @@ function screenBlocker() {
   ScissorsRockPaper();
 }
 
+function showExplosionAnimation(fieldElement) {
+  // Erstelle ein neues <img> Element
+  const img = document.createElement('img');
+  img.src = '../img/explosion.gif';
+  img.style.height = '50px';
+  img.style.width = '50px';
+  
+  // Füge das <img> Element zum Ziel-Feld hinzu
+  fieldElement.appendChild(img);
+  
+  // Entferne das <img> Element nach einer bestimmten Zeit (z.B. 3 Sekunden)
+  setTimeout(() => {
+    fieldElement.removeChild(img);
+  }, 800); // 3000 Millisekunden = 3 Sekunden
+}
+
 async function checkReadyToShoot(gamePlayerId) {
   const API_URL = api + gamePlayerId + "/" + gameId + "/CheckReadyToShoot";
   const test = fetch(API_URL, {
@@ -483,7 +552,7 @@ async function checkReadyToShoot(gamePlayerId) {
 
 function CheckIfBoardSet(gameId) {
   const API_URL = api + gameId + "/BoardState";
-  fetch(API_URL, {
+  return fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -510,7 +579,7 @@ function CheckIfBoardSet(gameId) {
 
 function loadFiredShots(gamePlayerId) {
   const API_URL = api + gamePlayerId + "/LoadFiredShots";
-  fetch(API_URL, {
+  return fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -577,7 +646,7 @@ function loadShotsFromOpponentFromTheDB(gamePlayerId) {
 }
 
 function loadGameBoard(data) {
-  // playe the ships on the board and wait for the other player
+  // place the ships on the board and wait for the other player
   data.forEach((ships) => {
     let shipFound = false;
     const X = ships.x;
@@ -597,6 +666,7 @@ function loadGameBoard(data) {
             `[data-x="${i}"][data-y="${j}"]`
           );
           container.appendChild(ship);
+
           ship.setAttribute(
             "data-direction",
             Direction === 0 ? "horizontal" : "vertical"
@@ -617,9 +687,39 @@ function loadGameBoard(data) {
   });
 }
 
+function loadHitShips(gamePlayerId) {
+  const API_URL =
+      api + gamePlayerId + "/LoadHitShips";
+    fetch(API_URL, {
+      credentials: "omit",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+        Accept: "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+      },
+      method: "GET",
+    }).then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          data.forEach((shots) => {
+            const X = shots.x;
+            const Y = shots.y;
+            const opponentFields = document.getElementById("opponent__board");
+            const opponentField = opponentFields.querySelector(
+              `[data-x="${X}"][data-y="${Y}"]`
+            );
+            opponentField.classList.add("Field--hit--ship");
+          });
+        }
+      });
+}
+
 async function ScissorsRockPaper() {
-  SRPFindished = await IsSRPIsSet(gamePlayerId);
-  if (!SRPFindished) {
+  const SRPFindished = await IsSRPIsSet(gamePlayerId); 
+  if(!SRPFindished) {
     scissors.classList.add("scissors--active");
     rock.classList.add("rock--active");
     paper.classList.add("paper--active");
@@ -672,18 +772,19 @@ SRPChoice.forEach((srp) => {
         "Sec-Fetch-Dest": "empty",
       },
       body: JSON.stringify(choice),
-      method: "Put",
-    }).then((data) => {
-      if (data) {
-        createLoadingScreenForSRP();
-        intervalSRP = setInterval(IsSRPIsSet, 1000);
-      }
-    });
+      method: "PUT",
+    })
+      .then((data) => {
+        if (data) {
+          createLoadingScreenForSRP()
+          intervalSRP = setInterval(IsSRPIsSet, 1000);
+        }
+      });
   });
 });
 async function IsSRPIsSet() {
   const API_URL = api + gamePlayerId + "/CheckIfSRPIsSet";
-  const result = fetch(API_URL, {
+  const result = await fetch(API_URL, {
     credentials: "omit",
     headers: {
       "User-Agent":
@@ -734,8 +835,12 @@ function countShots() {
       const counter = document.querySelector(".counter");
       if (data.nextPlayer === 1) {
         counter.classList.add("counter--active");
+        document.querySelector(".cursor").classList.add("cursor--active");
+        document.body.style.cursor = "none";
       } else {
         counter.classList.remove("counter--active");
+        document.querySelector(".cursor").classList.remove("cursor--active");
+        document.body.style.cursor = "crosshair";
       }
       if (data.shots) {
         counter.innerHTML = data.shots;

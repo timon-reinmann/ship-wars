@@ -1,6 +1,6 @@
 @font-face {
   font-family: "walkingdead";
-  src: url(../../font/BadGrunge.ttf);
+  src: url(../font/BadGrunge.ttf);
 }
 @media screen and (height < 800px) {
   .shipwars__title {
@@ -9,6 +9,25 @@
   }
   .shipwars__buttons {
     top: -4rem !important;
+  }
+}
+
+@keyframes slideout {
+  from {
+    right: 0%;
+  }
+  to {
+    right: -60%;
+    display: none;
+  }
+}
+
+@keyframes slidein {
+  from {
+    right: -60%;
+  }
+  to {
+    right: 0%;
   }
 }
 
@@ -146,29 +165,10 @@
   animation-fill-mode: forwards;
 }
 
-@keyframes slidein {
-  from {
-    right: -60%;
-  }
-  to {
-    right: 0%;
-  }
-}
-
 .slide-out {
   animation-duration: 0.8s;
   animation-name: slideout;
   animation-fill-mode: forwards;
-}
-
-@keyframes slideout {
-  from {
-    right: 0%;
-  }
-  to {
-    right: -60%;
-    display: none;
-  }
 }
 
 .sidebar-text {

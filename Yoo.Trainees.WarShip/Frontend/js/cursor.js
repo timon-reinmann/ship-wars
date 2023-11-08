@@ -1,26 +1,16 @@
-// TODO : #Trainee-177
-const follower = document.getElementById('follower');
-const printout = document.getElementById('printout');
+const cursor = document.querySelector('.cursor');
+cursor.style.pointerEvents = "none";
 
-const mouseX = (e) => {
-    return e.clientX;
-}
-
-const mouseY = (e) => {
-    return e.clientY;
-}
-
-positionElement = (e) => {
-    let mouse = {
-        x: mouseX(e),
-        y: mouseY(e)
-    };
-    follower.style.top = mouse.y + 'px';
-    follower.style.left = mouse.x + 'px';
-}
-let time = false;
-window.onmousemove = init = (e) => {
-    _event = e;
-    timer = setTimeout(() => {
-        positionElement(_event);
-    }, 1)};
+document.addEventListener('mousemove', e => {
+    cursor.setAttribute("style", "top: "+(e.pageY - 25)+"px; left: "+(e.pageX - 25)+"px;")
+    const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
+  
+    // -- ChatGPT --
+    if (elemBelow && elemBelow.clickable) {  // Ersetze "clickable" durch die Bedingung, die für dich zutrifft
+        // Setze einen niedrigeren z-index, damit das Element darunter klickbar ist
+        cursor.style.zIndex = "1";
+    } else {
+        // Setze einen höheren z-index, damit der Cursor sichtbar ist
+        cursor.style.zIndex = "1000";
+    }
+});

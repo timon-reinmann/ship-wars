@@ -16,6 +16,7 @@
   <body>
     <div class="background-animation"></div>
     <div class="container">
+      <div class="cursor"></div>
       <nav class="shipwars__navbar">
         <a href="../index.html" class="shipwars__logo"></a>
         <div class="navbar__list">
@@ -140,18 +141,21 @@
           </div>
         </div>
 
-        <div class="rock__paper__scissors">
-          <p>Play scissors rock paper to choos who starts</p>
+        <div class="rock-paper-scissors-container">
+          <p>Play rock paper scissors to choose who starts</p>
           <button class="scissors SRP-choice" data-choice="scissors">✂️</button>
           <button class="rock SRP-choice" data-choice="rock">🪨</button>
           <button class="paper SRP-choice" data-choice="paper">📄</button>
         </div>
 
+        <button class="mute__button">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
         <!-- ---------------------------------------------- -->
         <div class="chatBox">
           <ul id="message-list"></ul>
-          <div class="a">
             <input type="text" class="message-text" id="messageInput" />
+          <div class="a">
             <button id="sendButton" class="send-button">
               <i
                 class="fa-solid fa-paper-plane-top fa-lg"
@@ -171,7 +175,8 @@
           crossorigin="anonymous"
         ></script>
       </main>
-    </div>
     <div id="socketState"></div>
+    <script src="../js/cursor.js"></script>
+    <script src="../js/API-ShipWars-ApiLink.js"></script>
   </body>
 </html>
