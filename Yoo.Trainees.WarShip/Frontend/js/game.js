@@ -3,6 +3,11 @@ let api = "https://localhost:7118/api/Game/";
 
 const stateLabel = document.getElementById("socketState");
 
+let player1 = null;
+let activeWordCount1 = 0;
+let activeWordCount2 = 0;
+let div = document.createElement("div");
+
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
@@ -12,6 +17,9 @@ const SRPChoice = document.querySelectorAll(".SRP-choice");
 CheckIfBoardSet(gamePlayerId);
 loadFiredShots(gamePlayerId);
 
+getUser(gamePlayerId);
+
+console.log(player1);
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
@@ -795,14 +803,44 @@ function checkIfMessageIsThere(gameId) {
   })
     .then((response) => response.json())
     .then((data) => {
+      let wordCount1 = 0;
+      let wordCount2 = 0;
       data.forEach((message) => {
         const timeHHMMSS = message.date.split("T")[1].split(":");
         var li = document.createElement("li");
-        document.getElementById("messagesList").appendChild(li);
-        // We can assign user-supplied strings to an element's textContent because it
-        // is not interpreted as markup. If you're assigning in any other way, you
-        // should be aware of possible script injection concerns.
-        li.innerHTML = `<u>${timeHHMMSS[0]}:${timeHHMMSS[1]}  &ensp; ${message.user}:</u> ${message.text}`;
+        document.getElementById("message-list").appendChild(div);
+
+        if (player1 == message.user) {
+          activeWordCount1 = 1;
+          activeWordCount2 = 0;
+          if (wordCount1 >= 1) {
+            li.innerHTML = `<p class="li--message">${message.text}</p>`;
+          } else {
+            li.innerHTML = `<p class="li--time" style="">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user">${message.user}:</p> <p class="li--message">${message.text}</p>`;
+            div.style.marginTop = "10px";
+            div = document.createElement("div");
+            document.getElementById("message-list").appendChild(div);
+          }
+          div.classList.add("li--right");
+          div.appendChild(li);
+          wordCount1++;
+          wordCount2 = 0;
+        } else {
+          activeWordCount1 = 0;
+          activeWordCount2 = 1;
+          if (wordCount2 >= 1) {
+            li.innerHTML = `<p class="li--message">${message.text}</p>`;
+          } else {
+            li.innerHTML = `<p class="li--time2">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user2">${message.user}:</p> <p class="li--message">${message.text}</p>`;
+            div.style.marginTop = "10px";
+            div = document.createElement("div");
+            document.getElementById("message-list").appendChild(div);
+          }
+          div.classList.add("li--left");
+          div.appendChild(li);
+          wordCount2++;
+          wordCount1 = 0;
+        }
       });
     })
     .catch((error) => {
@@ -823,14 +861,38 @@ connection.on("ReceiveMessage", function (user, message, time) {
   if (message.trim() !== "") {
     // split date from yyyy.mm.ddThh:mm:ss to hh:mm:ss
     const timeHHMMSS = time.split("T")[1].split(":");
-    var li = document.createElement("li");
-    document.getElementById("messagesList").appendChild(li);
+    let li = document.createElement("li");
+    document.getElementById("message-list").appendChild(div);
+    if (player1 == user) {
+      if (activeWordCount1 >= 1) {
+        li.innerHTML = `<p class="li--message">${message}</p>`;
+      } else {
+        li.innerHTML = `<p class="li--time">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user">${user}:</p> <p class="li--message">${message}</p>`;
+        div = document.createElement("div");
+        div.style.marginTop = "10px";
+        document.getElementById("message-list").appendChild(div);
+      }
+      div.classList.add("li--right");
+      div.appendChild(li);
+      activeWordCount1 = 1;
+      activeWordCount2 = 0;
+    } else {
+      if (activeWordCount2 >= 1) {
+        li.innerHTML = `<p class="li--message">${message}</p>`;
+      } else {
+        li.innerHTML = `<p class="li--time2">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user2">${user}:</p> <p class="li--message">${message}</p>`;
+        div.style.marginTop = "10px";
+        div = document.createElement("div");
+        document.getElementById("message-list").appendChild(div);
+      }
+      div.classList.add("li--left");
+      div.appendChild(li);
+      activeWordCount1 = 0;
+      activeWordCount2 = 1;
+    }
 
-    // get hh:mm
-    li.innerHTML = `<u>${timeHHMMSS[0]}:${timeHHMMSS[1]}  &ensp; ${user}:</u> ${message}`;
-
-    var chatBox = document.querySelector(".chatBox");
-    chatBox.scrollTop = chatBox.scrollHeight;
+    var messageList = document.getElementById("message-list");
+    messageList.scrollTop = messageList.scrollHeight;
   }
 });
 
@@ -857,3 +919,40 @@ document
     });
     event.preventDefault();
   });
+
+async function getUser(gamePlayerId) {
+  const API_URL = api + gamePlayerId + "/GetUser";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      player1 = data.user;
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+var messageInput = document.getElementById("messageInput");
+messageInput.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    document.getElementById("sendButton").click();
+    messageInput.value = "";
+  }
+});
+
+const sendButton = document.getElementById("sendButton");
+sendButton.addEventListener("click", function (event) {
+  messageInput.value = "";
+});

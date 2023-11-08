@@ -184,6 +184,13 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok(new { shots = countAndNextPlayer.ShotCount, nextPlayer = countAndNextPlayer.IsNextPlayer, gameState = gameStateDB });
         }
 
+        [HttpGet("{gamePlayerId}/GetUser")]
+        public IActionResult GetUser(Guid gamePlayerId)
+        {
+            var user = _gameLogic.GetCurrentUser(gamePlayerId);
+            return Ok(new { User = user });
+        }
+
         // Create link for invitation.
         private String CreateLink(Guid gameId, Guid gamePlayerId)
         {

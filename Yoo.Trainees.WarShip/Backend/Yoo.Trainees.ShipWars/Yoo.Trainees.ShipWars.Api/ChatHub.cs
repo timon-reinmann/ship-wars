@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
@@ -49,6 +50,7 @@ public sealed class ChatHub : Hub
         // add Message and save changes
         _applicationDbContext.Message.Add(messageDB);
         await _applicationDbContext.SaveChangesAsync();
+
     }
 }
 

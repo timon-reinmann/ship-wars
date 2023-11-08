@@ -20,5 +20,6 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         public ShotInfoDto CountShotsInDB(Guid gamePlayerId);
         GameState GetGameState(Guid gamePlayerId);
         List<MessageDto> GetAllMessages(Guid gameId);
+        String GetCurrentUser(Guid gamePlayerId);
     }
 }

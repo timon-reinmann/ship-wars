@@ -503,18 +503,14 @@ span {
   height: 660px;
   width: 300px;
   background-color: rgba(128, 128, 128, 0.5);
-  overflow-y: visible;
-  overflow-x: hidden;
 }
 
 .message-text {
-  margin-top: 194%;
-  margin-right: 10px;
+  position: relative;
+  margin-top: 230%;
+  margin-left: 10px;
   width: 230px;
   grid-area: message;
-}
-
-.username {
 }
 
 .send-button {
@@ -528,6 +524,135 @@ span {
   transform: matrix();
 }
 
-.message-list {
+#message-list {
+  position: relative;
+  display: flex;
+  padding: 0;
+  flex-direction: column;
+  list-style: none;
+  align-items: flex-start;
   color: white;
+  position: relative;
+  height: 550px;
+  width: auto;
+  bottom: 0%;
+  overflow-y: visible;
+  overflow-x: hidden;
+  z-index: 100;
+}
+
+#message-list div:not(:empty) {
+  background-color: white;
+  max-width: 150px;
+  padding: 30px;
+}
+
+.a {
+  position: absolute;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(128, 128, 128);
+}
+
+::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 10px white;
+  border-radius: 10px;
+}
+
+.li--time {
+  position: absolute;
+  font-size: 10px;
+  color: rgb(99, 99, 99);
+  font-weight: bolder;
+  left: 10px;
+  bottom: 5px;
+}
+
+.li--time2 {
+  position: absolute;
+  font-size: 10px;
+  color: rgb(99, 99, 99);
+  font-weight: bolder;
+  right: 10px;
+  bottom: 5px;
+}
+
+.li--user {
+  color: blue;
+  left: 10px;
+}
+
+.li--user2 {
+  color: red;
+  left: 15px;
+}
+
+.li--user,
+.li--user2 {
+  position: absolute;
+  padding-bottom: 5px;
+  text-align: left;
+  top: 10px;
+}
+
+.li--message {
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.li--right {
+  position: relative;
+  color: black;
+  text-align: right;
+  align-self: flex-end;
+  margin-right: 10%;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.li--right::before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 10px solid white;
+  border-right: 10px solid transparent;
+  border-top: 10px solid white;
+  border-bottom: 10px solid transparent;
+  right: -15px;
+  top: 10px;
+}
+
+.li--left {
+  position: relative;
+  color: black;
+  align-self: flex-start;
+  margin-left: 7%;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.li--left::before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 10px solid white;
+  border-right: 10px solid transparent;
+  border-top: 10px solid white;
+  border-bottom: 10px solid transparent;
+  left: -15px;
+  top: 10px;
+  transform: rotate(90deg);
+}
+
+#message-list p {
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
