@@ -366,7 +366,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                         select p.Name).SingleOrDefault();
             return user;
         }
-        private bool CheckIfShipsThere(List<ShipPosition> ships)
+
         private Game? GetGame(Guid gamePlayerId) { 
             return (from g in _applicationDbContext.GamePlayer
                     where g.Id.Equals(gamePlayerId)
