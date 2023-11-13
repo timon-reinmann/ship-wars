@@ -67,7 +67,8 @@ namespace Yoo.Trainees.ShipWars.Api
             }
 
             app.UseHttpsRedirection();
-            app.MapHub<ChatHub>("/chatHub");
+            app.MapHub<ChatHub>("/ChatHub");
+            app.MapHub<GameHub>("/GameHub");
             app.UseAuthorization();
             app.MapControllers();
             app.Run();

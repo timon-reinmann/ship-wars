@@ -306,7 +306,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                          select s).Count();
 
             // Return number of Shots and if you are the next player
-            return new ShotInfoDto { ShotCount = count, IsNextPlayer = game.NextPlayer == gamePlayerId ? 1 : 0 };
+            return new ShotInfoDto { ShotCount = count, IsNextPlayer = game.NextPlayer};
         }
 
         public GameState GetGameState(Guid gamePlayerId)
