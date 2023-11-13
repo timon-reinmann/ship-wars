@@ -4,12 +4,95 @@ let player1 = null;
 let activeWordCount1 = 0;
 let activeWordCount2 = 0;
 let messageBox = document.createElement("div");
+const chatHubApi = api.replace("api/Game/", "ChatHub");
+const gameHubApi = api.replace("api/Game/", "GameHub");
 
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
+
+const connectionGameHub = new signalR.HubConnectionBuilder()
+  .withUrl(gameHubApi)
+  .build();
+
+connectionGameHub.on("LoadShotsFromOpponent", function (shots) {
+  shots.forEach((shot) => {
+    const X = shot.x;
+    const Y = shot.y;
+    const opponentFields = document.getElementById("game__board");
+    const opponentField = opponentFields.querySelector(
+      `[data-x="${X}"][data-y="${Y}"]`
+    );
+    opponentField.classList.add("field--hit");
+  });
+});
+
+connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
+  const counter = document.querySelector(".counter");
+  if (nextPlayer.toString() === gamePlayerId) {
+    counter.classList.add("counter--active");
+    document.querySelector(".cursor").classList.add("cursor--active");
+    document.body.style.cursor = "none";
+  } else {
+    counter.classList.remove("counter--active");
+    setTimeout(() => {
+      document.querySelector(".cursor").classList.remove("cursor--active");
+      document.body.style.cursor = "crosshair";
+    }, 500);
+  }
+  if (shots) {
+    counter.innerHTML = shots;
+  }
+  if (gameState === 1 || gameState === 2) {
+    clearInterval(intervalCounter);
+    clearInterval(intervalShots);
+  }
+  if (gameState === 1) {
+    const winContainer = document.querySelector(".container");
+    winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
+    document.body.style.margin = "0";
+    document.body.style.overflow = "hidden";
+    const win = document.querySelector(".win");
+    win.addEventListener("click", () => {
+      win.remove();
+      document.body.style.margin = "5";
+      document.body.style.overflowY = "visvible";
+    });
+  } else if (gameState === 2) {
+    const looseContainer = document.querySelector(".container");
+    looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
+    document.body.style.margin = "0";
+    document.body.style.overflow = "hidden";
+    const lost = document.querySelector(".lost");
+    lost.addEventListener("click", () => {
+      lost.remove();
+      document.body.style.margin = "5";
+      document.body.style.overflowY = "visible";
+    });
+  }
+});
+
+connectionGameHub
+  .start()
+  .then(function () {
+    connectionGameHub.invoke("JoinGroup", gameId).catch(function (err) {
+      return console.error(err.toString());
+    });
+    connectionGameHub.invoke("EgoGroup", gamePlayerId).catch(function (err) {
+      return console.error(err.toString());
+    });
+  })
+  .catch(function (err) {
+    return console.error(err.toString());
+  });
+
+connectionGameHub
+  .invoke("LoadShotsFromOpponent", gamePlayerId)
+  .catch(function (err) {
+    return console.error(err.toString());
+  });
 
 Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
 loadHitShips(gamePlayerId);
@@ -19,7 +102,6 @@ let mute = false;
 
 getUser(gamePlayerId);
 
-console.log(player1);
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
@@ -240,11 +322,20 @@ opponentFields.forEach((opponentField) => {
           cursor.classList.remove("recoil-animation");
         }, 200);
         if (data.hit === 1 || data.hit === 0) {
-          opponentField.classList.add("Field--hit");
-          intervalShots = setInterval(loadShotsFromOpponent, 2000);
+          opponentField.classList.add("field--hit");
+          connectionGameHub
+            .invoke("CountShots", gamePlayerId)
+            .catch(function (err) {
+              return console.error(err.toString());
+            });
+          connectionGameHub
+            .invoke("LoadShotsFromOpponent", gamePlayerId)
+            .catch(function (err) {
+              return console.error(err.toString());
+            });
         }
         if (data.hit === 1) {
-          opponentField.classList.add("Field--hit--ship");
+          opponentField.classList.add("field--hit--ship");
           showExplosionAnimation(opponentField);
         }
       });
@@ -602,7 +693,7 @@ function loadFiredShots(gamePlayerId) {
           const opponentField = opponentFields.querySelector(
             `[data-x="${X}"][data-y="${Y}"]`
           );
-          opponentField.classList.add("Field--hit");
+          opponentField.classList.add("field--hit");
         });
       }
     })
@@ -637,7 +728,7 @@ function loadShotsFromOpponentFromTheDB(gamePlayerId) {
           const opponentField = opponentFields.querySelector(
             `[data-x="${X}"][data-y="${Y}"]`
           );
-          opponentField.classList.add("Field--hit");
+          opponentField.classList.add("field--hit");
         });
       }
     })
@@ -712,7 +803,7 @@ function loadHitShips(gamePlayerId) {
           const opponentField = opponentFields.querySelector(
             `[data-x="${X}"][data-y="${Y}"]`
           );
-          opponentField.classList.add("Field--hit--ship");
+          opponentField.classList.add("field--hit--ship");
         });
       }
     });
@@ -751,6 +842,8 @@ function deleteLoadingScreenForSRP() {
   shipSelection.classList.remove("ship__selection");
   ring.classList.remove("ring--active");
   finish.classList.remove("active-popup");
+  loadShotsFromOpponent();
+  countShots();
   remove(commit_button);
 }
 
@@ -799,7 +892,6 @@ async function IsSRPIsSet() {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 1 || data.status === 2) {
-        intervalCounter = setInterval(countShots, 1000);
         clearInterval(intervalSRP);
         deleteLoadingScreenForSRP();
         return true;
@@ -833,7 +925,7 @@ function countShots() {
     .then((response) => response.json())
     .then((data) => {
       const counter = document.querySelector(".counter");
-      if (data.nextPlayer === 1) {
+      if (data.nextPlayer.toString() === gamePlayerId) {
         counter.classList.add("counter--active");
         document.querySelector(".cursor").classList.add("cursor--active");
         document.body.style.cursor = "none";
@@ -869,7 +961,7 @@ function countShots() {
         lost.addEventListener("click", () => {
           lost.remove();
           document.body.style.margin = "5";
-          document.body.style.overflowY = "visvible";
+          document.body.style.overflowY = "visible";
         });
       }
     })
@@ -890,6 +982,29 @@ function mapFrontendScissorsRockPaperToBackendEnum(choice) {
       // Handle ungültige Richtungen oder Fehlerbehandlung hier
       throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
+}
+
+async function getUser(gamePlayerId) {
+  const API_URL = api + gamePlayerId + "/GetUser";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      player1 = data.user;
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
 }
 
 function checkIfMessageIsThere(gameId) {
@@ -953,17 +1068,16 @@ function checkIfMessageIsThere(gameId) {
     });
 }
 
-const chatHubApi = api.replace("api/Game/", "chatHub");
-var connection = new signalR.HubConnectionBuilder().withUrl(chatHubApi).build();
-
-console.log(chatHubApi);
+const connectionChatHub = new signalR.HubConnectionBuilder()
+  .withUrl(chatHubApi)
+  .build();
 
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
 
 checkIfMessageIsThere(gameId);
 
-connection.on("ReceiveMessage", function (user, message, time) {
+connectionChatHub.on("ReceiveMessage", function (user, message, time) {
   if (message.trim() !== "") {
     // split date from yyyy.mm.ddThh:mm:ss to hh:mm:ss
     const timeHHMMSS = time.split("T")[1].split(":");
@@ -1002,10 +1116,10 @@ connection.on("ReceiveMessage", function (user, message, time) {
 });
 
 // create group for the game so that only the players can see the messages
-connection
+connectionChatHub
   .start()
   .then(function () {
-    connection.invoke("JoinGroup", gameId).catch(function (err) {
+    connectionChatHub.invoke("JoinGroup", gameId).catch(function (err) {
       return console.error(err.toString());
     });
     document.getElementById("sendButton").disabled = false;
@@ -1019,34 +1133,13 @@ document
   .addEventListener("click", function (event) {
     var user = gamePlayerId;
     var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
-      return console.error(err.toString());
-    });
+    connectionChatHub
+      .invoke("SendMessage", user, message)
+      .catch(function (err) {
+        return console.error(err.toString());
+      });
     event.preventDefault();
   });
-
-async function getUser(gamePlayerId) {
-  const API_URL = api + gamePlayerId + "/GetUser";
-  fetch(API_URL, {
-    credentials: "omit",
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-      Accept: "*/*",
-      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-      "Content-Type": "application/json",
-      "Sec-Fetch-Dest": "empty",
-    },
-    method: "GET",
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      player1 = data.user;
-    })
-    .catch((error) => {
-      console.error("Es gab einen Fehler bei der Anfrage:", error);
-    });
-}
 
 var messageInput = document.getElementById("messageInput");
 messageInput.addEventListener("keypress", function (event) {

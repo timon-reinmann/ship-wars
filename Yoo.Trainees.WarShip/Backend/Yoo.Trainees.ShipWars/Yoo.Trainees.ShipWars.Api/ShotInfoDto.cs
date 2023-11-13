@@ -4,7 +4,7 @@
     {
         public int ShotCount {  get; set; }
 
-        public int IsNextPlayer { get; set; }
+        public Guid? IsNextPlayer { get; set; }
 
     }
 }

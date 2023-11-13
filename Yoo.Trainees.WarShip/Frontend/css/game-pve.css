@@ -496,10 +496,10 @@ span {
   background-color: rgba(124, 124, 124, 0.837);
   cursor: pointer;
 }
-.Field--hit {
+.field--hit {
   background-color: rgb(255, 0, 0, 0.25);
 }
-.Field--hit--ship {
+.field--hit--ship {
   background-color: rgb(255, 0, 0, 0.75);
 }
 .counter {

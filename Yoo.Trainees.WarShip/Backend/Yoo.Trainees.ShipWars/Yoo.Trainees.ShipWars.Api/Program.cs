@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase;
 
@@ -67,7 +64,8 @@ namespace Yoo.Trainees.ShipWars.Api
             }
 
             app.UseHttpsRedirection();
-            app.MapHub<ChatHub>("/chatHub");
+            app.MapHub<ChatHub>("/ChatHub");
+            app.MapHub<GameHub>("/GameHub");
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
