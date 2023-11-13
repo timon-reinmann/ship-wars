@@ -881,4 +881,4 @@ function mapFrontendScissorsRockPaperToBackendEnum(choice) {
       throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }
-let timer = 2500;
+const timer = 2500;

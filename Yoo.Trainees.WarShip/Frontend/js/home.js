@@ -75,4 +75,4 @@ function EventListernerClose(Item) {
   });
 }
 
-let timer = 199200;
+const timer = 199200;
