@@ -43,12 +43,12 @@ public sealed class GameHub : Hub
     {
         var gameStateDB = _gameLogic.GetGameState(gamePlayerId);
         var gameId = await GetGameId(gamePlayerId);
-        ShotInfoDto countAndNextPlayer = _gameLogic.CountShotsInDB(gamePlayerId);
+        var countAndNextPlayer = _gameLogic.CountShotsInDB(gamePlayerId);
 
         await Clients.Group(gameId.ToString()).SendAsync("CountShots", countAndNextPlayer.ShotCount, countAndNextPlayer.IsNextPlayer, gameStateDB);
     }
 
-    private async Task<GamePlayer?> GetOpponent(Guid gamePlayerId, Guid gameId)
+    private async Task<GamePlayer> GetOpponent(Guid gamePlayerId, Guid gameId)
     {
         return await (from gp in _applicationDbContext.GamePlayer where gp.GameId == gameId && gp.Id != gamePlayerId select gp).SingleOrDefaultAsync();
     }
