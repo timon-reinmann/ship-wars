@@ -25,7 +25,7 @@ connectionGameHub.on("LoadShotsFromOpponent", function (shots) {
     const opponentField = opponentFields.querySelector(
       `[data-x="${X}"][data-y="${Y}"]`
     );
-    opponentField.classList.add("Field--hit");
+    opponentField.classList.add("field--hit");
   });
 });
 
@@ -322,7 +322,7 @@ opponentFields.forEach((opponentField) => {
           cursor.classList.remove("recoil-animation");
         }, 200);
         if (data.hit === 1 || data.hit === 0) {
-          opponentField.classList.add("Field--hit");
+          opponentField.classList.add("field--hit");
           connectionGameHub
             .invoke("CountShots", gamePlayerId)
             .catch(function (err) {
@@ -333,10 +333,9 @@ opponentFields.forEach((opponentField) => {
             .catch(function (err) {
               return console.error(err.toString());
             });
-          // intervalShots = setInterval(loadShotsFromOpponent, 2000);
         }
         if (data.hit === 1) {
-          opponentField.classList.add("Field--hit--ship");
+          opponentField.classList.add("field--hit--ship");
           showExplosionAnimation(opponentField);
         }
       });
@@ -694,7 +693,7 @@ function loadFiredShots(gamePlayerId) {
           const opponentField = opponentFields.querySelector(
             `[data-x="${X}"][data-y="${Y}"]`
           );
-          opponentField.classList.add("Field--hit");
+          opponentField.classList.add("field--hit");
         });
       }
     })
@@ -729,7 +728,7 @@ function loadShotsFromOpponentFromTheDB(gamePlayerId) {
           const opponentField = opponentFields.querySelector(
             `[data-x="${X}"][data-y="${Y}"]`
           );
-          opponentField.classList.add("Field--hit");
+          opponentField.classList.add("field--hit");
         });
       }
     })
@@ -804,7 +803,7 @@ function loadHitShips(gamePlayerId) {
           const opponentField = opponentFields.querySelector(
             `[data-x="${X}"][data-y="${Y}"]`
           );
-          opponentField.classList.add("Field--hit--ship");
+          opponentField.classList.add("field--hit--ship");
         });
       }
     });
@@ -893,7 +892,6 @@ async function IsSRPIsSet() {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 1 || data.status === 2) {
-        // intervalCounter = setInterval(countShots, 1000)
         clearInterval(intervalSRP);
         deleteLoadingScreenForSRP();
         return true;
