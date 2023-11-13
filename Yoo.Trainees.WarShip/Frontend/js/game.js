@@ -1,3 +1,10 @@
+const stateLabel = document.getElementById("socketState");
+
+let player1 = null;
+let activeWordCount1 = 0;
+let activeWordCount2 = 0;
+let messageBox = document.createElement("div");
+
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
@@ -10,6 +17,9 @@ loadHitShips(gamePlayerId);
 const muteButton = document.querySelector(".mute__button");
 let mute = false;
 
+getUser(gamePlayerId);
+
+console.log(player1);
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
@@ -882,3 +892,173 @@ function mapFrontendScissorsRockPaperToBackendEnum(choice) {
   }
 }
 const timer = 2500;
+
+function checkIfMessageIsThere(gameId) {
+  const API_URL = api + gameId + "/Message";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      let wordCount1 = 0;
+      let wordCount2 = 0;
+      data.forEach((message) => {
+        const timeHHMMSS = message.date.split("T")[1].split(":");
+        var li = document.createElement("li");
+        document.getElementById("message-list").appendChild(messageBox);
+
+        if (player1 == message.user) {
+          activeWordCount1 = 1;
+          activeWordCount2 = 0;
+          if (wordCount1 >= 1) {
+            li.innerHTML = `<p class="li--message">${message.text}</p>`;
+          } else {
+            li.innerHTML = `<p class="li--time" style="">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user">${message.user}:</p> <p class="li--message">${message.text}</p>`;
+            messageBox.style.marginTop = "10px";
+            messageBox = document.createElement("div");
+            document.getElementById("message-list").appendChild(messageBox);
+          }
+          messageBox.classList.add("li--right");
+          messageBox.appendChild(li);
+          wordCount1++;
+          wordCount2 = 0;
+        } else {
+          activeWordCount1 = 0;
+          activeWordCount2 = 1;
+          if (wordCount2 >= 1) {
+            li.innerHTML = `<p class="li--message">${message.text}</p>`;
+          } else {
+            li.innerHTML = `<p class="li--time2">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user2">${message.user}:</p> <p class="li--message">${message.text}</p>`;
+            messageBox.style.marginTop = "10px";
+            messageBox = document.createElement("div");
+            document.getElementById("message-list").appendChild(messageBox);
+          }
+          messageBox.classList.add("li--left");
+          messageBox.appendChild(li);
+          wordCount2++;
+          wordCount1 = 0;
+        }
+      });
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+const chatHubApi = api.replace("api/Game/", "chatHub");
+var connection = new signalR.HubConnectionBuilder().withUrl(chatHubApi).build();
+
+console.log(chatHubApi);
+
+//Disable the send button until connection is established.
+document.getElementById("sendButton").disabled = true;
+
+checkIfMessageIsThere(gameId);
+
+connection.on("ReceiveMessage", function (user, message, time) {
+  if (message.trim() !== "") {
+    // split date from yyyy.mm.ddThh:mm:ss to hh:mm:ss
+    const timeHHMMSS = time.split("T")[1].split(":");
+    let li = document.createElement("li");
+    document.getElementById("message-list").appendChild(messageBox);
+    if (player1 == user) {
+      if (activeWordCount1 >= 1) {
+        li.innerHTML = `<p class="li--message">${message}</p>`;
+      } else {
+        li.innerHTML = `<p class="li--time">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user">${user}:</p> <p class="li--message">${message}</p>`;
+        messageBox = document.createElement("div");
+        messageBox.style.marginTop = "10px";
+        document.getElementById("message-list").appendChild(messageBox);
+      }
+      messageBox.classList.add("li--right");
+      messageBox.appendChild(li);
+      activeWordCount1 = 1;
+      activeWordCount2 = 0;
+    } else {
+      if (activeWordCount2 >= 1) {
+        li.innerHTML = `<p class="li--message">${message}</p>`;
+      } else {
+        li.innerHTML = `<p class="li--time2">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user2">${user}:</p> <p class="li--message">${message}</p>`;
+        messageBox.style.marginTop = "10px";
+        messageBox = document.createElement("div");
+        document.getElementById("message-list").appendChild(messageBox);
+      }
+      messageBox.classList.add("li--left");
+      messageBox.appendChild(li);
+      activeWordCount1 = 0;
+      activeWordCount2 = 1;
+    }
+    var messageList = document.getElementById("message-list");
+    messageList.scrollTop = messageList.scrollHeight;
+  }
+});
+
+// create group for the game so that only the players can see the messages
+connection
+  .start()
+  .then(function () {
+    connection.invoke("JoinGroup", gameId).catch(function (err) {
+      return console.error(err.toString());
+    });
+    document.getElementById("sendButton").disabled = false;
+  })
+  .catch(function (err) {
+    return console.error(err.toString());
+  });
+
+document
+  .getElementById("sendButton")
+  .addEventListener("click", function (event) {
+    var user = gamePlayerId;
+    var message = document.getElementById("messageInput").value;
+    connection.invoke("SendMessage", user, message).catch(function (err) {
+      return console.error(err.toString());
+    });
+    event.preventDefault();
+  });
+
+async function getUser(gamePlayerId) {
+  const API_URL = api + gamePlayerId + "/GetUser";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      player1 = data.user;
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+var messageInput = document.getElementById("messageInput");
+messageInput.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    document.getElementById("sendButton").click();
+    messageInput.value = "";
+  }
+});
+
+const sendButton = document.getElementById("sendButton");
+sendButton.addEventListener("click", function (event) {
+  messageInput.value = "";
+});

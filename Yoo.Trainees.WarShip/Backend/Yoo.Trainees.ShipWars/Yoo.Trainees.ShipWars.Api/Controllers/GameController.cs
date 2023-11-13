@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.OpenApi.Any;
+﻿using Microsoft.AspNetCore.Mvc; 
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
@@ -16,7 +14,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         private readonly IGameLogic _gameLogic;
         private readonly IVerificationLogic _verificationLogic;
         private readonly IEmailSender _emailSender;
-        private Game _Game;
+
         public static List<Ship> Ships = new List<Ship>
         {
                 new Ship { Length = 2, Name = "destroyer" },
@@ -33,15 +31,6 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             this._configuration = configuration;
         }
 
-        // GET: api/Game
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        //[Route("FinishedGames")]
-
         // Ready checks in the DB if all ships are placed.
         [HttpGet("{gameId}/Ready")]
         public IActionResult Ready(Guid gameId)
@@ -49,6 +38,14 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             if (_gameLogic.IsReady(gameId))
                 return Ok();
             return BadRequest();
+        }
+
+        // Get all Messages if some one reloads the website
+        [HttpGet("{gameId}/Message")]
+        public IActionResult Message(Guid gameId)
+        {
+            var messages = _gameLogic.GetAllMessages(gameId);
+            return Ok(messages);
         }
 
         // If Player reloads the Website it checks if he already has ships placed.
@@ -135,9 +132,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] string name)
         {
-            this._Game = _gameLogic.CreateGame(name);
-            var linkPlayer1 = CreateLink(this._Game.Id, this._Game.GamePlayers.First().Id);
-            var linkPlayer2 = CreateLink(this._Game.Id, this._Game.GamePlayers.ToArray()[1].Id);
+            var game = _gameLogic.CreateGame(name);
+            var linkPlayer1 = CreateLink(game.Id, game.GamePlayers.First().Id);
+            var linkPlayer2 = CreateLink(game.Id, game.GamePlayers.ToArray()[1].Id);
 
             var links = new 
             {
@@ -149,7 +146,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // Post api/<Game>/5/SaveShips.
         [HttpPost("{id}/SaveShips")]
-        public async Task<IActionResult> Post(Guid id, [FromBody] SaveShipsDto Ships)
+        public async Task<IActionResult> SaveShips(Guid id, [FromBody] SaveShipsDto Ships)
         {
             if (id != Ships.GameId)
             {
@@ -179,12 +176,6 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok();
         }
 
-        // PUT api/<GameController>/5.
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
         // Count ALL shots for the counter and also give information for the nextplayer and game state (Ongoing, Lost, Won, Prep, Complete).
         [HttpGet("{gamePlayerId}/CountShots")]
         public IActionResult CountShots(Guid gamePlayerId)
@@ -194,6 +185,13 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             var gameStateDB = _gameLogic.GetGameState(gamePlayerId);
 
             return Ok(new { shots = countAndNextPlayer.ShotCount, nextPlayer = countAndNextPlayer.IsNextPlayer, gameState = gameStateDB });
+        }
+
+        [HttpGet("{gamePlayerId}/GetUser")]
+        public IActionResult GetUser(Guid gamePlayerId)
+        {
+            var user = _gameLogic.GetCurrentUser(gamePlayerId);
+            return Ok(new { User = user });
         }
 
         // Create link for invitation.
