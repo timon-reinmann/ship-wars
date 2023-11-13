@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Yoo.Trainees.ShipWars.DataBase;
+﻿using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 
@@ -13,6 +12,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         Draw,
         Redo
     }
+
     public enum ShipHit
     {
         Missed,
@@ -27,12 +27,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         Prep,
         Complete
     }
+
     public class GameLogic : IGameLogic
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IConfiguration _configuration;
         private IVerificationLogic _verificationLogic;
-        private Game _Game;
 
         public GameLogic(ApplicationDbContext applicationDbContext, IVerificationLogic verificationLogic, IConfiguration configuration)
         {
@@ -69,7 +69,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 PlayerId = player2.Id
             });
 
-            this._Game = new Game
+            var game = new Game
             {
                 Id = gameId,
                 Name = name,
@@ -81,17 +81,17 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             _applicationDbContext.Player.Add(player1);
             _applicationDbContext.Player.Add(player2);
-            _applicationDbContext.Game.Add(this._Game);
+            _applicationDbContext.Game.Add(game);
             _applicationDbContext.SaveChanges();
 
-            return this._Game;
+            return game;
         }
         public void CreateBoard(SaveShipsDto SwaggerData)
         {
             var game = _applicationDbContext.Game.Find(SwaggerData.GameId);
             if (game == null)
             {
-                throw new Exception("_Game not found");
+                throw new Exception("game not found");
             }
             Guid id = new Guid();
             for (var i = 0; i < SwaggerData.Ships.Length; i++)
@@ -102,8 +102,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 {
                     Id = Guid.NewGuid(),
                     GamePlayerId = Guid.Parse(SwaggerData.GamePlayerId.ToString()),
-                    ShipId = Guid.Parse(shipType.Id.ToString()),                                      
-                    X = Ship.X,                                                                  
+                    ShipId = Guid.Parse(shipType.Id.ToString()),
+                    X = Ship.X,
                     Y = Ship.Y,
                     Direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship.Direction,
                     Life = shipType.Length
@@ -117,11 +117,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         public bool IsReady(Guid gameId)
         { 
             var gamePlayers = from s in _applicationDbContext.GamePlayer
-                      where s.GameId == gameId
-                      select s;
+                              where s.GameId == gameId
+                              select s;
             var gamePlayer1 = from s in _applicationDbContext.ShipPosition
-                                   where s.GamePlayerId == gamePlayers.First().Id
-                                   select s;
+                              where s.GamePlayerId == gamePlayers.First().Id
+                              select s;
             var gamePlayer2 = from s in _applicationDbContext.ShipPosition
                               where s.GamePlayerId == gamePlayers.ToArray()[1].Id
                               select s;
@@ -146,7 +146,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             Guid? nextPlayerId = game.NextPlayer;
 
-            if(nextPlayerId == gamePlayerId)
+            if (nextPlayerId == gamePlayerId)
             {
                 var nextPlayer = (from gp in _applicationDbContext.GamePlayer
                                   where gp.Id != nextPlayerId && gp.GameId.Equals(gameId)
@@ -163,8 +163,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             var game = GetGame(gamePlayerId);
             SaveShotsDto shot = new SaveShotsDto { X = xy.X, Y = xy.Y};
             var shots = (from s in _applicationDbContext.Shot
-                        where s.Player.Id == gamePlayerId
-                        select new SaveShotsDto { X = s.X, Y = s.Y })
+                         where s.Player.Id == gamePlayerId
+                         select new SaveShotsDto { X = s.X, Y = s.Y })
                         .ToList();
 
             if (!_verificationLogic.VerifyShot(shots, shot))
@@ -181,8 +181,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 .FirstOrDefault(x => x.Id == gamePlayerId)?.Player;
 
             var gamePlayer = (from gp in _applicationDbContext.GamePlayer
-                           where gp.Id == gamePlayerId
-                           select gp).FirstOrDefault();
+                              where gp.Id == gamePlayerId
+                              select gp).FirstOrDefault();
             var shotToSave = new Shot
             {
                 Id = Guid.NewGuid(),
@@ -216,7 +216,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         {
             var gamePlayer = _applicationDbContext.GamePlayer.FirstOrDefault(x => x.Id == gamePlayerId);
 
-            if (gamePlayer != null) {
+            if (gamePlayer != null)
+            {
                 gamePlayer.ScissorsRockPaperBet = scissorsRockPaperBet;
                 _applicationDbContext.GamePlayer.Update(gamePlayer);
                 _applicationDbContext.SaveChanges();
@@ -235,14 +236,14 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             if (player1.ScissorsRockPaperBet == null) return RockPaperScissorsState.Redo;
             if (player2.ScissorsRockPaperBet == null || game == null) return RockPaperScissorsState.Waiting;
-            if (player1.ScissorsRockPaperBet == player2.ScissorsRockPaperBet) 
+            if (player1.ScissorsRockPaperBet == player2.ScissorsRockPaperBet)
             {
                 player1.ScissorsRockPaperBet = null;
                 player2.ScissorsRockPaperBet = null;
                 _applicationDbContext.GamePlayer.Update(player1);
                 _applicationDbContext.GamePlayer.Update(player2);
                 _applicationDbContext.SaveChanges();
-                return RockPaperScissorsState.Draw; 
+                return RockPaperScissorsState.Draw;
             }
 
             bool isPlayer1Loser = CheckIfPlayer1IsLoser(player1, player2);
@@ -273,11 +274,17 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             this._verificationLogic = new VerificationLogic();
             var ships = (from sp in _applicationDbContext.ShipPosition
                          where sp.GamePlayer.Id.Equals(player2.Id)
-                         select new SaveShipDto { Direction = (Yoo.Trainees.ShipWars.Api.Direction)sp.Direction, Id = sp.Id, ShipType = sp.Ship.Name ,
-                                                    X = sp.X, Y = sp.Y}).ToList();
+                         select new SaveShipDto
+                         {
+                             Direction = (Yoo.Trainees.ShipWars.Api.Direction)sp.Direction,
+                             Id = sp.Id,
+                             ShipType = sp.Ship.Name,
+                             X = sp.X,
+                             Y = sp.Y
+                         }).ToList();
 
             var ship = _verificationLogic.VerifyShipHit(ships, xy);
-            if(ship == null)
+            if (ship == null)
             {
                 return ShipHit.Missed;
             }
@@ -289,7 +296,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             _applicationDbContext.SaveChanges();
             return ShipHit.Hit;
         }
-        
+
         public ShotInfoDto CountShotsInDB(Guid gamePlayerId)
         {
             var game = GetGame(gamePlayerId);
@@ -297,7 +304,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                          join s in _applicationDbContext.Shot on gp equals s.Player
                          where gp.GameId == game.Id
                          select s).Count();
-            
+
             // Return number of Shots and if you are the next player
             return new ShotInfoDto { ShotCount = count, IsNextPlayer = game.NextPlayer == gamePlayerId ? 1 : 0 };
         }
@@ -337,6 +344,27 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             }
 
             return gameState;
+        }
+
+        public List<MessageDto> GetAllMessages(Guid gameId)
+        {
+            var players = (from gp in _applicationDbContext.GamePlayer
+                           where gp.GameId.Equals(gameId)
+                           select gp).ToList();
+            var messages = (from m in _applicationDbContext.Message
+                            where m.GamePlayers.Id.Equals(players[0].Id) || m.GamePlayers.Id.Equals(players[1].Id)
+                            orderby m.Date ascending
+                            select new MessageDto { Date = m.Date, Text = m.Text, User = m.GamePlayers.Player.Name }).ToList();
+            return messages;
+        }
+
+        public String GetCurrentUser(Guid gamePlayerId)
+        {
+            var user = (from gp in _applicationDbContext.GamePlayer
+                        join p in _applicationDbContext.Player on gp.PlayerId equals p.Id
+                        where gp.Id.Equals(gamePlayerId)
+                        select p.Name).SingleOrDefault();
+            return user;
         }
 
         private Game? GetGame(Guid gamePlayerId) { 

@@ -1,15 +1,25 @@
+const stateLabel = document.getElementById("socketState");
+
+let player1 = null;
+let activeWordCount1 = 0;
+let activeWordCount2 = 0;
+let messageBox = document.createElement("div");
+
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
 
-Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)])
+Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
 loadHitShips(gamePlayerId);
 
 const muteButton = document.querySelector(".mute__button");
 let mute = false;
 
+getUser(gamePlayerId);
+
+console.log(player1);
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
@@ -29,7 +39,7 @@ const ScissorsRockPaperEnum = {
   Paper: 2,
 };
 
-const sound = new Audio("../sound/pewpew.mp3")
+const sound = new Audio("../sound/pewpew.mp3");
 
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
@@ -53,7 +63,7 @@ const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
 const SRP = document.querySelector(".rock-paper-scissors-container");
 
-localStorage.setItem('srpReload', 'false');
+localStorage.setItem("srpReload", "false");
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("mouseover", (e) => {
@@ -66,7 +76,7 @@ draggables.forEach((draggable) => {
       currentY,
       parseInt(draggable.getAttribute("data-size"))
     );
-    if(isValid){
+    if (isValid) {
       draggable.style.setProperty("--opacityBefore", 1);
       hoverTimer = setTimeout(() => {
         draggable.style.setProperty("--opacityAfter", 1);
@@ -100,7 +110,7 @@ draggables.forEach((draggable) => {
   draggable.addEventListener("dragstart", (e) => {
     let img = new Image();
     const imgName = draggable.getAttribute("data-name");
-    img.src = "../img/"+imgName+".png";
+    img.src = "../img/" + imgName + ".png";
     e.dataTransfer.setDragImage(img, 0, 0);
     originField = draggable.parentNode;
     draggable.classList.add("dragging");
@@ -202,11 +212,12 @@ opponentFields.forEach((opponentField) => {
   opponentField.addEventListener("click", async (e) => {
     clearInterval(intervalShots);
     const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
-    if(!isReadyToShoot) {return}
+    if (!isReadyToShoot) {
+      return;
+    }
     const currentX = parseInt(opponentField.getAttribute("data-x"));
     const currentY = parseInt(opponentField.getAttribute("data-y"));
-    const API_URL =
-      api + gamePlayerId + "/SaveShot";
+    const API_URL = api + gamePlayerId + "/SaveShot";
     fetch(API_URL, {
       credentials: "omit",
       headers: {
@@ -223,16 +234,16 @@ opponentFields.forEach((opponentField) => {
       .then((response) => response.json())
       .then((data) => {
         sound.play();
-        const cursor = document.querySelector('.cursor');
-        cursor.classList.add('recoil-animation');
+        const cursor = document.querySelector(".cursor");
+        cursor.classList.add("recoil-animation");
         setTimeout(() => {
-          cursor.classList.remove('recoil-animation');
+          cursor.classList.remove("recoil-animation");
         }, 200);
-        if(data.hit === 1 || data.hit === 0) {
+        if (data.hit === 1 || data.hit === 0) {
           opponentField.classList.add("Field--hit");
           intervalShots = setInterval(loadShotsFromOpponent, 2000);
-        } 
-        if(data.hit === 1) {
+        }
+        if (data.hit === 1) {
           opponentField.classList.add("Field--hit--ship");
           showExplosionAnimation(opponentField);
         }
@@ -269,7 +280,7 @@ muteButton.addEventListener("mouseout", () => {
 });
 muteButton.addEventListener("click", () => {
   mute = !mute;
-  if(mute) {
+  if (mute) {
     muteButton.children[0].classList.add("fa-volume-xmark");
     muteButton.children[0].classList.remove("fa-volume-high");
     sound.volume = 0;
@@ -500,14 +511,14 @@ function screenBlocker() {
 
 function showExplosionAnimation(fieldElement) {
   // Erstelle ein neues <img> Element
-  const img = document.createElement('img');
-  img.src = '../img/explosion.gif';
-  img.style.height = '50px';
-  img.style.width = '50px';
-  
+  const img = document.createElement("img");
+  img.src = "../img/explosion.gif";
+  img.style.height = "50px";
+  img.style.width = "50px";
+
   // Füge das <img> Element zum Ziel-Feld hinzu
   fieldElement.appendChild(img);
-  
+
   // Entferne das <img> Element nach einer bestimmten Zeit (z.B. 3 Sekunden)
   setTimeout(() => {
     fieldElement.removeChild(img);
@@ -537,7 +548,7 @@ async function checkReadyToShoot(gamePlayerId) {
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
-    return test;
+  return test;
 }
 
 function CheckIfBoardSet(gameId) {
@@ -599,7 +610,7 @@ function loadFiredShots(gamePlayerId) {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
 }
-function loadShotsFromOpponent(){
+function loadShotsFromOpponent() {
   loadShotsFromOpponentFromTheDB(gamePlayerId);
 }
 function loadShotsFromOpponentFromTheDB(gamePlayerId) {
@@ -678,38 +689,38 @@ function loadGameBoard(data) {
 }
 
 function loadHitShips(gamePlayerId) {
-  const API_URL =
-      api + gamePlayerId + "/LoadHitShips";
-    fetch(API_URL, {
-      credentials: "omit",
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-        Accept: "*/*",
-        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-        "Content-Type": "application/json",
-        "Sec-Fetch-Dest": "empty",
-      },
-      method: "GET",
-    }).then((response) => response.json())
-      .then((data) => {
-        if (data) {
-          data.forEach((shots) => {
-            const X = shots.x;
-            const Y = shots.y;
-            const opponentFields = document.getElementById("opponent__board");
-            const opponentField = opponentFields.querySelector(
-              `[data-x="${X}"][data-y="${Y}"]`
-            );
-            opponentField.classList.add("Field--hit--ship");
-          });
-        }
-      });
+  const API_URL = api + gamePlayerId + "/LoadHitShips";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        data.forEach((shots) => {
+          const X = shots.x;
+          const Y = shots.y;
+          const opponentFields = document.getElementById("opponent__board");
+          const opponentField = opponentFields.querySelector(
+            `[data-x="${X}"][data-y="${Y}"]`
+          );
+          opponentField.classList.add("Field--hit--ship");
+        });
+      }
+    });
 }
 
 async function ScissorsRockPaper() {
-  const SRPFindished = await IsSRPIsSet(gamePlayerId); 
-  if(!SRPFindished) {
+  const SRPFindished = await IsSRPIsSet(gamePlayerId);
+  if (!SRPFindished) {
     scissors.classList.add("scissors--active");
     rock.classList.add("rock--active");
     paper.classList.add("paper--active");
@@ -733,25 +744,24 @@ function createLoadingScreenForSRP() {
 }
 
 function deleteLoadingScreenForSRP() {
-    const finish = document.querySelector(".finish");
-    const commit_button = document.querySelector(".commit-button");
-    const ring = document.querySelector(".ring");
-    const shipSelection = document.querySelector(".ship__selection");
-    shipSelection.classList.remove("ship__selection");
-    ring.classList.remove("ring--active");
-    finish.classList.remove("active-popup");
-    remove(commit_button);
+  const finish = document.querySelector(".finish");
+  const commit_button = document.querySelector(".commit-button");
+  const ring = document.querySelector(".ring");
+  const shipSelection = document.querySelector(".ship__selection");
+  shipSelection.classList.remove("ship__selection");
+  ring.classList.remove("ring--active");
+  finish.classList.remove("active-popup");
+  remove(commit_button);
 }
 
 SRPChoice.forEach((srp) => {
   srp.addEventListener("click", function () {
-    localStorage.setItem('srpReload', 'true');
+    localStorage.setItem("srpReload", "true");
     const choice = mapFrontendScissorsRockPaperToBackendEnum(
       srp.dataset.choice
     );
 
-    const API_URL =
-      api + gamePlayerId + "/SaveSRP";
+    const API_URL = api + gamePlayerId + "/SaveSRP";
     fetch(API_URL, {
       credentials: "omit",
       headers: {
@@ -764,13 +774,12 @@ SRPChoice.forEach((srp) => {
       },
       body: JSON.stringify(choice),
       method: "PUT",
-    })
-      .then((data) => {
-        if (data) {
-          createLoadingScreenForSRP()
-          intervalSRP = setInterval(IsSRPIsSet, 1000);
-        }
-      });
+    }).then((data) => {
+      if (data) {
+        createLoadingScreenForSRP();
+        intervalSRP = setInterval(IsSRPIsSet, 1000);
+      }
+    });
   });
 });
 async function IsSRPIsSet() {
@@ -795,16 +804,19 @@ async function IsSRPIsSet() {
         deleteLoadingScreenForSRP();
         return true;
       }
-      if((data.status === 4 || data.status === 3) && localStorage.getItem('srpReload') === 'true'){
-        localStorage.setItem('srpReload', 'false');
+      if (
+        (data.status === 4 || data.status === 3) &&
+        localStorage.getItem("srpReload") === "true"
+      ) {
+        localStorage.setItem("srpReload", "false");
         location.reload();
       }
       return false;
     });
-    return result;
+  return result;
 }
 
-function countShots(){
+function countShots() {
   const API_URL = api + gamePlayerId + "/CountShots";
   fetch(API_URL, {
     credentials: "omit",
@@ -821,7 +833,7 @@ function countShots(){
     .then((response) => response.json())
     .then((data) => {
       const counter = document.querySelector(".counter");
-      if(data.nextPlayer === 1) {
+      if (data.nextPlayer === 1) {
         counter.classList.add("counter--active");
         document.querySelector(".cursor").classList.add("cursor--active");
         document.body.style.cursor = "none";
@@ -833,11 +845,11 @@ function countShots(){
       if (data.shots) {
         counter.innerHTML = data.shots;
       }
-      if(data.gameState === 1 || data.gameState === 2) {
+      if (data.gameState === 1 || data.gameState === 2) {
         clearInterval(intervalCounter);
         clearInterval(intervalShots);
       }
-      if(data.gameState === 1){
+      if (data.gameState === 1) {
         const winContainer = document.querySelector(".container");
         winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
         document.body.style.margin = "0";
@@ -848,7 +860,7 @@ function countShots(){
           document.body.style.margin = "5";
           document.body.style.overflowY = "visvible";
         });
-      } else if (data.gameState === 2){
+      } else if (data.gameState === 2) {
         const looseContainer = document.querySelector(".container");
         looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
         document.body.style.margin = "0";
@@ -879,3 +891,172 @@ function mapFrontendScissorsRockPaperToBackendEnum(choice) {
       throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }
+
+function checkIfMessageIsThere(gameId) {
+  const API_URL = api + gameId + "/Message";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      let wordCount1 = 0;
+      let wordCount2 = 0;
+      data.forEach((message) => {
+        const timeHHMMSS = message.date.split("T")[1].split(":");
+        var li = document.createElement("li");
+        document.getElementById("message-list").appendChild(messageBox);
+
+        if (player1 == message.user) {
+          activeWordCount1 = 1;
+          activeWordCount2 = 0;
+          if (wordCount1 >= 1) {
+            li.innerHTML = `<p class="li--message">${message.text}</p>`;
+          } else {
+            li.innerHTML = `<p class="li--time" style="">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user">${message.user}:</p> <p class="li--message">${message.text}</p>`;
+            messageBox.style.marginTop = "10px";
+            messageBox = document.createElement("div");
+            document.getElementById("message-list").appendChild(messageBox);
+          }
+          messageBox.classList.add("li--right");
+          messageBox.appendChild(li);
+          wordCount1++;
+          wordCount2 = 0;
+        } else {
+          activeWordCount1 = 0;
+          activeWordCount2 = 1;
+          if (wordCount2 >= 1) {
+            li.innerHTML = `<p class="li--message">${message.text}</p>`;
+          } else {
+            li.innerHTML = `<p class="li--time2">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user2">${message.user}:</p> <p class="li--message">${message.text}</p>`;
+            messageBox.style.marginTop = "10px";
+            messageBox = document.createElement("div");
+            document.getElementById("message-list").appendChild(messageBox);
+          }
+          messageBox.classList.add("li--left");
+          messageBox.appendChild(li);
+          wordCount2++;
+          wordCount1 = 0;
+        }
+      });
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+var connection = new signalR.HubConnectionBuilder()
+  .withUrl("https://localhost:7118/chatHub")
+  .build();
+
+//Disable the send button until connection is established.
+document.getElementById("sendButton").disabled = true;
+
+checkIfMessageIsThere(gameId);
+
+connection.on("ReceiveMessage", function (user, message, time) {
+  if (message.trim() !== "") {
+    // split date from yyyy.mm.ddThh:mm:ss to hh:mm:ss
+    const timeHHMMSS = time.split("T")[1].split(":");
+    let li = document.createElement("li");
+    document.getElementById("message-list").appendChild(messageBox);
+    if (player1 == user) {
+      if (activeWordCount1 >= 1) {
+        li.innerHTML = `<p class="li--message">${message}</p>`;
+      } else {
+        li.innerHTML = `<p class="li--time">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user">${user}:</p> <p class="li--message">${message}</p>`;
+        messageBox = document.createElement("div");
+        messageBox.style.marginTop = "10px";
+        document.getElementById("message-list").appendChild(messageBox);
+      }
+      messageBox.classList.add("li--right");
+      messageBox.appendChild(li);
+      activeWordCount1 = 1;
+      activeWordCount2 = 0;
+    } else {
+      if (activeWordCount2 >= 1) {
+        li.innerHTML = `<p class="li--message">${message}</p>`;
+      } else {
+        li.innerHTML = `<p class="li--time2">${timeHHMMSS[0]}:${timeHHMMSS[1]}</p>  &ensp; <p class="li--user2">${user}:</p> <p class="li--message">${message}</p>`;
+        messageBox.style.marginTop = "10px";
+        messageBox = document.createElement("div");
+        document.getElementById("message-list").appendChild(messageBox);
+      }
+      messageBox.classList.add("li--left");
+      messageBox.appendChild(li);
+      activeWordCount1 = 0;
+      activeWordCount2 = 1;
+    }
+    var messageList = document.getElementById("message-list");
+    messageList.scrollTop = messageList.scrollHeight;
+  }
+});
+
+// create group for the game so that only the players can see the messages
+connection
+  .start()
+  .then(function () {
+    connection.invoke("JoinGroup", gameId).catch(function (err) {
+      return console.error(err.toString());
+    });
+    document.getElementById("sendButton").disabled = false;
+  })
+  .catch(function (err) {
+    return console.error(err.toString());
+  });
+
+document
+  .getElementById("sendButton")
+  .addEventListener("click", function (event) {
+    var user = gamePlayerId;
+    var message = document.getElementById("messageInput").value;
+    connection.invoke("SendMessage", user, message).catch(function (err) {
+      return console.error(err.toString());
+    });
+    event.preventDefault();
+  });
+
+async function getUser(gamePlayerId) {
+  const API_URL = api + gamePlayerId + "/GetUser";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      player1 = data.user;
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+var messageInput = document.getElementById("messageInput");
+messageInput.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    document.getElementById("sendButton").click();
+    messageInput.value = "";
+  }
+});
+
+const sendButton = document.getElementById("sendButton");
+sendButton.addEventListener("click", function (event) {
+  messageInput.value = "";
+});

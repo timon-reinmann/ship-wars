@@ -24,22 +24,22 @@ namespace Yoo.Trainees.ShipWars.DataBase
             modelBuilder.Entity<Ship>().HasData(
             new Ship
             {
-                Id = Guid.NewGuid(),
+                Id = new Guid("45652d4e-10be-4b26-a8a8-c6de9a4e49af"),
                 Length = 1,
                 Name = "Submarine"
             }, new Ship
             {
-                Id = Guid.NewGuid(),
+                Id = new Guid("a735b8ec-c868-45fa-81bc-942eda165a8f"),
                 Length = 2,
                 Name = "Destroyer"
             }, new Ship
             {
-                Id = Guid.NewGuid(),
+                Id = new Guid("985497b3-353c-49d3-97a0-79232a270da0"),
                 Length = 3,
                 Name = "Cruiser"
             }, new Ship
             {
-                Id = Guid.NewGuid(),
+                Id = new Guid("eee6167b-6588-42d9-b657-7698a2f5ca40"),
                 Length = 4,
                 Name = "Warship"
             });
