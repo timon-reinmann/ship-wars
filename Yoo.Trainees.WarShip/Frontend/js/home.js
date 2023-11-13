@@ -75,4 +75,4 @@ function EventListernerClose(Item) {
   });
 }
 
-const timer = 199200;
+const removeVideoTimer = 199200;
