@@ -1,0 +1,32 @@
+canvas {
+  border: 1px solid #d3d3d3;
+  background-color: #f1f1f1;
+}
+canvas--active {
+  transform: scale(0);
+}
+
+.accelerate-btn--active {
+  transform: scale(0);
+}
+
+.gift {
+  font-size: 100px;
+  width: 500px;
+  height: 250px;
+  position: absolute;
+  top: 40%;
+  left: 35%;
+  transform: scale(0);
+}
+
+.gift:hover,
+a:hover {
+  background-color: transparent;
+  border: transparent;
+  color: transparent;
+}
+
+.gift--active {
+  transform: scale(1);
+}
