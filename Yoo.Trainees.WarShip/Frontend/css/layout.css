@@ -55,6 +55,7 @@ body {
 .shipwars__navbar {
   display: flex;
   justify-content: space-between;
+  user-select: none;
 }
 
 .navbar__list {
@@ -72,6 +73,7 @@ body {
   margin-bottom: 3rem;
   border: 1px solid #fefefe;
   transform: skew(30deg);
+  user-select: none;
 }
 
 .navbar__list ul {
