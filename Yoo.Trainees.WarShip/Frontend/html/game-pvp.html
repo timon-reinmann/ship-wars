@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <button class="easter-egg" id="play-button"></button>
-    <video class="video" id="myVideo" controls>
+    <video class="video" id="myVideo" data-length="2500" controls>
       <source src="/Frontend/img/_click_nice.mp4" type="video/mp4" />
     </video>
     <meta charset="UTF-8" />
@@ -14,7 +14,8 @@
       rel="icon"
       href="../img/favicon.ico"
       type="image/x-icon"
-      sizes="32x32" />
+      sizes="32x32"
+    />
   </head>
   <body>
     <div class="background-animation"></div>
@@ -39,70 +40,80 @@
             data-size="4"
             data-name="warship"
             draggable="true"
-            id="Warship1"></div>
+            id="Warship1"
+          ></div>
           <div
             class="ship cruiser"
             data-direction="horizontal"
             data-size="3"
             data-name="cruiser"
             draggable="true"
-            id="cruiser1"></div>
+            id="cruiser1"
+          ></div>
           <div
             class="ship cruiser"
             data-direction="horizontal"
             data-size="3"
             data-name="cruiser"
             draggable="true"
-            id="cruiser2"></div>
+            id="cruiser2"
+          ></div>
           <div
             class="ship destroyer"
             data-direction="horizontal"
             data-size="2"
             data-name="destroyer"
             draggable="true"
-            id="destroyer1"></div>
+            id="destroyer1"
+          ></div>
           <div
             class="ship destroyer"
             data-direction="horizontal"
             data-size="2"
             data-name="destroyer"
             draggable="true"
-            id="destroyer2"></div>
+            id="destroyer2"
+          ></div>
           <div
             class="ship destroyer"
             data-direction="horizontal"
             data-size="2"
             data-name="destroyer"
             draggable="true"
-            id="destroyer3"></div>
+            id="destroyer3"
+          ></div>
           <div
             class="ship submarine"
             data-direction="horizontal"
             data-size="1"
             data-name="submarine"
             draggable="true"
-            id="submarine1"></div>
+            id="submarine1"
+          ></div>
           <div
             class="ship submarine"
             data-direction="horizontal"
             data-size="1"
             data-name="submarine"
             draggable="true"
-            id="submarine2"></div>
+            id="submarine2"
+          ></div>
           <div
             class="ship submarine"
             data-direction="horizontal"
             data-size="1"
             data-name="submarine"
             draggable="true"
-            id="submarine3"></div>
+            id="submarine3"
+          ></div>
           <div
             class="ship submarine"
             data-direction="horizontal"
             data-size="1"
             data-name="submarine"
             draggable="true"
-            id="submarine4"></div>
+            id="submarine4"
+          ></div>
         </aside>
 
         <button class="commit-button" id="commit_button">Commit</button>
@@ -126,7 +137,8 @@
 
         <div class="error-popup">
           <i
-            class="fa-sharp fa-solid fa-circle-exclamation fa-beat-fade fa-2xl"></i>
+            class="fa-sharp fa-solid fa-circle-exclamation fa-beat-fade fa-2xl"
+          ></i>
           <p class="error-popup__text">failed to save ships</p>
           <div class="error-popup__xmark-icon">
             <i class="fa-solid fa-xmark"></i>
@@ -151,7 +163,8 @@
             <button id="sendButton" class="send-button">
               <i
                 class="fa-solid fa-paper-plane-top fa-lg"
-                style="color: #ededed"></i>
+                style="color: #ededed"
+              ></i>
             </button>
           </div>
         </div>
@@ -163,7 +176,8 @@
     <script src="../js/Play-Easter-eggs-Video.js"></script>
     <script
       src="https://kit.fontawesome.com/d6df3707cf.js"
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous"
+    ></script>
     <div id="socketState"></div>
     <script src="../js/cursor.js"></script>
     <script src="../js/API-ShipWars-ApiLink.js"></script>

@@ -74,5 +74,3 @@ function EventListernerClose(Item) {
     e.target.parentElement.close();
   });
 }
-
-const removeVideoTimer = 199200;

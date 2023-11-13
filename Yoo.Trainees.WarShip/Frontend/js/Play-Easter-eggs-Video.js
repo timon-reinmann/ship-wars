@@ -1,8 +1,9 @@
 var video = document.getElementById("myVideo");
 var playButton = document.getElementById("play-button");
 const videoNice = document.querySelector(".video");
+var removeVideoTimer = video.getAttribute("data-length");
 
-playButton.addEventListener("click", function () {
+function playVideo(removeVideoTimer) {
   if (video.ended) {
     video.currentTime = 0;
   }
@@ -11,4 +12,8 @@ playButton.addEventListener("click", function () {
   setTimeout(function () {
     videoNice.classList.remove("video--active");
   }, removeVideoTimer);
+}
+
+playButton.addEventListener("click", function (e) {
+  playVideo(removeVideoTimer);
 });

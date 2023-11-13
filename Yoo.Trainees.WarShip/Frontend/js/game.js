@@ -891,7 +891,6 @@ function mapFrontendScissorsRockPaperToBackendEnum(choice) {
       throw new Error("Ungültige Richtung im Frontend: " + frontendDirection);
   }
 }
-const removeVideoTimer = 2500;
 
 function checkIfMessageIsThere(gameId) {
   const API_URL = api + gameId + "/Message";
