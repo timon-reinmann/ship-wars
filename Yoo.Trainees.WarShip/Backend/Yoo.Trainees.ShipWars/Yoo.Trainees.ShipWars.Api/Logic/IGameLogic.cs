@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Yoo.Trainees.ShipWars.DataBase.Entities;
+﻿using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
 {
