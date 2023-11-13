@@ -953,9 +953,10 @@ function checkIfMessageIsThere(gameId) {
     });
 }
 
-var connection = new signalR.HubConnectionBuilder()
-  .withUrl("https://localhost:7118/chatHub")
-  .build();
+const chatHubApi = api.replace("api/Game/", "chatHub");
+var connection = new signalR.HubConnectionBuilder().withUrl(chatHubApi).build();
+
+console.log(chatHubApi);
 
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
