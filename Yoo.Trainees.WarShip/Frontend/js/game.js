@@ -46,10 +46,9 @@ connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
     counter.innerHTML = shots;
   }
   if (gameState === 1 || gameState === 2) {
-    clearInterval(intervalCounter);
-    clearInterval(intervalShots);
+    connectionGameHub.stop();
   }
-  if (gameState === 1) {
+  if (gameState === 1 && nextPlayer.toString() === gamePlayerId) {
     const winContainer = document.querySelector(".container");
     winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
     document.body.style.margin = "0";
@@ -60,7 +59,7 @@ connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
       document.body.style.margin = "5";
       document.body.style.overflowY = "visvible";
     });
-  } else if (gameState === 2) {
+  } else if (gameState === 1 && nextPlayer.toString() !== gamePlayerId) {
     const looseContainer = document.querySelector(".container");
     looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
     document.body.style.margin = "0";
@@ -131,8 +130,6 @@ let currentField = null;
 
 let intervalid;
 let intervalSRP;
-let intervalShots;
-let intervalCounter;
 let hoverTimer = null;
 
 const draggables = document.querySelectorAll(".ship");
@@ -938,8 +935,7 @@ function countShots() {
         counter.innerHTML = data.shots;
       }
       if (data.gameState === 1 || data.gameState === 2) {
-        clearInterval(intervalCounter);
-        clearInterval(intervalShots);
+        connectionGameHub.stop();
       }
       if (data.gameState === 1) {
         const winContainer = document.querySelector(".container");
