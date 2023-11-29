@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invite</title>
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/create-game-bot.css" />
+    <link
+      rel="icon"
+      href="../img/favicon.ico"
+      type="image/x-icon"
+      sizes="32x32"
+    />
+  </head>
+  <body>
+    <div class="background-animation"></div>
+    <div class="container">
+      <nav class="shipwars__navbar">
+        <a href="../index.html" class="shipwars__logo"></a>
+        <div class="navbar__list">
+          <ul>
+            <li><a style="user-select: none" href="../index.html">Home</a></li>
+            <li><a style="user-select: none" href="#">Friends</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <!-- Einfügen von Lobbyname Label plus Button zum submiten -->
+    <!--Timon tags wie input am Schluss immer /> bitte-->
+    <div class="container__lobbyname">
+      <div class="submit__lobbyname">
+        <input
+          type="text"
+          class="text"
+          placeholder="lobbyname"
+          id="lobbyname"
+        /><br />
+        <button>
+          <span class="icon_create" id="lobbyinput" type="submit"
+            ><ion-icon name="create"></ion-icon
+          ></span>
+        </button>
+      </div>
+    </div>
+    <a href="" class="join__button">Join Game</a>
+    <script src="../js/API-ShipWars-ApiLink.js"></script>
+    <script type="module" src="../js/create-game-bot.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/35470b0449.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

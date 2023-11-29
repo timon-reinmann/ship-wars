@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <button class="easter-egg" id="play-button"></button>
+    <video class="video" id="myVideo" data-length="2500" controls>
+      <source src="/Frontend/img/_click_nice.mp4" type="video/mp4" />
+    </video>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Game vs. Bot</title>
+    <title>Game vs. Player</title>
     <link rel="stylesheet" href="../css/layout.css" />
     <link rel="stylesheet" href="../css/game-pve.css" />
     <link
@@ -16,6 +20,7 @@
   <body>
     <div class="background-animation"></div>
     <div class="container">
+      <div class="cursor"></div>
       <nav class="shipwars__navbar">
         <a href="../index.html" class="shipwars__logo"></a>
         <div class="navbar__list">
@@ -140,20 +145,41 @@
           </div>
         </div>
 
-        <div class="SRP">
-          <p>Play scissors rock paper to choos who starts</p>
+        <div class="rock-paper-scissors-container">
+          <p>Play rock paper scissors to choose who starts</p>
           <button class="scissors SRP-choice" data-choice="scissors">✂️</button>
           <button class="rock SRP-choice" data-choice="rock">🪨</button>
           <button class="paper SRP-choice" data-choice="paper">📄</button>
         </div>
 
-        <script src="../js/API-ShipWars-ApiLink.js"></script>
-        <script src="../js/game.js"></script>
-        <script
-          src="https://kit.fontawesome.com/d6df3707cf.js"
-          crossorigin="anonymous"
-        ></script>
+        <button class="mute__button">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+
+        <div class="chatBox">
+          <ul id="message-list"></ul>
+          <div class="a">
+            <input type="text" class="message-text" id="messageInput" />
+            <button id="sendButton" class="send-button">
+              <i
+                class="fa-solid fa-paper-plane-top fa-lg"
+                style="color: #ededed"
+              ></i>
+            </button>
+          </div>
+        </div>
       </main>
     </div>
+
+    <script src="../js/signalr.js"></script>
+    <script defer src="../js/game.js"></script>
+    <script src="../js/Play-Easter-eggs-Video.js"></script>
+    <script
+      src="https://kit.fontawesome.com/d6df3707cf.js"
+      crossorigin="anonymous"
+    ></script>
+    <div id="socketState"></div>
+    <script src="../js/cursor.js"></script>
+    <script src="../js/API-ShipWars-ApiLink.js"></script>
   </body>
 </html>
