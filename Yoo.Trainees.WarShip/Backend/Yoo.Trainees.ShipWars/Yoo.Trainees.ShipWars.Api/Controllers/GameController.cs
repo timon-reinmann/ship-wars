@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc; 
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
+using Yoo.Trainees.ShipWars.DataBase.Migrations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -130,11 +131,11 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // POST api/<GameController>.
         [HttpPost]
-        public IActionResult Post([FromBody] string name)
+        public IActionResult Post([FromBody] GameDto gameDto)
         {
-            var game = _gameLogic.CreateGame(name);
-            var linkPlayer1 = CreateLink(game.Id, game.GamePlayers.First().Id);
-            var linkPlayer2 = CreateLink(game.Id, game.GamePlayers.ToArray()[1].Id);
+            var game = _gameLogic.CreateGame(gameDto.Name, gameDto.Bot);
+            var linkPlayer1 = CreateLink(game.Id, game.GamePlayers.First().Id, gameDto.Bot);
+            var linkPlayer2 = CreateLink(game.Id, game.GamePlayers.ToArray()[1].Id, gameDto.Bot);
 
             var links = new 
             {
@@ -194,10 +195,12 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return Ok(new { User = user });
         }
 
-        // Create link for invitation.
-        private String CreateLink(Guid gameId, Guid gamePlayerId)
+            // Create link for invitation.
+            private String CreateLink(Guid gameId, Guid gamePlayerId, bool bot)
         {
-            return _configuration["Link:URL"] + gameId + "&gamePlayerId=" + gamePlayerId;
+            
+            return bot ? _configuration["Link:URL-PVE"] + gameId + "&gamePlayerId=" + gamePlayerId : _configuration["Link:URL-PVP"] + gameId + "&gamePlayerId=" + gamePlayerId;
         }
+
     }
 }

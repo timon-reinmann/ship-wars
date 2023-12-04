@@ -4,7 +4,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 {
     public interface IGameLogic
     {
-        Game CreateGame(string name);
+        Game CreateGame(string name, bool bot);
         void CreateBoard(SaveShipsDto Ships);
         bool IsReady(Guid gameId);
         ShipPositionDto[] GetCompleteShipPositionsForGamePlayer(Guid gamePlayerId);

@@ -103,11 +103,102 @@
   text-decoration: none;
   border: 1.5px solid #ffffff;
   position: absolute;
-  left: 50%;
-  top: 40%;
+  left: 40%;
+  top: 42%;
   transform: translateX(-50%);
   transform: scale(0);
 }
 .join__button.active {
+  transform: scale(1);
+}
+
+.easy-mode {
+  width: 300px;
+  height: 300px;
+  background-image: url(../img/gamemode-bot-easy.png);
+  background-color: rgba(128, 128, 128, 0);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 95% 100%;
+  border: none;
+  border-radius: 50%;
+  box-shadow: none;
+  overflow: visible;
+  cursor: pointer;
+  position: absolute;
+  right: 53%;
+  bottom: 20%;
+}
+
+.easy-mode--active {
+  transform: scale(1.1);
+}
+
+.hard-mode {
+  width: 250px;
+  height: 250px;
+  background-image: url(../img/gamemode-bot-hard.png);
+  background-color: rgba(128, 128, 128, 0);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border: none;
+  border-radius: 50%;
+  box-shadow: none;
+  overflow: visible;
+  cursor: pointer;
+  position: absolute;
+  left: 53%;
+  bottom: 22.84%;
+  margin-left: 20px;
+}
+
+.hard-mode--active {
+  transform: scale(1.1);
+}
+
+.error-popup {
+  height: 22.5px;
+  width: 250px;
+  position: absolute;
+  top: 40%;
+  left: 22.4%;
+  background-color: var(--white);
+  border: 5px solid red;
+  border-radius: 10px;
+  padding: 13px 20px;
+  z-index: 101;
+  overflow: hidden;
+  transform: scale(0);
+}
+.error-popup__text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin-left: 16px;
+  position: absolute;
+  margin: 19px 55px;
+  user-select: none;
+  transform: scale(0);
+}
+.error-popup__xmark-icon {
+  position: absolute;
+  top: -7px;
+  left: 265px;
+  padding: 7px 7px;
+  height: 20px;
+  width: 20px;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  z-index: 200;
+  transform: scale(0);
+}
+
+.error-popup__xmark-icon:hover {
+  cursor: pointer;
+}
+
+.error-popup--active,
+.error-popup__text--active,
+.error-popup__xmark-icon--active {
   transform: scale(1);
 }

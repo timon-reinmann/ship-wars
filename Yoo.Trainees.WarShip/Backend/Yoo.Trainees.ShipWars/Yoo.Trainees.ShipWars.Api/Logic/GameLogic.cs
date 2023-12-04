@@ -41,7 +41,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             this._configuration = configuration;
         }
 
-        public Game CreateGame(string name)
+        public Game CreateGame(string name, bool bot)
         {
             var gamePlayers = new List<GamePlayer>();
             var player1 = new Player
@@ -75,9 +75,9 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 Name = name,
                 GameStatus = GameState.Prep.ToString(),
                 GamePlayers = gamePlayers,
+                IsBotGame = bot,
                 Date = DateTime.Now
             };
-
 
             _applicationDbContext.Player.Add(player1);
             _applicationDbContext.Player.Add(player2);
@@ -86,7 +86,9 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return game;
         }
-        public void CreateBoard(SaveShipsDto SwaggerData)
+
+
+            public void CreateBoard(SaveShipsDto SwaggerData)
         {
             var game = _applicationDbContext.Game.Find(SwaggerData.GameId);
             if (game == null)

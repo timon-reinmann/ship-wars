@@ -11,6 +11,7 @@ const input = copyText.querySelector("input.text");
 
 let link = null;
 let lobbyName = null;
+const isBotGame = false;
 
 copyText.querySelector("button").addEventListener("click", () => {
   joinGame.classList.add("active");
@@ -49,8 +50,8 @@ submit_button.addEventListener("click", async function () {
     createGame.classList.remove("active");
   }, 2500);
 
-  lobbyName = JSON.stringify(document.getElementById("lobbyname").value);
-  ("use strict");
+  lobbyName = document.getElementById("lobbyname").value;
+
   await fetch(api, {
     credentials: "omit",
     headers: {
@@ -61,7 +62,7 @@ submit_button.addEventListener("click", async function () {
       "Content-Type": "application/json",
       "Sec-Fetch-Dest": "empty",
     },
-    body: lobbyName,
+    body: JSON.stringify({ Name: lobbyName, Bot: isBotGame }),
     method: "POST",
   })
     .then((response) => response.json())
