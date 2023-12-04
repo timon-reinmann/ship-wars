@@ -48,7 +48,7 @@ connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
   if (gameState === 1 || gameState === 2) {
     connectionGameHub.stop();
   }
-  if (gameState === 1 && nextPlayer.toString() === gamePlayerId) {
+  if (gameState === 1 && nextPlayer.toString() !== gamePlayerId) {
     const winContainer = document.querySelector(".container");
     winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
     document.body.style.margin = "0";
@@ -59,7 +59,7 @@ connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
       document.body.style.margin = "5";
       document.body.style.overflowY = "visvible";
     });
-  } else if (gameState === 1 && nextPlayer.toString() !== gamePlayerId) {
+  } else if (gameState === 1 && nextPlayer.toString() === gamePlayerId) {
     const looseContainer = document.querySelector(".container");
     looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
     document.body.style.margin = "0";
@@ -289,7 +289,6 @@ containers.forEach((container) => {
 
 opponentFields.forEach((opponentField) => {
   opponentField.addEventListener("click", async (e) => {
-    clearInterval(intervalShots);
     const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
     if (!isReadyToShoot) {
       return;
