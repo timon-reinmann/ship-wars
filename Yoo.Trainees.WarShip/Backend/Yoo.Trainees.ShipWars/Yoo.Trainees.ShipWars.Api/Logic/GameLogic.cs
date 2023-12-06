@@ -33,12 +33,15 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IConfiguration _configuration;
         private IVerificationLogic _verificationLogic;
+        private IBotLogic _botLogic;
 
-        public GameLogic(ApplicationDbContext applicationDbContext, IVerificationLogic verificationLogic, IConfiguration configuration)
+
+        public GameLogic(ApplicationDbContext applicationDbContext, IVerificationLogic verificationLogic, IConfiguration configuration, IBotLogic botLogic)
         {
             this._applicationDbContext = applicationDbContext;
             this._verificationLogic = verificationLogic;
             this._configuration = configuration;
+            this._botLogic = botLogic;
         }
 
         public Game CreateGame(string name, bool bot)
@@ -88,8 +91,9 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         }
 
 
-            public void CreateBoard(SaveShipsDto SwaggerData)
+        public void CreateBoard(SaveShipsDto SwaggerData)
         {
+            var gamePlayerId = SwaggerData.GamePlayerId;
             var game = _applicationDbContext.Game.Find(SwaggerData.GameId);
             if (game == null)
             {
@@ -100,21 +104,23 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             {
                 var Ship = SwaggerData.Ships[i];
                 var shipType = _applicationDbContext.Ship.Where(ship => ship.Name == Ship.ShipType).SingleOrDefault();
-                var shipPositio = new ShipPosition
+                                var shipPositio = new ShipPosition
                 {
                     Id = Guid.NewGuid(),
-                    GamePlayerId = Guid.Parse(SwaggerData.GamePlayerId.ToString()),
+                    GamePlayerId = Guid.Parse(gamePlayerId.ToString()),
                     ShipId = Guid.Parse(shipType.Id.ToString()),
                     X = Ship.X,
                     Y = Ship.Y,
                     Direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship.Direction,
-                    Life = shipType.Length
+                    Life = shipType.Length,
+                    IsHuman = true
                 };
                 id = shipPositio.GamePlayerId;
 
                 _applicationDbContext.ShipPosition.Add(shipPositio);
             }
             _applicationDbContext.SaveChanges();
+
         }
         public bool IsReady(Guid gameId)
         { 

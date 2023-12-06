@@ -5,7 +5,6 @@ const easy_button = document.querySelector(".easy-mode");
 
 let link = null;
 let lobbyName = null;
-const isBotGame = true;
 let isFetchEnable = false;
 
 hard_button.addEventListener("click", function () {

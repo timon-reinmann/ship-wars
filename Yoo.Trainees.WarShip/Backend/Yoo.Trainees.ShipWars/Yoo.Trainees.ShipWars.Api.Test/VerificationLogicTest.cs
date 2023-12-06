@@ -5,6 +5,17 @@ namespace Yoo.Trainees.ShipWars.Api.Test
 {
     public class VerificationLogicTest
     {
+        private static String[] ships = {   "warship",
+                                            "cruiser",
+                                            "cruiser",
+                                            "destroyer",
+                                            "destroyer",
+                                            "destroyer",
+                                            "submarine",
+                                            "submarine",
+                                            "submarine",
+                                            "submarine" };
+
         [Test]
         public void TestVerifyEmptyList_ShouldReturnFalse()
         {
@@ -233,6 +244,32 @@ namespace Yoo.Trainees.ShipWars.Api.Test
             Assert.AreEqual(expected.X, actual.X);
             Assert.AreEqual(expected.Y, actual.Y);
             Assert.AreEqual(expected.ShipType, actual.ShipType);
+        }
+
+        [Test]
+        public void TestVerifyShipPositionsBot_ShouldReturnTrue()
+        {
+            var verificationLogic = new VerificationLogic();
+            var saveShipDtos = new SaveShipDto[10];
+            Random rnd = new Random();
+
+            for (var i = 0; i < 9; i++)
+            {
+                saveShipDtos[i] = new SaveShipDto
+                {
+                    Id = Guid.NewGuid(),
+                    X = rnd.Next(0, 10),
+                    Y = rnd.Next(0, 10),
+                    ShipType = ships[i],
+                    Direction = (Direction)rnd.Next(0, 2)
+                };
+
+
+                i = verificationLogic.VerifyShipPositionBot(saveShipDtos) ? i : i - 1;
+
+            }
+
+            Assert.True(verificationLogic.VerifyShipPositionBot(saveShipDtos));
         }
     }
 }

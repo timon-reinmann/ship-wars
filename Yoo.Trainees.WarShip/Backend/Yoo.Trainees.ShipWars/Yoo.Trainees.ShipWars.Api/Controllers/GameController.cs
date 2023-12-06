@@ -15,6 +15,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         private readonly IGameLogic _gameLogic;
         private readonly IVerificationLogic _verificationLogic;
         private readonly IEmailSender _emailSender;
+        private readonly IBotLogic _botLogic;
 
         public static List<Ship> Ships = new List<Ship>
         {
@@ -24,12 +25,13 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 new Ship { Length = 1, Name = "submarine" }
         };
 
-        public GameController(IGameLogic gameLogic, IEmailSender emailSender, IConfiguration configuration, IVerificationLogic verificationLogic)
+        public GameController(IGameLogic gameLogic, IEmailSender emailSender, IConfiguration configuration, IVerificationLogic verificationLogic, IBotLogic botLogic)
         {
             this._gameLogic = gameLogic;
             this._emailSender = emailSender;
             this._verificationLogic = verificationLogic;
             this._configuration = configuration;
+            this._botLogic = botLogic;
         }
 
         // Ready checks in the DB if all ships are placed.
@@ -147,7 +149,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // Post api/<Game>/5/SaveShips.
         [HttpPost("{id}/SaveShips")]
-        public async Task<IActionResult> SaveShips(Guid id, [FromBody] SaveShipsDto Ships)
+        public async Task<IActionResult> SaveShips(Guid id, [FromBody] SaveShipsDto Ships, bool isHuman)
         {
             if (id != Ships.GameId)
             {
@@ -160,7 +162,14 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 return BadRequest();
             }
 
-            _gameLogic.CreateBoard(Ships);
+            if (isHuman)
+            {
+                _gameLogic.CreateBoard(Ships);
+            }
+            else
+            {
+                _botLogic.SaveShipPositions(Ships);
+            }
             return Ok();
         }
 

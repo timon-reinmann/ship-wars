@@ -24,5 +24,7 @@
         public Ship Ship { get; set; }
 
         public GamePlayer GamePlayer { get; set; }
+
+        public bool IsHuman { get; set; }
     }
 }
