@@ -358,7 +358,7 @@ muteButton.addEventListener("click", () => {
 });
 
 function deleteShipHitBox(container) {
-  if (originField) {
+  if (originField && originField.dataset.ships) {
     const oldX = parseInt(originField.dataset.x);
     const oldY = parseInt(originField.dataset.y);
     const oldShipSize = parseInt(originField.firstChild?.dataset.size);
