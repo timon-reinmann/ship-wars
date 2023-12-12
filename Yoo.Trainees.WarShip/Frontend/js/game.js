@@ -446,7 +446,7 @@ function isDirectionChangeAllowed(draggable, currentX, currentY, shipSize) {
     const futureField = document.querySelector(
       `[data-x="${x}"][data-y="${y}"]`
     );
-    if (futureField.dataset.ships > 0 + tinyShip) {
+    if (futureField != null && futureField.dataset.ships > 0 + tinyShip) {
       return false; // Is not valid
     }
   }
