@@ -303,14 +303,19 @@ body {
   border: 5px solid red;
   border-radius: 10px;
   padding: 13px 20px;
-  z-index: 101;
+  z-index: 201;
   overflow: hidden;
   transform: scale(0);
+
   .error-popup__text {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    margin-left: 16px;
     position: absolute;
-    margin: 19px 55px;
+    box-sizing: border-box;
+    top: 50%;
+    left: 50%;
+    margin-top: auto;
+    margin-bottom: auto;
+    transform: translate(-50%, -40%);
     user-select: none;
   }
   .error-popup__xmark-icon {
@@ -323,6 +328,7 @@ body {
     background-color: black;
     color: white;
     border-radius: 10px;
+    z-index: 201;
   }
 }
 

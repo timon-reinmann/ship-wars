@@ -1,91 +1,13 @@
-const gameHubApi = api.replace("api/Game/", "GameHub");
-
 // Read playerid from URL
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
+const ifShipsPlaced = false;
 
-const connectionGameHub = new signalR.HubConnectionBuilder()
-  .withUrl(gameHubApi)
-  .build();
+if (ifShipsPlaced) {
+  Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
+}
 
-connectionGameHub.on("LoadShotsFromOpponent", function (shots) {
-  shots.forEach((shot) => {
-    const X = shot.x;
-    const Y = shot.y;
-    const opponentFields = document.getElementById("game__board");
-    const opponentField = opponentFields.querySelector(
-      `[data-x="${X}"][data-y="${Y}"]`
-    );
-    opponentField.classList.add("field--hit");
-  });
-});
-
-connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
-  const counter = document.querySelector(".counter");
-  if (nextPlayer.toString() === gamePlayerId) {
-    counter.classList.add("counter--active");
-    document.querySelector(".cursor").classList.add("cursor--active");
-    document.body.style.cursor = "none";
-  } else {
-    counter.classList.remove("counter--active");
-    setTimeout(() => {
-      document.querySelector(".cursor").classList.remove("cursor--active");
-      document.body.style.cursor = "crosshair";
-    }, 500);
-  }
-  if (shots) {
-    counter.innerHTML = shots;
-  }
-  if (gameState === 1 || gameState === 2) {
-    connectionGameHub.stop();
-  }
-  if (gameState === 1 && nextPlayer.toString() === gamePlayerId) {
-    const winContainer = document.querySelector(".container");
-    winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
-    document.body.style.margin = "0";
-    document.body.style.overflow = "hidden";
-    const win = document.querySelector(".win");
-    win.addEventListener("click", () => {
-      win.remove();
-      document.body.style.margin = "5";
-      document.body.style.overflowY = "visvible";
-    });
-  } else if (gameState === 1 && nextPlayer.toString() !== gamePlayerId) {
-    const looseContainer = document.querySelector(".container");
-    looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
-    document.body.style.margin = "0";
-    document.body.style.overflow = "hidden";
-    const lost = document.querySelector(".lost");
-    lost.addEventListener("click", () => {
-      lost.remove();
-      document.body.style.margin = "5";
-      document.body.style.overflowY = "visible";
-    });
-  }
-});
-
-connectionGameHub
-  .start()
-  .then(function () {
-    connectionGameHub.invoke("JoinGroup", gameId).catch(function (err) {
-      return console.error(err.toString());
-    });
-    connectionGameHub.invoke("EgoGroup", gamePlayerId).catch(function (err) {
-      return console.error(err.toString());
-    });
-  })
-  .catch(function (err) {
-    return console.error(err.toString());
-  });
-
-connectionGameHub
-  .invoke("LoadShotsFromOpponent", gamePlayerId)
-  .catch(function (err) {
-    return console.error(err.toString());
-  });
-
-Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
 loadHitShips(gamePlayerId);
 
 const muteButton = document.querySelector(".mute__button");
@@ -177,6 +99,9 @@ draggables.forEach((draggable) => {
 
   draggable.addEventListener("dragend", () => {
     draggable.classList.remove("dragging");
+    if (!currentField) {
+      return;
+    }
     currentField.style.zIndex = zIndexChange + 1;
     const currentX = parseInt(currentField.getAttribute("data-x"));
     const currentY = parseInt(currentField.getAttribute("data-y"));
@@ -263,57 +188,6 @@ containers.forEach((container) => {
   // Komischer Weise geht das auch mit drag anstatt drop
   container.addEventListener("drop", (e) => {
     e.preventDefault();
-  });
-});
-
-opponentFields.forEach((opponentField) => {
-  opponentField.addEventListener("click", async (e) => {
-    const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
-    if (!isReadyToShoot) {
-      return;
-    }
-    const currentX = parseInt(opponentField.getAttribute("data-x"));
-    const currentY = parseInt(opponentField.getAttribute("data-y"));
-    const API_URL = api + gamePlayerId + "/SaveShot";
-    fetch(API_URL, {
-      credentials: "omit",
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-        Accept: "*/*",
-        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-        "Content-Type": "application/json",
-        "Sec-Fetch-Dest": "empty",
-      },
-      body: JSON.stringify({ X: currentX, Y: currentY }),
-      method: "POST",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        sound.play();
-        const cursor = document.querySelector(".cursor");
-        cursor.classList.add("recoil-animation");
-        setTimeout(() => {
-          cursor.classList.remove("recoil-animation");
-        }, 200);
-        if (data.hit === 1 || data.hit === 0) {
-          opponentField.classList.add("field--hit");
-          connectionGameHub
-            .invoke("CountShots", gamePlayerId)
-            .catch(function (err) {
-              return console.error(err.toString());
-            });
-          connectionGameHub
-            .invoke("LoadShotsFromOpponent", gamePlayerId)
-            .catch(function (err) {
-              return console.error(err.toString());
-            });
-        }
-        if (data.hit === 1) {
-          opponentField.classList.add("field--hit--ship");
-          showExplosionAnimation(opponentField);
-        }
-      });
   });
 });
 
@@ -456,10 +330,12 @@ function isDirectionChangeAllowed(draggable, currentX, currentY, shipSize) {
 
 let error_popup__wmark = document.querySelector(".error-popup__xmark-icon");
 error_popup__wmark.addEventListener("click", () => {
+  const screenBlocker = document.querySelector(".screen-blocker");
   let error_popup__screen_blocker = document.querySelector(
     ".error-popup__screen-blocker"
   );
   let error_popup = document.querySelector(".error-popup");
+  screenBlocker.classList.remove("screen-blocker--active");
   error_popup.classList.remove("error-popup--active");
   error_popup__screen_blocker.classList.remove(
     "error-popup__screen-blocker--active"
@@ -471,12 +347,26 @@ function error_popup(commit_button) {
   const error_popup__screen_blocker = document.querySelector(
     ".error-popup__screen-blocker"
   );
+  const screenBlocker = document.querySelector(".screen-blocker");
   const error_popup = document.querySelector(".error-popup");
   error_popup.classList.add("error-popup--active");
   error_popup__screen_blocker.classList.add(
     "error-popup__screen-blocker--active"
   );
+  screenBlocker.classList.remove("screen-blocker--active");
   commit_button.classList.add("commit-button--active");
+}
+
+function screenBlocker(isHuman) {
+  const finishField = document.querySelector(".finish");
+  const ring = document.querySelector(".ring");
+  const screenBlocker = document.querySelector(".screen-blocker");
+  ring.classList.remove("ring--active");
+  finishField.classList.remove("active-popup");
+  screenBlocker.classList.add("screen-blocker--active");
+  if (isHuman) {
+    ScissorsRockPaper();
+  }
 }
 
 function createLoadingScreen() {
@@ -488,16 +378,6 @@ function createLoadingScreen() {
   ring.classList.add("ring--active");
   finishField.classList.add("active-popup");
   commit_button.classList.add("commit-button--active");
-}
-
-function screenBlocker() {
-  const finishField = document.querySelector(".finish");
-  const ring = document.querySelector(".ring");
-  const screenBlocker = document.querySelector(".screen-blocker");
-  ring.classList.remove("ring--active");
-  finishField.classList.remove("active-popup");
-  screenBlocker.classList.add("screen-blocker--active");
-  ScissorsRockPaper();
 }
 
 function showExplosionAnimation(fieldElement) {
@@ -540,58 +420,6 @@ async function checkReadyToShoot(gamePlayerId) {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
   return test;
-}
-
-function CheckIfBoardSet(gameId) {
-  const API_URL = api + gameId + "/BoardState";
-  return fetch(API_URL, {
-    credentials: "omit",
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-      Accept: "*/*",
-      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-      "Content-Type": "application/json",
-      "Sec-Fetch-Dest": "empty",
-    },
-    method: "GET",
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data) {
-        loadGameBoard(data);
-        createLoadingScreen();
-        intervalid = setInterval(checkIfPlayerReady, 1000);
-      }
-    })
-    .catch((error) => {
-      console.error("Es gab einen Fehler bei der Anfrage:", error);
-    });
-}
-
-function checkIfPlayerReady() {
-  const API_URL = api + gameId + "/Ready";
-  fetch(API_URL, {
-    credentials: "omit",
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-      Accept: "*/*",
-      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-      "Content-Type": "application/json",
-      "Sec-Fetch-Dest": "empty",
-    },
-    method: "GET",
-  })
-    .then((data) => {
-      if (data.ok) {
-        clearInterval(intervalid);
-        screenBlocker();
-      }
-    })
-    .catch((error) => {
-      console.error("Es gab einen Fehler bei der Anfrage:", error);
-    });
 }
 
 function loadFiredShots(gamePlayerId) {
@@ -655,6 +483,38 @@ function loadShotsFromOpponentFromTheDB(gamePlayerId) {
           );
           opponentField.classList.add("field--hit");
         });
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
+
+function CheckIfBoardSet(gameId) {
+  const API_URL = api + gameId + "/BoardState";
+  return fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        loadGameBoard(data);
+        createLoadingScreen();
+        if (!isHuman)
+          setTimeout(() => {
+            screenBlocker(isHuman);
+            isReadyToShootBot = true;
+          }, 1000);
+        intervalid = setInterval(checkIfPlayerReady, 1000);
       }
     })
     .catch((error) => {

@@ -41,9 +41,24 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 var maxBoardLength = 9;
                 var minBoardLength = 0;
 
-                if (shipX > maxBoardLength || shipY > maxBoardLength || shipX < minBoardLength || shipY < minBoardLength || shipType == null || shipX + shipLength - 1 > maxBoardLength || shipY + shipLength + 1 > maxBoardLength)
+                if (shipX > maxBoardLength || shipY > maxBoardLength || shipX < minBoardLength || shipY < minBoardLength || shipType == null)
                 {
                     return false;
+                }
+
+                if (shipDirection == 0)
+                {
+                    if (shipX + shipLength - 1 > maxBoardLength || shipY > maxBoardLength)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (shipX > maxBoardLength || shipY + shipLength - 1 > maxBoardLength)
+                    {
+                        return false;
+                    }
                 }
 
                 foreach (var j in shipDtos)

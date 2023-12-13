@@ -34,11 +34,15 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         public void SaveShipPositions(SaveShipsDto SwaggerData)
         {
             var gamePlayerId = SwaggerData.GamePlayerId;
-            var game = _applicationDbContext.Game.Find(SwaggerData.GameId);
+            var game = GetGame(gamePlayerId);
+            
             if (game == null)
             {
                 throw new Exception("game not found");
             }
+
+            var botGamePlayerId = GetBotGamePlayerId(gamePlayerId, game.Id);
+
             Guid id = new Guid();
             for (var i = 0; i < SwaggerData.Ships.Length; i++)
             {
@@ -69,9 +73,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             string[] badRequest = { "-1", "-1" };
             var saveShipDtos = new SaveShipDto[10];
             var shipCount = 10;
+            var game = GetGame(gamePlayerId);
+            var botGamePLayerId = GetBotGamePlayerId(gamePlayerId, game.Id);
+
 
             Random rnd = new Random();
-            var game = GetGame(gamePlayerId);
+
             if (game == null)
             {
                 throw new Exception("game not found");
@@ -93,11 +100,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             }
             
             foreach (var ship in saveShipDtos)
-            { 
+            {
                 var shipPositio = new ShipPosition
                 {
                     Id = ship.Id,
-                    GamePlayerId = gamePlayerId,
+
+                    GamePlayerId = botGamePLayerId,
                     ShipId = (from s in _applicationDbContext.Ship
                               where s.Name.Equals(ship.ShipType)
                               select s.Id).SingleOrDefault(),
@@ -118,11 +126,26 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         }
 
+        public bool IsBotLobby(Guid gameId)
+        {
+            return (from g in _applicationDbContext.Game
+                    where g.Id.Equals(gameId)
+                    select g.IsBotGame).SingleOrDefault();
+        }
+
         private Game? GetGame(Guid gamePlayerId)
         {
             return (from g in _applicationDbContext.GamePlayer
                     where g.Id.Equals(gamePlayerId)
                     select g.Game).SingleOrDefault();
+        }
+
+        private Guid GetBotGamePlayerId(Guid gamePlayerId, Guid gameId)
+        {
+            return (from gp in _applicationDbContext.GamePlayer
+                    where !gp.Id.Equals(gamePlayerId) &&
+                    gp.GameId.Equals(gameId)
+                    select gp.Id).SingleOrDefault();
         }
     }
 }

@@ -7,6 +7,8 @@ let link = null;
 let lobbyName = null;
 let isFetchEnable = false;
 
+const isBotGame = true;
+
 hard_button.addEventListener("click", function () {
   hard_button.classList.add("hard-mode--active");
   easy_button.classList.remove("easy-mode--active");

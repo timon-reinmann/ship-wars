@@ -220,6 +220,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                          select new SaveShotsDto { X = s.X, Y = s.Y }).ToList();
             return shots;
         }
+        
         public void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
         {
             var gamePlayer = _applicationDbContext.GamePlayer.FirstOrDefault(x => x.Id == gamePlayerId);
@@ -231,6 +232,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 _applicationDbContext.SaveChanges();
             }
         }
+
         public RockPaperScissorsState GetResultOfTheSRP(Guid gamePlayerId)
         {
             var game = GetGame(gamePlayerId);

@@ -1,3 +1,5 @@
+const gameHubApi = api.replace("api/Game/", "GameHub");
+
 let player1 = null;
 let activeWordCount1 = 0;
 let activeWordCount2 = 0;
@@ -5,6 +7,86 @@ let messageBox = document.createElement("div");
 const chatHubApi = api.replace("api/Game/", "ChatHub");
 
 const SRPChoice = document.querySelectorAll(".SRP-choice");
+
+const connectionGameHub = new signalR.HubConnectionBuilder()
+  .withUrl(gameHubApi)
+  .build();
+
+connectionGameHub.on("LoadShotsFromOpponent", function (shots) {
+  shots.forEach((shot) => {
+    const X = shot.x;
+    const Y = shot.y;
+    const opponentFields = document.getElementById("game__board");
+    const opponentField = opponentFields.querySelector(
+      `[data-x="${X}"][data-y="${Y}"]`
+    );
+    opponentField.classList.add("field--hit");
+  });
+});
+
+connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
+  const counter = document.querySelector(".counter");
+  if (nextPlayer.toString() === gamePlayerId) {
+    counter.classList.add("counter--active");
+    document.querySelector(".cursor").classList.add("cursor--active");
+    document.body.style.cursor = "none";
+  } else {
+    counter.classList.remove("counter--active");
+    setTimeout(() => {
+      document.querySelector(".cursor").classList.remove("cursor--active");
+      document.body.style.cursor = "crosshair";
+    }, 500);
+  }
+  if (shots) {
+    counter.innerHTML = shots;
+  }
+  if (gameState === 1 || gameState === 2) {
+    connectionGameHub.stop();
+  }
+  if (gameState === 1 && nextPlayer.toString() === gamePlayerId) {
+    const winContainer = document.querySelector(".container");
+    winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
+    document.body.style.margin = "0";
+    document.body.style.overflow = "hidden";
+    const win = document.querySelector(".win");
+    win.addEventListener("click", () => {
+      win.remove();
+      document.body.style.margin = "5";
+      document.body.style.overflowY = "visvible";
+    });
+  } else if (gameState === 1 && nextPlayer.toString() !== gamePlayerId) {
+    const looseContainer = document.querySelector(".container");
+    looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
+    document.body.style.margin = "0";
+    document.body.style.overflow = "hidden";
+    const lost = document.querySelector(".lost");
+    lost.addEventListener("click", () => {
+      lost.remove();
+      document.body.style.margin = "5";
+      document.body.style.overflowY = "visible";
+    });
+  }
+});
+
+connectionGameHub
+  .start()
+  .then(function () {
+    connectionGameHub.invoke("JoinGroup", gameId).catch(function (err) {
+      return console.error(err.toString());
+    });
+    connectionGameHub.invoke("EgoGroup", gamePlayerId).catch(function (err) {
+      return console.error(err.toString());
+    });
+  })
+  .catch(function (err) {
+    return console.error(err.toString());
+  });
+
+connectionGameHub
+  .invoke("LoadShotsFromOpponent", gamePlayerId)
+  .catch(function (err) {
+    return console.error(err.toString());
+  });
 
 getUser(gamePlayerId);
 
@@ -326,6 +408,57 @@ async function commitShips(commit_button) {
   }
 }
 
+opponentFields.forEach((opponentField) => {
+  opponentField.addEventListener("click", async (e) => {
+    const isReadyToShoot = await checkReadyToShoot(gamePlayerId);
+    if (!isReadyToShoot) {
+      return;
+    }
+    const currentX = parseInt(opponentField.getAttribute("data-x"));
+    const currentY = parseInt(opponentField.getAttribute("data-y"));
+    const API_URL = api + gamePlayerId + "/SaveShot";
+    fetch(API_URL, {
+      credentials: "omit",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+        Accept: "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+      },
+      body: JSON.stringify({ X: currentX, Y: currentY }),
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        sound.play();
+        const cursor = document.querySelector(".cursor");
+        cursor.classList.add("recoil-animation");
+        setTimeout(() => {
+          cursor.classList.remove("recoil-animation");
+        }, 200);
+        if (data.hit === 1 || data.hit === 0) {
+          opponentField.classList.add("field--hit");
+          connectionGameHub
+            .invoke("CountShots", gamePlayerId)
+            .catch(function (err) {
+              return console.error(err.toString());
+            });
+          connectionGameHub
+            .invoke("LoadShotsFromOpponent", gamePlayerId)
+            .catch(function (err) {
+              return console.error(err.toString());
+            });
+        }
+        if (data.hit === 1) {
+          opponentField.classList.add("field--hit--ship");
+          showExplosionAnimation(opponentField);
+        }
+      });
+  });
+});
+
 commit_button.addEventListener("click", () => {
   let ship_selector = document.querySelector(".ship__selection");
   if (ship_selector.children.length === 0) {
@@ -348,43 +481,66 @@ async function sendShips(Ships) {
       "Sec-Fetch-Dest": "empty",
     },
     body: JSON.stringify({
-      gameId,
-      GamePlayerId: gamePlayerId,
-      Ships,
-      isHuman,
+      gamePlayerId,
     }),
     method: "POST",
   }).then((response) => {
     if (!response.ok) {
       error_popup(commit_button);
     } else {
+      ifShipsPlaced = true;
       createLoadingScreen();
       intervalid = setInterval(checkIfPlayerReady, 1000);
     }
   });
 }
 
-let error_popup__wmark = document.querySelector(".error-popup__xmark-icon");
-error_popup__wmark.addEventListener("click", () => {
-  let error_popup__screen_blocker = document.querySelector(
-    ".error-popup__screen-blocker"
-  );
-  let error_popup = document.querySelector(".error-popup");
-  error_popup.classList.remove("error-popup--active");
-  error_popup__screen_blocker.classList.remove(
-    "error-popup__screen-blocker--active"
-  );
-  commit_button.classList.remove("commit-button--active");
-});
+function checkIfPlayerReady() {
+  const API_URL = api + gameId + "/Ready";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((data) => {
+      if (data.ok) {
+        clearInterval(intervalid);
+        screenBlocker(isHuman);
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
+}
 
-function error_popup(commit_button) {
-  const error_popup__screen_blocker = document.querySelector(
-    ".error-popup__screen-blocker"
-  );
-  const error_popup = document.querySelector(".error-popup");
-  error_popup.classList.add("error-popup--active");
-  error_popup__screen_blocker.classList.add(
-    "error-popup__screen-blocker--active"
-  );
-  commit_button.classList.add("commit-button--active");
+function checkIfPlayerReady() {
+  const API_URL = api + gameId + "/Ready";
+  fetch(API_URL, {
+    credentials: "omit",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+      Accept: "*/*",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Content-Type": "application/json",
+      "Sec-Fetch-Dest": "empty",
+    },
+    method: "GET",
+  })
+    .then((data) => {
+      if (data.ok) {
+        clearInterval(intervalid);
+        screenBlocker(isHuman);
+      }
+    })
+    .catch((error) => {
+      console.error("Es gab einen Fehler bei der Anfrage:", error);
+    });
 }
