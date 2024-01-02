@@ -1,5 +1,4 @@
-﻿
-namespace Yoo.Trainees.ShipWars.DataBase.Entities
+﻿namespace Yoo.Trainees.ShipWars.DataBase.Entities
 {
     public class Player
     {

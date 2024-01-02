@@ -9,7 +9,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Entities
 
         public string Text { get; set; }
 
-        [Column(TypeName = "smalldatetime")]
+        [Column(TypeName = "datetime")]
         public DateTime Date { get; set; }
 
         public GamePlayer GamePlayers { get; set; }

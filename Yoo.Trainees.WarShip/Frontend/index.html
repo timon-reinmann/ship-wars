@@ -9,6 +9,14 @@
     <link rel="icon" href="img/favicon.ico" type="image/x-icon" sizes="32x32" />
   </head>
   <body>
+    <button id="play-button"></button>
+    <video class="video" id="myVideo" data-length="199200" controls>
+      <source
+        src="/Frontend/img/Rick Astley - Never Gonna Give You Up (Official Music Video).mp4"
+        type="video/mp4"
+      />
+    </video>
+
     <div class="background-animation"></div>
     <div class="container">
       <nav class="shipwars__navbar">
@@ -18,8 +26,8 @@
         ></a>
         <div class="navbar__list">
           <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Friends</a></li>
+            <li><a style="user-select: none" href="#">Home</a></li>
+            <li><a style="user-select: none" href="#">Friends</a></li>
           </ul>
           <i class="hamburger fa-solid fa-bars"></i>
         </div>
@@ -145,12 +153,9 @@
           </div>
         </selection>
       </div>
-      <a
-        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        class="RickRoll"
-      ></a>
     </div>
     <script src="js/home.js"></script>
+    <script src="js/Play-Easter-eggs-Video.js"></script>
     <script
       src="https://kit.fontawesome.com/d6df3707cf.js"
       crossorigin="anonymous"

@@ -44,7 +44,8 @@
   display: flex;
   justify-content: center;
   box-sizing: border-box;
-  gap: 10vw;
+  gap: 9%;
+  user-select: none;
 }
 
 .shipwars__button {
@@ -63,6 +64,7 @@
   font-size: x-large;
   transition: all 0.3s ease-in-out;
   box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
+  user-select: none;
 }
 
 .shipwars__button-text {
@@ -70,18 +72,21 @@
   opacity: 1;
   font-family: walkingdead;
   font-size: 60px;
+  user-select: none;
 }
 
 .shipwars__buttons:hover {
   margin-bottom: 2rem;
   height: 6rem;
   width: 22rem;
+  user-select: none;
 }
 
 .buttons a,
 .buttons a:visited {
   color: #fefefe;
   text-decoration: none;
+  user-select: none;
 }
 
 .shipwars__button:hover {
@@ -89,15 +94,36 @@
   transform: scale(1.01) skew(-30deg) translate(-45%, -45%);
   .shipwars__button-text {
     color: black;
+    user-select: none;
   }
 }
-.RickRoll {
+#play-button {
   width: 5rem;
   height: 5rem;
   position: absolute;
   right: 0px;
   bottom: 0px;
   opacity: 1;
+  background: transparent;
+  border: none;
+}
+
+#play-button:hover {
+  cursor: pointer;
+}
+
+.video {
+  position: absolute;
+  left: 20%;
+  top: 20%;
+  width: 50%;
+  height: 50%;
+  z-index: 100;
+  transform: scale(0);
+}
+
+.video--active {
+  transform: scale(1);
 }
 
 .btn {
@@ -124,6 +150,7 @@
   opacity: 1;
   font-family: walkingdead;
   font-size: 60px;
+  user-select: none;
 }
 
 .btn:hover {
@@ -132,6 +159,7 @@
   cursor: help;
   .btn-text {
     color: black;
+    user-select: none;
   }
 }
 

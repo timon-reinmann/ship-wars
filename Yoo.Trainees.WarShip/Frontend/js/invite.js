@@ -101,9 +101,29 @@ send_email.addEventListener("click", async () => {
     method: "POST",
   })
     .then((response) => response.json())
-    .then((data) => {
-    })
+    .then((data) => {})
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("moving-button");
+  moveButton();
+
+  function moveButton() {
+    const windowWidth = window.innerWidth;
+    const buttonWidth = button.offsetWidth;
+    const maxLeft = windowWidth - buttonWidth;
+
+    // Set the button's position to the right edge of the window
+    button.style.left = maxLeft + "px";
+
+    // Animate the button's movement from right to left
+    setTimeout(() => {
+      button.style.left = "0";
+      // After the animation, move it back to the right and continue the loop
+      setTimeout(moveButton, 2000); // 2000ms (2 seconds) for the transition
+    }, 2000); // 2000ms (2 seconds) delay before starting the animation
+  }
 });

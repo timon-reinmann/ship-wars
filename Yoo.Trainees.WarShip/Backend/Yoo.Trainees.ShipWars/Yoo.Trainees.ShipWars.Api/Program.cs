@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using Yoo.Trainees.ShipWars.Api.Logic;
 using Yoo.Trainees.ShipWars.DataBase;
 
@@ -16,6 +14,8 @@ namespace Yoo.Trainees.ShipWars.Api
             builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.AddTransient<IVerificationLogic, VerificationLogic>();
             builder.Services.AddTransient<IGameLogic, GameLogic>();
+
+            builder.Services.AddSignalR();
 
             builder.Services.AddCors();
 
@@ -43,7 +43,11 @@ namespace Yoo.Trainees.ShipWars.Api
             var app = builder.Build();
 
             app.UseCors(
-                options => options.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()
+                options => options
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials()
+                            .SetIsOriginAllowed((host) => true)
             );
 
             // Configure the HTTP request pipeline.
@@ -60,6 +64,8 @@ namespace Yoo.Trainees.ShipWars.Api
             }
 
             app.UseHttpsRedirection();
+            app.MapHub<ChatHub>("/ChatHub");
+            app.MapHub<GameHub>("/GameHub");
             app.UseAuthorization();
             app.MapControllers();
             app.Run();

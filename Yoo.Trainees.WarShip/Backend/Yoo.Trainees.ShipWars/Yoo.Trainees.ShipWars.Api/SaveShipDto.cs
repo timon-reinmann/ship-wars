@@ -1,6 +1,4 @@
-﻿using Yoo.Trainees.ShipWars.DataBase.Entities;
-
-namespace Yoo.Trainees.ShipWars.Api
+﻿namespace Yoo.Trainees.ShipWars.Api
 {
     public enum Direction
     {
