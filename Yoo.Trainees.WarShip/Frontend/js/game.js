@@ -47,6 +47,9 @@ connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
   }
   if (gameState === 1 || gameState === 2) {
     connectionGameHub.stop();
+    counter.classList.remove("counter--active");
+    document.querySelector(".cursor").classList.remove("cursor--active");
+    document.body.style.cursor = "crosshair";
   }
   if (gameState === 1 && nextPlayer.toString() !== gamePlayerId) {
     const winContainer = document.querySelector(".container");
@@ -935,6 +938,9 @@ function countShots() {
       }
       if (data.gameState === 1 || data.gameState === 2) {
         connectionGameHub.stop();
+        counter.classList.remove("counter--active");
+        document.querySelector(".cursor").classList.remove("cursor--active");
+        document.body.style.cursor = "crosshair";
       }
       if (data.gameState === 1) {
         const winContainer = document.querySelector(".container");
