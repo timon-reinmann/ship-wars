@@ -10,8 +10,7 @@
       rel="icon"
       href="../img/favicon.ico"
       type="image/x-icon"
-      sizes="32x32"
-    />
+      sizes="32x32" />
   </head>
   <body>
     <a id="moving-button" href="../html/easter-egg.html">Beweglicher Button</a>
@@ -22,9 +21,12 @@
         <a href="../index.html" class="shipwars__logo"></a>
         <div class="navbar__list">
           <ul>
-            <li><a style="user-select: none" href="../index.html">Home</a></li>
+            <li><a style="user-select: none" href="#">Home</a></li>
             <li><a style="user-select: none" href="#">Friends</a></li>
           </ul>
+          <div class="hamburger">
+            <i class="hamburger__icon fa-solid fa-bars"></i>
+          </div>
         </div>
       </nav>
     </div>
@@ -36,8 +38,7 @@
           type="text"
           class="text"
           placeholder="lobbyname"
-          id="lobbyname"
-        /><br />
+          id="lobbyname" /><br />
         <button>
           <span class="icon_create" id="lobbyinput" type="submit"
             ><ion-icon name="create"></ion-icon
@@ -59,8 +60,7 @@
             class="text"
             id="linkoutput"
             placeholder="https://shipwars.ch/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-            readonly
-          />
+            readonly />
           <button>
             <span class="icon_link"><ion-icon name="copy"></ion-icon></span>
           </button>
@@ -80,8 +80,7 @@
             type="email"
             class="email-input"
             placeholder="E-mail"
-            id="email-input"
-          /><br />
+            id="email-input" /><br />
           <button type="submit" id="email" class="btn">Send link</button>
 
           <div class="link-email">
@@ -95,15 +94,15 @@
     <script type="module" src="../js/invite.js"></script>
     <script
       type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script
       nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script
       src="https://kit.fontawesome.com/35470b0449.js"
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/d6df3707cf.js"
+      crossorigin="anonymous"></script>
   </body>
 </html>
