@@ -13,8 +13,7 @@
     <video class="video" id="myVideo" data-length="199200" controls>
       <source
         src="/Frontend/img/Rick Astley - Never Gonna Give You Up (Official Music Video).mp4"
-        type="video/mp4"
-      />
+        type="video/mp4" />
     </video>
 
     <div class="background-animation"></div>
@@ -22,14 +21,15 @@
       <nav class="shipwars__navbar">
         <a
           href="https://en.wikipedia.org/wiki/Battleship_(game)"
-          class="shipwars__logo"
-        ></a>
+          class="shipwars__logo"></a>
         <div class="navbar__list">
           <ul>
             <li><a style="user-select: none" href="#">Home</a></li>
             <li><a style="user-select: none" href="#">Friends</a></li>
           </ul>
-          <i class="hamburger fa-solid fa-bars"></i>
+          <div class="hamburger">
+            <i class="hamburger__icon fa-solid fa-bars"></i>
+          </div>
         </div>
       </nav>
       <div class="shipwars__title">
@@ -44,8 +44,8 @@
           ><p class="shipwars__button-text">VS Player</p></a
         >
 
-        <button id="sidebarBtn" class="btn">
-          <p class="btn-text">Directions</p>
+        <button id="sidebarBtn" class="btn shipwars__button">
+          <p class="btn-text shipwars__button-text">Directions</p>
         </button>
         <selection id="sidebar" class="sidebar-text">
           <h1>Directions</h1>
@@ -128,8 +128,7 @@
                 <img
                   src="img/clicktosendemail.png"
                   alt=""
-                  class="clicktosendemail"
-                />
+                  class="clicktosendemail" />
                 <button class="button close-button">close modal</button>
               </dialog>
             </div>
@@ -158,7 +157,6 @@
     <script src="js/Play-Easter-eggs-Video.js"></script>
     <script
       src="https://kit.fontawesome.com/d6df3707cf.js"
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
   </body>
 </html>

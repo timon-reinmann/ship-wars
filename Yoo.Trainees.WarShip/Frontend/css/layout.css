@@ -2,6 +2,7 @@ body {
   font-family: Brush Script MT, Brush Script Std, cursive;
   list-style: none;
   overflow-x: hidden;
+  height: 100vh;
 }
 
 :root {
@@ -26,6 +27,37 @@ body {
   src: url(../font/BadGrunge.ttf);
 }
 
+@media screen and (max-width: 900px) {
+  .shipwars__logo {
+    height: 10rem;
+    width: 10rem;
+  }
+  .navbar__list {
+    width: 11rem !important;
+  }
+  .navbar__list ul {
+    display: none !important;
+    width: 3rem;
+  }
+  .hamburger {
+    display: block !important;
+    transform: skew(-30deg);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .navbar__list {
+    left: 10% !important;
+  }
+}
+
+@media screen and (max-height: 800px) {
+  .shipwars__logo {
+    height: 8rem !important;
+    width: 8rem !important;
+  }
+}
+
 .background-animation {
   position: fixed;
   top: 0;
@@ -43,21 +75,7 @@ body {
   background-size: contain;
   height: 15rem;
   width: 15rem;
-}
-
-@media screen and (max-width: 770px) {
-  .shipwars__logo {
-    height: 10rem;
-    width: 10rem;
-  }
-  .navbar__list ul {
-    display: none !important;
-    width: 3rem;
-  }
-  .hamburger {
-    display: block;
-    transform: skew(-30deg);
-  }
+  transition: all 0.3s ease-in-out;
 }
 
 .shipwars__navbar {
@@ -68,13 +86,16 @@ body {
 
 .hamburger {
   display: none;
+}
+
+.hamburger__icon {
   color: var(--white);
 }
 
 .navbar__list {
   position: relative;
   left: 5%;
-  width: 40%;
+  width: 40vw;
   height: 5rem;
   background-color: rgba(128, 128, 128, 0.5);
   display: flex;
@@ -87,6 +108,7 @@ body {
   border: 1px solid #fefefe;
   transform: skew(30deg);
   user-select: none;
+  transition: all 0.3s ease-in-out;
 }
 
 .navbar__list ul {
@@ -104,6 +126,7 @@ body {
 
 .navbar__list li {
   display: table-cell;
+  margin-right: 2rem;
 }
 
 .navbar__list a {

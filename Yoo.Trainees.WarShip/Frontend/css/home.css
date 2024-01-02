@@ -4,11 +4,25 @@
 }
 @media screen and (height < 800px) {
   .shipwars__title {
-    top: -12rem !important;
     left: 4% !important;
   }
   .shipwars__buttons {
     top: -4rem !important;
+  }
+}
+
+@media screen and (max-width: 500px), (max-height: 920px) {
+  .shipwars__button {
+    width: 18rem !important;
+    height: 3rem !important;
+  }
+
+  .shipwars__button-text {
+    font-size: 2.5rem !important;
+  }
+
+  .shipwars__title {
+    width: 95% !important;
   }
 }
 
@@ -49,11 +63,11 @@
 }
 
 .shipwars__button {
+  display: flex;
   width: 20rem;
   height: 5rem;
   transform: skew(-30deg) translate(-50%, -50%);
   border: 1px solid #fefefe;
-  display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -71,7 +85,7 @@
   transform: skew(30deg);
   opacity: 1;
   font-family: walkingdead;
-  font-size: 60px;
+  font-size: 3.75rem;
   user-select: none;
 }
 
