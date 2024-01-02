@@ -24,8 +24,8 @@
 }
 .icon_create {
   position: absolute;
-  bottom: 15%;
-  left: 35%;
+  inset: 25%;
+  transform: translateX(10%);
 }
 
 .copy__text,
