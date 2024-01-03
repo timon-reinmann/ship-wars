@@ -1,5 +1,6 @@
 // @ts-check
 const { test, expect } = require("@playwright/test");
+const { text } = require("stream/consumers");
 
 test("has title", async ({ page }) => {
   await page.goto("http://127.0.0.1:5500/Frontend/index.html");
@@ -70,4 +71,36 @@ test("place ships", async ({ page }) => {
   await page.waitForTimeout(2000);
 
   await expect(page.getByText(/finished!!!/)).toBeVisible();
+});
+
+test("send message", async ({ page }) => {
+  await page.goto("http://127.0.0.1:5500/Frontend/html/invite.html");
+
+  await page.click("#lobbyinput");
+
+  await page.getByRole("button", { name: "Link for friend" }).click();
+
+  await page.click("#button--copy");
+
+  await page.waitForTimeout(2000);
+
+  await page.getByText(/Game/).click();
+
+  await page.click("#messageInput");
+
+  await page.fill("#messageInput", "Hello");
+
+  await page.click("#sendButton");
+
+  await expect(page.getByText(/Hans:/)).toBeVisible();
+});
+
+test("open directions", async ({ page }) => {
+  await page.goto("http://127.0.0.1:5500/Frontend/index.html");
+
+  await page.click("#sidebarBtn");
+
+  await expect(
+    page.getByText(/Click on the topic that interests you./)
+  ).toBeVisible();
 });
