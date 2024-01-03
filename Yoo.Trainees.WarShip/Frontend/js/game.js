@@ -1078,6 +1078,8 @@ sendButton.addEventListener("click", function (event) {
 
 function showCountShots(shots, nextPlayer, gameState) {
   const counter = document.querySelector(".counter");
+  const animationDuration = 500;
+
   if (nextPlayer.toString() === gamePlayerId) {
     counter.classList.add("counter--active");
     document.querySelector(".cursor").classList.add("cursor--active");
@@ -1087,7 +1089,7 @@ function showCountShots(shots, nextPlayer, gameState) {
     setTimeout(() => {
       document.querySelector(".cursor").classList.remove("cursor--active");
       document.body.style.cursor = "crosshair";
-    }, 500);
+    }, animationDuration);
   }
   if (shots) {
     counter.innerHTML = shots;
