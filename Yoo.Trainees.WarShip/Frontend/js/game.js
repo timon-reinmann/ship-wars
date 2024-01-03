@@ -1103,7 +1103,7 @@ function showCountShots(shots, nextPlayer, gameState) {
     const win = document.querySelector(".win");
     win.addEventListener("click", () => {
       win.remove();
-      document.body.style.margin = "5";
+      document.body.style.margin = "5px";
       document.body.style.overflowY = "visvible";
     });
   } else if (gameState === 2) {
@@ -1114,7 +1114,7 @@ function showCountShots(shots, nextPlayer, gameState) {
     const lost = document.querySelector(".lost");
     lost.addEventListener("click", () => {
       lost.remove();
-      document.body.style.margin = "5";
+      document.body.style.margin = "5px";
       document.body.style.overflowY = "visible";
     });
   }
