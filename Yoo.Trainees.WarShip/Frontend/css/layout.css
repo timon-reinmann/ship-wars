@@ -33,7 +33,7 @@ body {
     width: 10rem;
   }
   .navbar__list {
-    width: 11rem !important;
+    width: 10rem !important;
   }
   .navbar__list ul {
     display: none !important;

@@ -53,8 +53,31 @@
     grid-template-areas:
       "ship player1"
       "chatbox player2" !important;
-    grid-template-columns: 0.5fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 0.25fr 1fr !important;
+    grid-template-rows: 1fr 1fr !important;
+  }
+
+  .ship__selection,
+  .chatBox {
+    margin: 1rem 1rem 1rem 1rem !important;
+    justify-self: stretch !important;
+  }
+
+  .mute__button {
+    right: 5% !important;
+    left: auto !important;
+  }
+}
+
+@media screen and (max-width: 1300px) and (min-width: 900px) {
+  .ship__selection,
+  .chatBox,
+  .commit-button {
+    transform: scale(0.8) !important;
+  }
+
+  .board {
+    transform: translateX(-50%) scale(0.8) !important;
   }
 }
 
@@ -290,7 +313,9 @@ body {
   box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
   position: absolute;
   border: 3px white solid;
-  margin: 650px 344px;
+  grid-area: player1;
+  bottom: 0%;
+  margin-bottom: 1rem;
   cursor: pointer;
   transform: scale(1);
   user-select: none;
