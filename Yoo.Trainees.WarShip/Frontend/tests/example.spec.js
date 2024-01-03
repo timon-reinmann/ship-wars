@@ -33,6 +33,24 @@ test("get started link", async ({ page }) => {
   await expect(page.getByText(/Commit/)).toBeVisible();
 });
 
+test("get startet email", async ({ page }) => {
+  await page.goto("http://127.0.0.1:5500/Frontend/html/invite.html");
+
+  await page.click("#lobbyinput");
+
+  await page.getByRole("button", { name: "Link for friend" }).click();
+
+  await page.getByRole("link", { name: "send Email" }).click();
+
+  await page.fill("#email-input", "alex@uscata.com");
+
+  await page.click("#email");
+
+  await page.waitForTimeout(2000);
+
+  await page.getByText(/Game/).click();
+});
+
 test("place ships", async ({ page }) => {
   await page.goto("http://127.0.0.1:5500/Frontend/html/invite.html");
 
