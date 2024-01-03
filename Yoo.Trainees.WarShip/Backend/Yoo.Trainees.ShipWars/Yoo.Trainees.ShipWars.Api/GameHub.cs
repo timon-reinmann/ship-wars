@@ -33,9 +33,9 @@ public sealed class GameHub : Hub
     {
         var gameId = await GetGameId(gamePlayerId);
         var opponent = await GetOpponent(gamePlayerId, gameId);
-        var shots = _gameLogic.GetAllShotsOfOpponent(opponent.Id);
+        var shots = _gameLogic.GetAllShotsOfOpponent(opponent);
 
-        await Clients.Group(opponent.Id.ToString()).SendAsync("LoadShotsFromOpponent", shots);
+        await Clients.Group(opponent.ToString()).SendAsync("LoadShotsFromOpponent", shots);
     }
 
     // Count ALL shots for the counter and also give information for the nextplayer and game state (Ongoing, Lost, Won, Prep, Complete).
@@ -43,14 +43,17 @@ public sealed class GameHub : Hub
     {
         var gameStateDB = _gameLogic.GetGameState(gamePlayerId);
         var gameId = await GetGameId(gamePlayerId);
+        var opponentId = await GetOpponent(gamePlayerId, gameId);
+        var opponentGameState = _gameLogic.GetGameState(opponentId);
         var countAndNextPlayer = _gameLogic.CountShotsInDB(gamePlayerId);
 
-        await Clients.Group(gameId.ToString()).SendAsync("CountShots", countAndNextPlayer.ShotCount, countAndNextPlayer.IsNextPlayer, gameStateDB);
+        await Clients.Group(gamePlayerId.ToString()).SendAsync("CountShots", countAndNextPlayer.ShotCount, countAndNextPlayer.IsNextPlayer, gameStateDB);
+        await Clients.Group(opponentId.ToString()).SendAsync("CountShots", countAndNextPlayer.ShotCount, countAndNextPlayer.IsNextPlayer, opponentGameState);
     }
 
-    private async Task<GamePlayer> GetOpponent(Guid gamePlayerId, Guid gameId)
+    private async Task<Guid> GetOpponent(Guid gamePlayerId, Guid gameId)
     {
-        return await (from gp in _applicationDbContext.GamePlayer where gp.GameId == gameId && gp.Id != gamePlayerId select gp).SingleOrDefaultAsync();
+        return await (from gp in _applicationDbContext.GamePlayer where gp.GameId == gameId && gp.Id != gamePlayerId select gp.Id).SingleOrDefaultAsync();
     }
 
     private async Task<Guid> GetGameId(Guid gamePlayerId)

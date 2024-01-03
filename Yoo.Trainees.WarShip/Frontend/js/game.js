@@ -30,50 +30,7 @@ connectionGameHub.on("LoadShotsFromOpponent", function (shots) {
 });
 
 connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
-  const counter = document.querySelector(".counter");
-  if (nextPlayer.toString() === gamePlayerId) {
-    counter.classList.add("counter--active");
-    document.querySelector(".cursor").classList.add("cursor--active");
-    document.body.style.cursor = "none";
-  } else {
-    counter.classList.remove("counter--active");
-    setTimeout(() => {
-      document.querySelector(".cursor").classList.remove("cursor--active");
-      document.body.style.cursor = "crosshair";
-    }, 500);
-  }
-  if (shots) {
-    counter.innerHTML = shots;
-  }
-  if (gameState === 1 || gameState === 2) {
-    connectionGameHub.stop();
-    counter.classList.remove("counter--active");
-    document.querySelector(".cursor").classList.remove("cursor--active");
-    document.body.style.cursor = "crosshair";
-  }
-  if (gameState === 1 && nextPlayer.toString() !== gamePlayerId) {
-    const winContainer = document.querySelector(".container");
-    winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
-    document.body.style.margin = "0";
-    document.body.style.overflow = "hidden";
-    const win = document.querySelector(".win");
-    win.addEventListener("click", () => {
-      win.remove();
-      document.body.style.margin = "5";
-      document.body.style.overflowY = "visvible";
-    });
-  } else if (gameState === 1 && nextPlayer.toString() === gamePlayerId) {
-    const looseContainer = document.querySelector(".container");
-    looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
-    document.body.style.margin = "0";
-    document.body.style.overflow = "hidden";
-    const lost = document.querySelector(".lost");
-    lost.addEventListener("click", () => {
-      lost.remove();
-      document.body.style.margin = "5";
-      document.body.style.overflowY = "visible";
-    });
-  }
+  showCountShots(shots, nextPlayer, gameState);
 });
 
 connectionGameHub
@@ -122,6 +79,7 @@ const ScissorsRockPaperEnum = {
   Rock: 1,
   Paper: 2,
 };
+const GameStateEnum = {};
 
 const sound = new Audio("../sound/pewpew.mp3");
 
@@ -923,48 +881,7 @@ function countShots() {
   })
     .then((response) => response.json())
     .then((data) => {
-      const counter = document.querySelector(".counter");
-      if (data.nextPlayer.toString() === gamePlayerId) {
-        counter.classList.add("counter--active");
-        document.querySelector(".cursor").classList.add("cursor--active");
-        document.body.style.cursor = "none";
-      } else {
-        counter.classList.remove("counter--active");
-        document.querySelector(".cursor").classList.remove("cursor--active");
-        document.body.style.cursor = "crosshair";
-      }
-      if (data.shots) {
-        counter.innerHTML = data.shots;
-      }
-      if (data.gameState === 1 || data.gameState === 2) {
-        connectionGameHub.stop();
-        counter.classList.remove("counter--active");
-        document.querySelector(".cursor").classList.remove("cursor--active");
-        document.body.style.cursor = "crosshair";
-      }
-      if (data.gameState === 1) {
-        const winContainer = document.querySelector(".container");
-        winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
-        document.body.style.margin = "0";
-        document.body.style.overflow = "hidden";
-        const win = document.querySelector(".win");
-        win.addEventListener("click", () => {
-          win.remove();
-          document.body.style.margin = "5";
-          document.body.style.overflowY = "visvible";
-        });
-      } else if (data.gameState === 2) {
-        const looseContainer = document.querySelector(".container");
-        looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
-        document.body.style.margin = "0";
-        document.body.style.overflow = "hidden";
-        const lost = document.querySelector(".lost");
-        lost.addEventListener("click", () => {
-          lost.remove();
-          document.body.style.margin = "5";
-          document.body.style.overflowY = "visible";
-        });
-      }
+      showCountShots(data.shots, data.nextPlayer, data.gameState);
     })
     .catch((error) => {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
@@ -1155,3 +1072,50 @@ const sendButton = document.getElementById("sendButton");
 sendButton.addEventListener("click", function (event) {
   messageInput.value = "";
 });
+
+function showCountShots(shots, nextPlayer, gameState) {
+  const counter = document.querySelector(".counter");
+  if (nextPlayer.toString() === gamePlayerId) {
+    counter.classList.add("counter--active");
+    document.querySelector(".cursor").classList.add("cursor--active");
+    document.body.style.cursor = "none";
+  } else {
+    counter.classList.remove("counter--active");
+    setTimeout(() => {
+      document.querySelector(".cursor").classList.remove("cursor--active");
+      document.body.style.cursor = "crosshair";
+    }, 500);
+  }
+  if (shots) {
+    counter.innerHTML = shots;
+  }
+  if (gameState === 1 || gameState === 2) {
+    connectionGameHub.stop();
+    counter.classList.remove("counter--active");
+    document.querySelector(".cursor").classList.remove("cursor--active");
+    document.body.style.cursor = "crosshair";
+  }
+  if (gameState === 1) {
+    const winContainer = document.querySelector(".container");
+    winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
+    document.body.style.margin = "0";
+    document.body.style.overflow = "hidden";
+    const win = document.querySelector(".win");
+    win.addEventListener("click", () => {
+      win.remove();
+      document.body.style.margin = "5";
+      document.body.style.overflowY = "visvible";
+    });
+  } else if (gameState === 2) {
+    const looseContainer = document.querySelector(".container");
+    looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
+    document.body.style.margin = "0";
+    document.body.style.overflow = "hidden";
+    const lost = document.querySelector(".lost");
+    lost.addEventListener("click", () => {
+      lost.remove();
+      document.body.style.margin = "5";
+      document.body.style.overflowY = "visible";
+    });
+  }
+}
