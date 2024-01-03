@@ -1097,26 +1097,22 @@ function showCountShots(shots, nextPlayer, gameState) {
     counter.classList.remove("counter--active");
     document.querySelector(".cursor").classList.remove("cursor--active");
     document.body.style.cursor = "crosshair";
-  }
-  if (gameState === GameStateEnum.Won) {
-    const winContainer = document.querySelector(".container");
-    winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
+
+    const gameEnd = document.querySelector(".container");
+    gameEnd.innerHTML +=
+      gameState === GameStateEnum.Won
+        ? `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`
+        : `<div class="lost"><img src="../img/die.png"></img></div>`;
+    const result =
+      gameState === GameStateEnum.Won
+        ? document.querySelector(".win")
+        : document.querySelector(".lost");
+
     document.body.style.margin = "0";
     document.body.style.overflow = "hidden";
-    const win = document.querySelector(".win");
-    win.addEventListener("click", () => {
-      win.remove();
-      document.body.style.margin = "5px";
-      document.body.style.overflowY = "visvible";
-    });
-  } else if (gameState === GameStateEnum.Lost) {
-    const looseContainer = document.querySelector(".container");
-    looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
-    document.body.style.margin = "0";
-    document.body.style.overflow = "hidden";
-    const lost = document.querySelector(".lost");
-    lost.addEventListener("click", () => {
-      lost.remove();
+
+    result.addEventListener("click", (e) => {
+      result.remove();
       document.body.style.margin = "5px";
       document.body.style.overflowY = "visible";
     });
