@@ -40,8 +40,8 @@
   user-select: none;
 }
 
-.copy__text input.input__text,
-.submit__lobbyname input.input__text {
+.copy__text input,
+.submit__lobbyname input {
   padding: 10px;
   font-size: 18px;
   color: #555;
