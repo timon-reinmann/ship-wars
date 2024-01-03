@@ -49,7 +49,7 @@ test("place ships", async ({ page }) => {
 
   await page.locator("#cruiser1").dragTo(page.locator("#box20"));
 
-  await page.locator("#cruiser1").dragTo(page.locator("#box40"));
+  await page.locator("#cruiser2").dragTo(page.locator("#box40"));
 
   await page.locator("#destroyer1").dragTo(page.locator("#box60"));
 
@@ -64,4 +64,10 @@ test("place ships", async ({ page }) => {
   await page.locator("#submarine3").dragTo(page.locator("#box97"));
 
   await page.locator("#submarine4").dragTo(page.locator("#box99"));
+
+  await page.click("#commit_button");
+
+  await page.waitForTimeout(2000);
+
+  await expect(page.getByText(/finished!!!/)).toBeVisible();
 });
