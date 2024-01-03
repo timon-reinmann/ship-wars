@@ -75,7 +75,8 @@ submit_button.addEventListener("click", async function () {
     });
 });
 
-send_email.addEventListener("click", async () => {
+send_email.addEventListener("click", async (e) => {
+  e.preventDefault();
   const email = document.getElementById("email-input").value;
   joinGame.classList.add("active");
   let daten = {
