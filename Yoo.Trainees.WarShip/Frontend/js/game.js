@@ -79,7 +79,10 @@ const ScissorsRockPaperEnum = {
   Rock: 1,
   Paper: 2,
 };
-const GameStateEnum = {};
+const GameStateEnum = {
+  Won: 1,
+  Lost: 2,
+};
 
 const sound = new Audio("../sound/pewpew.mp3");
 
@@ -1089,13 +1092,13 @@ function showCountShots(shots, nextPlayer, gameState) {
   if (shots) {
     counter.innerHTML = shots;
   }
-  if (gameState === 1 || gameState === 2) {
+  if (gameState === GameStateEnum.Won || gameState === GameStateEnum.Lost) {
     connectionGameHub.stop();
     counter.classList.remove("counter--active");
     document.querySelector(".cursor").classList.remove("cursor--active");
     document.body.style.cursor = "crosshair";
   }
-  if (gameState === 1) {
+  if (gameState === GameStateEnum.Won) {
     const winContainer = document.querySelector(".container");
     winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
     document.body.style.margin = "0";
@@ -1106,7 +1109,7 @@ function showCountShots(shots, nextPlayer, gameState) {
       document.body.style.margin = "5px";
       document.body.style.overflowY = "visvible";
     });
-  } else if (gameState === 2) {
+  } else if (gameState === GameStateEnum.Lost) {
     const looseContainer = document.querySelector(".container");
     looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
     document.body.style.margin = "0";
