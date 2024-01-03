@@ -16,4 +16,12 @@ test("get started link", async ({ page }) => {
 
   // Expects page to have a heading with the name of Installation.
   await expect(page.getByText(/Home/)).toBeVisible();
+
+  await page.click("#lobbyinput");
+
+  await page.getByRole("button", { name: "Link for friend" }).click();
+
+  await page.click("#button--copy");
+
+  await expect(page.getByText(/Join Game/)).toBeVisible();
 });
