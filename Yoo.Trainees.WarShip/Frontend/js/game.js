@@ -611,21 +611,24 @@ function countShots() {
     .then((response) => response.json())
     .then((data) => {
       const counter = document.querySelector(".counter");
-      if (data.nextPlayer.toString() === gamePlayerId) {
-        counter.classList.add("counter--active");
-        document.querySelector(".cursor").classList.add("cursor--active");
-        document.body.style.cursor = "none";
-      } else {
-        counter.classList.remove("counter--active");
-        document.querySelector(".cursor").classList.remove("cursor--active");
-        document.body.style.cursor = "crosshair";
+      if (isHuman) {
+        if (data.nextPlayer.toString() === gamePlayerId) {
+          counter.classList.add("counter--active");
+          document.querySelector(".cursor").classList.add("cursor--active");
+          document.body.style.cursor = "none";
+        } else {
+          counter.classList.remove("counter--active");
+          document.querySelector(".cursor").classList.remove("cursor--active");
+          document.body.style.cursor = "crosshair";
+        }
+        if (data.gameState === 1 || data.gameState === 2) {
+          connectionGameHub.stop();
+        }
       }
       if (data.shots) {
         counter.innerHTML = data.shots;
       }
-      if (data.gameState === 1 || data.gameState === 2) {
-        connectionGameHub.stop();
-      }
+
       if (data.gameState === 1) {
         const winContainer = document.querySelector(".container");
         winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;

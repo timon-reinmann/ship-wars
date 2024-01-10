@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.Data;
+using System.Diagnostics.Metrics;
 using Yoo.Trainees.ShipWars.Api.Controllers;
 using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
@@ -167,32 +168,24 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return true;
         }
 
-        public bool VerifyBotShot(SaveBotShotsDto[] shot)
+        public bool VerifyBotShot(IList<SaveBotShotsDto> shots, SaveBotShotsDto lastShot)
         {
-            for (int i = 0; i < shot.Length; i++)
+            if (lastShot.X > 9 || lastShot.X < 0 || lastShot.Y > 9 || lastShot.Y < 0)
             {
-                if (shot.Last().X > 9 || shot.Last().X < 0 || shot.Last().Y > 9 || shot.Last().Y < 0)
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                if (i - 1 < 0)
-                {
-                    return true;
-                }
+            if (shots.Count > 1)
+            {
+                // Check if a shot with this coordinates already exists. If yes, verification fails
+                var shotAlreadyExists = shots.Any(x => x.X == lastShot.X && x.Y == lastShot.Y);
 
-                var sh = shot[i-1];
-
-                if (shot.Last() == sh)
-                {
-                    return false;
-                }
-
+                return !shotAlreadyExists;
 
             }
+
             return true;
         }
-
         public SaveShipDto VerifyShipHit(List<SaveShipDto> ships, SaveShotsDto shot)
         {
             foreach (var ship in ships)

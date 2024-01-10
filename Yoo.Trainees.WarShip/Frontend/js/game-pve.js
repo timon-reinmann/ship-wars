@@ -159,6 +159,7 @@ opponentFields.forEach((opponentField) => {
         //ToDo
         if (data.hit === 1 || data.hit === 0) {
           opponentField.classList.add("field--hit");
+          countShots(gamePlayerId);
         }
         if (data.hit === 1) {
           opponentField.classList.add("field--hit--ship");
@@ -193,6 +194,7 @@ function proveIfShipHit(X, Y, gamePlayerId, field, showExposion) {
       //ToDo
       if (data.hit === 1 || data.hit === 0) {
         field.classList.add("field--hit");
+        countShots(gamePlayerId);
         // ownField.classList.add("field--hit");
       }
       if (data.hit === 1) {

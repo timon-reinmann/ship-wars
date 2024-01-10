@@ -128,44 +128,36 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         {
             var game = GetGame(gamePlayerId);
             var botGamePlayer = GetBotGamePlayer(gamePlayerId, game.Id);
-            var shotLength = GetShotCount(gamePlayerId, game.Id);
-            var botShotPosition = new SaveBotShotsDto[1];
-            var botShots = new SaveBotShotsDto[shotLength + 1];
+            var allBotShots = GetAllBotShots(gamePlayerId, game.Id);
             Random rnd = new Random();
+            SaveBotShotsDto botShots;
 
-
-            for (int i = shotLength; i <= shotLength; i++)
+            bool shotVerified;
+            do
             {
-                botShots[i] = new SaveBotShotsDto
+                botShots = new SaveBotShotsDto
                 {
                     X = rnd.Next(0, 10),
                     Y = rnd.Next(0, 10)
                 };
 
-                var verifyResult = _verificationLogic.VerifyBotShot(botShots);
-                if (verifyResult)
+                shotVerified = _verificationLogic.VerifyBotShot(allBotShots, botShots);
+
+                if (shotVerified)
                 {
                     var shot = new Shot
                     {
                         Id = Guid.NewGuid(),
-                        X = botShots[i].X,
-                        Y = botShots[i].Y,
+                        X = botShots.X,
+                        Y = botShots.Y,
                         Player = botGamePlayer
                     };
                     _applicationDbContext.Shot.Add(shot);
                     _applicationDbContext.SaveChanges();
+                }
+            } while (!shotVerified);
 
-                    if (botGamePlayer != null)
-                    {
-                        botShotPosition[0] = botShots[shotLength];
-                    }
-                }
-                else
-                {
-                    i = i - 1;
-                }
-            }
-            return botShots.Last();
+            return botShots;
         }
 
         public ShipHit CheckIfBotHit(SaveShotsDto xy, Guid gamePlayerId)
