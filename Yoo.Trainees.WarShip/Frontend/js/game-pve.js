@@ -156,7 +156,6 @@ opponentFields.forEach((opponentField) => {
         setTimeout(() => {
           cursor.classList.remove("recoil-animation");
         }, 200);
-        //ToDo
         if (data.hit === 1 || data.hit === 0) {
           opponentField.classList.add("field--hit");
           countShots(gamePlayerId);
@@ -191,18 +190,12 @@ function proveIfShipHit(X, Y, gamePlayerId, field, showExposion) {
     .then((response) => response.json())
     .then((data) => {
       sound.play();
-      //ToDo
       if (data.hit === 1 || data.hit === 0) {
         field.classList.add("field--hit");
         countShots(gamePlayerId);
-        // ownField.classList.add("field--hit");
       }
-      if (data.hit === 1) {
-        // ownField.classList.add("field--hit--ship");
-        field.classList.add("field--hit--ship");
-        if (showExposion) {
-          showExplosionAnimation(field);
-        }
+      if (data.hit === 1 && showExposion) {
+        showExplosionAnimation(field);
       }
       isReadyToShotBot = readyToShot(isReadyToShotBot);
     });
