@@ -72,6 +72,20 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             return BadRequest();
         }
 
+        [HttpPost("{gamePlayerId}/CheckBotHitShip")]
+        public IActionResult CheckBotHitShip(Guid gamePlayerId, [FromBody] SaveShotsDto xy, Guid gameId)
+        {
+            try
+            {
+                var shipHit = _botLogic.CheckIfBotHit(xy, gamePlayerId);
+                return Ok(new { hit = shipHit });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { bad = -1 });
+            }
+        }
+
         // It saves the Shot in the DB and returns if a ship was hit.
         [HttpPost("{gamePlayerId}/SaveShot")]
         public IActionResult SaveShot([FromBody] SaveShotsDto xy, Guid gameId, Guid gamePlayerId)
@@ -81,8 +95,11 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             {
                 if (isBotLobby)
                 {
-                    var shipHit = _gameLogic.CheckIfShipHit(xy, gamePlayerId);
+                    _gameLogic.VerifyAndSaveShot(xy, gamePlayerId);
+                    var botGamePlayerId = _botLogic.GetBotGamePlayerId(gamePlayerId);
+                    var shipHit = _gameLogic.CheckIfShipHit(xy, botGamePlayerId);
                     return Ok(new { hit = shipHit });
+
                 }
                 else
                 {
@@ -160,10 +177,14 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
 
         // Post api/<Game>/5/SaveShips.
-        [HttpPost("SaveShips")]
-        public async Task<IActionResult> SaveShips([FromBody] SaveShipsDto ships)
+        [HttpPost("{id}/SaveShips")]
+        public async Task<IActionResult> SaveShips( Guid id, [FromBody] SaveShipsDto ships)
         {
             var gameId = ships.GameId;
+            if (id != gameId)
+            {
+                return BadRequest("Mismatch game ID");
+            }
             bool isBotLobby = _botLogic.IsBotLobby(gameId);
 
             bool isValidRequest = _verificationLogic.VerifyEverything(ships.Ships);
@@ -178,7 +199,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             }
             else
             {
-                _botLogic.SaveShipPositions(ships);
+                _botLogic.SaveShipPositionsInBotGame(ships);
             }
             return Ok();
         }
@@ -212,6 +233,21 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         {
             var user = _gameLogic.GetCurrentUser(gamePlayerId);
             return Ok(new { User = user });
+        }
+
+        [HttpGet("{gamePlayerId}/GetShotsFromBot")]
+        public IActionResult GetBotShots(Guid gamePlayerId)
+        {
+            var botShotPositions = _botLogic.BotShotPosition(gamePlayerId);
+            return Ok(new { BotShots = botShotPositions });
+        }
+
+        [HttpGet("{gamePlayerId}/LoadShotsFromBot")]
+        public IActionResult LoadShotsFromBot(Guid gamePlayerId)
+        {
+            var game = _botLogic.GetGame(gamePlayerId);
+            var botShots = _botLogic.GetAllBotShots(gamePlayerId, game.Id);
+            return Ok(new { BotShots = botShots });
         }
 
         // Create link for invitation.

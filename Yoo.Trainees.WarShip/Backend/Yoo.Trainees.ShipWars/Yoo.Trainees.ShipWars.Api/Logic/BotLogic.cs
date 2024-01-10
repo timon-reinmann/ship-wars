@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections;
+using System.Linq;
 using Yoo.Trainees.ShipWars.Api.Controllers;
 using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
@@ -31,7 +32,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             this._configuration = configuration;
         }
 
-        public void SaveShipPositions(SaveShipsDto SwaggerData)
+        public void SaveShipPositionsInBotGame(SaveShipsDto SwaggerData)
         {
             var gamePlayerId = SwaggerData.GamePlayerId;
             var game = GetGame(gamePlayerId);
@@ -41,7 +42,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 throw new Exception("game not found");
             }
 
-            var botGamePlayerId = GetBotGamePlayerId(gamePlayerId, game.Id);
+            var botGamePlayerId = GetBotGamePlayerId(gamePlayerId);
 
             Guid id = new Guid();
             for (var i = 0; i < SwaggerData.Ships.Length; i++)
@@ -65,16 +66,16 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             }
             _applicationDbContext.SaveChanges();
 
-            var saveShipDtos = GetBotShipPositions(gamePlayerId);
+            CreateAndSaveBotShipPositions(gamePlayerId);
         }
-        public SaveShipDto[] GetBotShipPositions(Guid gamePlayerId)
+        public void CreateAndSaveBotShipPositions(Guid gamePlayerId)
         {
             bool verifyResult = true;
             string[] badRequest = { "-1", "-1" };
             var saveShipDtos = new SaveShipDto[10];
             var shipCount = 10;
             var game = GetGame(gamePlayerId);
-            var botGamePLayerId = GetBotGamePlayerId(gamePlayerId, game.Id);
+            var botGamePLayerId = GetBotGamePlayerId(gamePlayerId);
 
 
             Random rnd = new Random();
@@ -121,9 +122,79 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             }
             _applicationDbContext.SaveChanges();
 
+        }
 
-                return saveShipDtos;
+        public SaveBotShotsDto BotShotPosition(Guid gamePlayerId)
+        {
+            var game = GetGame(gamePlayerId);
+            var botGamePlayer = GetBotGamePlayer(gamePlayerId, game.Id);
+            var shotLength = GetShotCount(gamePlayerId, game.Id);
+            var botShotPosition = new SaveBotShotsDto[1];
+            var botShots = new SaveBotShotsDto[shotLength + 1];
+            Random rnd = new Random();
 
+
+            for (int i = shotLength; i <= shotLength; i++)
+            {
+                botShots[i] = new SaveBotShotsDto
+                {
+                    X = rnd.Next(0, 10),
+                    Y = rnd.Next(0, 10)
+                };
+
+                var verifyResult = _verificationLogic.VerifyBotShot(botShots);
+                if (verifyResult)
+                {
+                    var shot = new Shot
+                    {
+                        Id = Guid.NewGuid(),
+                        X = botShots[i].X,
+                        Y = botShots[i].Y,
+                        Player = botGamePlayer
+                    };
+                    _applicationDbContext.Shot.Add(shot);
+                    _applicationDbContext.SaveChanges();
+
+                    if (botGamePlayer != null)
+                    {
+                        botShotPosition[0] = botShots[shotLength];
+                    }
+                }
+                else
+                {
+                    i = i - 1;
+                }
+            }
+            return botShots.Last();
+        }
+
+        public ShipHit CheckIfBotHit(SaveShotsDto xy, Guid gamePlayerId)
+        {
+
+            this._verificationLogic = new VerificationLogic();
+            var ships = (from sp in _applicationDbContext.ShipPosition
+                         where sp.GamePlayer.Id.Equals(gamePlayerId)
+                         select new SaveShipDto
+                         {
+                             Direction = (Yoo.Trainees.ShipWars.Api.Direction)sp.Direction,
+                             Id = sp.Id,
+                             ShipType = sp.Ship.Name,
+                             X = sp.X,
+                             Y = sp.Y
+                         }).ToList();
+
+            var ship = _verificationLogic.VerifyShipHit(ships, xy);
+            if (ship == null)
+            {
+                return ShipHit.Missed;
+            }
+            var shipDB = (from sp in _applicationDbContext.ShipPosition
+                          where sp.Id.Equals(ship.Id)
+                          select sp).FirstOrDefault();
+            shipDB.Life--;
+            _applicationDbContext.ShipPosition.Update(shipDB);
+            _applicationDbContext.SaveChanges();
+            return ShipHit.Hit;
         }
 
         public bool IsBotLobby(Guid gameId)
@@ -133,19 +204,50 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                     select g.IsBotGame).SingleOrDefault();
         }
 
-        private Game? GetGame(Guid gamePlayerId)
+        public Game? GetGame(Guid gamePlayerId)
         {
             return (from g in _applicationDbContext.GamePlayer
                     where g.Id.Equals(gamePlayerId)
                     select g.Game).SingleOrDefault();
         }
 
-        private Guid GetBotGamePlayerId(Guid gamePlayerId, Guid gameId)
+        private Guid GetBotPlayerId(Guid botGamePlayerId)
         {
+            return (from gp in _applicationDbContext.GamePlayer
+                    where gp.Id.Equals(botGamePlayerId)
+                    select gp.PlayerId).SingleOrDefault();
+        }
+
+        private GamePlayer? GetBotGamePlayer(Guid gamePLayerId, Guid gameId)
+        {
+            return (from gp in _applicationDbContext.GamePlayer
+                    where !gp.Id.Equals(gamePLayerId) &&
+                    gp.GameId.Equals(gameId)
+                    select gp).SingleOrDefault();
+        }
+
+        public Guid GetBotGamePlayerId(Guid gamePlayerId)
+        {
+            var gameId = GetGame(gamePlayerId).Id;
             return (from gp in _applicationDbContext.GamePlayer
                     where !gp.Id.Equals(gamePlayerId) &&
                     gp.GameId.Equals(gameId)
                     select gp.Id).SingleOrDefault();
+        }
+        private int GetShotCount(Guid gamePlayerId, Guid gameId)
+        {
+            var botGamePlayer = GetBotGamePlayer(gamePlayerId, gameId);
+            var shot = (from s in _applicationDbContext.Shot
+                        where s.Player.Equals(botGamePlayer)
+                        select s).Count();
+            return shot;
+        }
+        public List<SaveBotShotsDto> GetAllBotShots(Guid gamePlayerId, Guid gameId)
+        {
+            var botGamePlayer = GetBotGamePlayer(gamePlayerId, gameId);
+            return (from s in _applicationDbContext.Shot
+                    where s.Player.Equals(botGamePlayer)
+                    select new SaveBotShotsDto { X = s.X, Y = s.Y }).ToList();
         }
     }
 }

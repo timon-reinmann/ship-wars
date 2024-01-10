@@ -93,7 +93,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         public void CreateBoard(SaveShipsDto SwaggerData)
         {
-            var gamePlayerId = SwaggerData.GamePlayerId;
+
             var game = _applicationDbContext.Game.Find(SwaggerData.GameId);
             if (game == null)
             {
@@ -104,10 +104,10 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             {
                 var Ship = SwaggerData.Ships[i];
                 var shipType = _applicationDbContext.Ship.Where(ship => ship.Name == Ship.ShipType).SingleOrDefault();
-                                var shipPositio = new ShipPosition
+                var shipPositio = new ShipPosition
                 {
                     Id = Guid.NewGuid(),
-                    GamePlayerId = Guid.Parse(gamePlayerId.ToString()),
+                    GamePlayerId = Guid.Parse(SwaggerData.GamePlayerId.ToString()),
                     ShipId = Guid.Parse(shipType.Id.ToString()),
                     X = Ship.X,
                     Y = Ship.Y,

@@ -1,5 +1,9 @@
 const gameHubApi = api.replace("api/Game/", "GameHub");
 
+if (ifShipsPlaced) {
+  Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
+}
+
 let player1 = null;
 let activeWordCount1 = 0;
 let activeWordCount2 = 0;
@@ -468,7 +472,7 @@ commit_button.addEventListener("click", () => {
   }
 });
 
-async function sendShips(Ships) {
+async function sendShips(ships) {
   const API_URL = api + gameId + "/SaveShips";
   await fetch(API_URL, {
     credentials: "omit",
@@ -481,7 +485,9 @@ async function sendShips(Ships) {
       "Sec-Fetch-Dest": "empty",
     },
     body: JSON.stringify({
+      gameId,
       gamePlayerId,
+      ships,
     }),
     method: "POST",
   }).then((response) => {
@@ -493,31 +499,6 @@ async function sendShips(Ships) {
       intervalid = setInterval(checkIfPlayerReady, 1000);
     }
   });
-}
-
-function checkIfPlayerReady() {
-  const API_URL = api + gameId + "/Ready";
-  fetch(API_URL, {
-    credentials: "omit",
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-      Accept: "*/*",
-      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-      "Content-Type": "application/json",
-      "Sec-Fetch-Dest": "empty",
-    },
-    method: "GET",
-  })
-    .then((data) => {
-      if (data.ok) {
-        clearInterval(intervalid);
-        screenBlocker(isHuman);
-      }
-    })
-    .catch((error) => {
-      console.error("Es gab einen Fehler bei der Anfrage:", error);
-    });
 }
 
 function checkIfPlayerReady() {

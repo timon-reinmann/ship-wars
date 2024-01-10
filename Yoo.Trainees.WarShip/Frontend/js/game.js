@@ -2,13 +2,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
-const ifShipsPlaced = false;
-
-if (ifShipsPlaced) {
-  Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
-}
-
-loadHitShips(gamePlayerId);
+let ifShipsPlaced = false;
 
 const muteButton = document.querySelector(".mute__button");
 let mute = false;
@@ -386,7 +380,10 @@ function showExplosionAnimation(fieldElement) {
   img.src = "../img/explosion.gif";
   img.style.height = "50px";
   img.style.width = "50px";
-
+  img.style.top = "1px";
+  img.style.left = "1px";
+  img.style.position = "absolute";
+  img.style.zIndex = "4000";
   // Füge das <img> Element zum Ziel-Feld hinzu
   fieldElement.appendChild(img);
 
@@ -507,14 +504,17 @@ function CheckIfBoardSet(gameId) {
     .then((response) => response.json())
     .then((data) => {
       if (data) {
+        ifShipsPlaced = true;
         loadGameBoard(data);
         createLoadingScreen();
         if (!isHuman)
           setTimeout(() => {
             screenBlocker(isHuman);
-            isReadyToShootBot = true;
+            isReadyToShotBot = true;
           }, 1000);
-        intervalid = setInterval(checkIfPlayerReady, 1000);
+        if (isHuman) {
+          intervalid = setInterval(checkIfPlayerReady, 1000);
+        }
       }
     })
     .catch((error) => {

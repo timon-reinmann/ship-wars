@@ -167,6 +167,32 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return true;
         }
 
+        public bool VerifyBotShot(SaveBotShotsDto[] shot)
+        {
+            for (int i = 0; i < shot.Length; i++)
+            {
+                if (shot.Last().X > 9 || shot.Last().X < 0 || shot.Last().Y > 9 || shot.Last().Y < 0)
+                {
+                    return false;
+                }
+
+                if (i - 1 < 0)
+                {
+                    return true;
+                }
+
+                var sh = shot[i-1];
+
+                if (shot.Last() == sh)
+                {
+                    return false;
+                }
+
+
+            }
+            return true;
+        }
+
         public SaveShipDto VerifyShipHit(List<SaveShipDto> ships, SaveShotsDto shot)
         {
             foreach (var ship in ships)
