@@ -245,8 +245,22 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{gamePlayerId}/GetShotsFromBot")]
         public IActionResult GetBotShots(Guid gamePlayerId)
         {
-            var botShotPositions = _botLogic.BotShotPosition(gamePlayerId);
-            return Ok(new { BotShots = botShotPositions });
+            SaveBotShotsDto botShotPositions = null;
+            var game = _botLogic.GetGame(gamePlayerId);
+            GameMode gameMode = (Yoo.Trainees.ShipWars.Api.Controllers.GameController.GameMode)_botLogic.GetGameMode(game.Id);
+            if (gameMode == GameMode.easy)
+            {
+                botShotPositions = _botLogic.BotShotPosition(gamePlayerId);
+            }
+            else if (gameMode == GameMode.hard) 
+            {
+                botShotPositions = _botLogic.HardGameMode(gamePlayerId);    
+            }
+            if (botShotPositions != null)
+            {
+                return Ok(new { BotShots = botShotPositions });
+            }
+            return BadRequest();
         }
 
         [HttpGet("{gamePlayerId}/LoadShotsFromBot")]

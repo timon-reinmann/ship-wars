@@ -12,5 +12,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         List<SaveBotShotsDto> GetAllBotShots(Guid gamePlayerId, Guid gameId);
         Game? GetGame(Guid gamePlayerId);
         Guid GetBotGamePlayerId(Guid gamePlayerId);
+        GameMode GetGameMode(Guid gameId);
+        SaveBotShotsDto HardGameMode(Guid gamePlayerId);
     }
 }

@@ -189,6 +189,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return ShipHit.Hit;
         }
 
+        public SaveBotShotsDto HardGameMode(Guid gamePlayerId)
+        {
+            SaveBotShotsDto botShot = BotShotPosition(gamePlayerId);
+            return botShot;
+        }
+
         public bool IsBotLobby(Guid gameId)
         {
             return (from g in _applicationDbContext.Game
@@ -203,6 +209,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                     select g.Game).SingleOrDefault();
         }
 
+        public GameMode GetGameMode(Guid gameId)
+        {
+            return (Yoo.Trainees.ShipWars.Api.Logic.GameMode)(from g in _applicationDbContext.Game
+                    where g.Id.Equals(gameId)
+                    select g.GameMode).SingleOrDefault();
+        }
         private Guid GetBotPlayerId(Guid botGamePlayerId)
         {
             return (from gp in _applicationDbContext.GamePlayer
