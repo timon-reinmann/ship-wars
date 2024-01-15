@@ -167,7 +167,7 @@ opponentFields.forEach((opponentField) => {
         isReadyToShotBot = notReadyToShot(isReadyToShotBot);
         setTimeout(() => {
           getShotsFromBot(gamePlayerId, getShotsFromBot);
-        });
+        }, 1500);
       });
   });
 });

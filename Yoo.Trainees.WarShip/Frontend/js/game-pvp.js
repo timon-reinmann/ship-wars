@@ -3,7 +3,15 @@ const gameHubApi = api.replace("api/Game/", "GameHub");
 if (ifShipsPlaced) {
   Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
 }
-
+CheckIfBoardSet(gamePlayerId).then(() => {
+  if (ifShipsPlaced) {
+    Promise.all([
+      loadHitShips(gamePlayerId),
+      loadFiredShots(gamePlayerId),
+      CheckIfBoardSet(gamePlayerId),
+    ]).then();
+  }
+});
 let player1 = null;
 let activeWordCount1 = 0;
 let activeWordCount2 = 0;
@@ -47,7 +55,7 @@ connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
   if (gameState === 1 || gameState === 2) {
     connectionGameHub.stop();
   }
-  if (gameState === 1 && nextPlayer.toString() === gamePlayerId) {
+  if (gameState === 1 && nextPlayer.toString() !== gamePlayerId) {
     const winContainer = document.querySelector(".container");
     winContainer.innerHTML += `<div class="win"><img src="../img/VictoryRoyaleSlate.png"></img></div>`;
     document.body.style.margin = "0";
@@ -58,7 +66,7 @@ connectionGameHub.on("CountShots", function (shots, nextPlayer, gameState) {
       document.body.style.margin = "5";
       document.body.style.overflowY = "visvible";
     });
-  } else if (gameState === 1 && nextPlayer.toString() !== gamePlayerId) {
+  } else if (gameState === 1 && nextPlayer.toString() === gamePlayerId) {
     const looseContainer = document.querySelector(".container");
     looseContainer.innerHTML += `<div class="lost"><img src="../img/die.png"></img></div>`;
     document.body.style.margin = "0";
@@ -499,29 +507,4 @@ async function sendShips(ships) {
       intervalid = setInterval(checkIfPlayerReady, 1000);
     }
   });
-}
-
-function checkIfPlayerReady() {
-  const API_URL = api + gameId + "/Ready";
-  fetch(API_URL, {
-    credentials: "omit",
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-      Accept: "*/*",
-      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
-      "Content-Type": "application/json",
-      "Sec-Fetch-Dest": "empty",
-    },
-    method: "GET",
-  })
-    .then((data) => {
-      if (data.ok) {
-        clearInterval(intervalid);
-        screenBlocker(isHuman);
-      }
-    })
-    .catch((error) => {
-      console.error("Es gab einen Fehler bei der Anfrage:", error);
-    });
 }
