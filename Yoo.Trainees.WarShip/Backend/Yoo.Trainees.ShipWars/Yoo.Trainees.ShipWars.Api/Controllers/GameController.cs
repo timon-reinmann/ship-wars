@@ -26,6 +26,12 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 new Ship { Length = 1, Name = "submarine" }
         };
 
+        public enum GameMode
+        {
+            hard,
+            easy
+        }
+
         public GameController(IGameLogic gameLogic, IEmailSender emailSender, IConfiguration configuration, IVerificationLogic verificationLogic, IBotLogic botLogic)
         {
             this._gameLogic = gameLogic;
@@ -163,7 +169,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpPost]
         public IActionResult Post(bool gameId, [FromBody] GameDto gameDto)
         {
-            var game = _gameLogic.CreateGame(gameDto.Name, gameDto.Bot);
+            var game = _gameLogic.CreateGame(gameDto.Name, gameDto.Bot, gameDto.EasyGame);
             var isBotLobby = _botLogic.IsBotLobby(game.Id);
             var linkPlayer1 = CreateLink(game.Id, game.GamePlayers.First().Id, isBotLobby);
             var linkPlayer2 = CreateLink(game.Id, game.GamePlayers.ToArray()[1].Id, isBotLobby);
@@ -199,6 +205,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             }
             else
             {
+
                 _botLogic.SaveShipPositionsInBotGame(ships);
             }
             return Ok();

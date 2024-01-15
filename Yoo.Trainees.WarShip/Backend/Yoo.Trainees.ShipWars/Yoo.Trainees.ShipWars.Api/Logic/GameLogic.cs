@@ -13,6 +13,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         Redo
     }
 
+    public enum GameMode
+    {
+        hard,
+        easy
+    }
+
     public enum ShipHit
     {
         Missed,
@@ -35,7 +41,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         private IVerificationLogic _verificationLogic;
         private IBotLogic _botLogic;
 
-
+        public enum GameMode
+        {
+            hard, 
+            easy
+        }
         public GameLogic(ApplicationDbContext applicationDbContext, IVerificationLogic verificationLogic, IConfiguration configuration, IBotLogic botLogic)
         {
             this._applicationDbContext = applicationDbContext;
@@ -44,8 +54,13 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             this._botLogic = botLogic;
         }
 
-        public Game CreateGame(string name, bool bot)
+        public Game CreateGame(string name, bool bot, bool easyGame)
         {
+            GameMode gameMode = GameMode.hard;
+            if (easyGame)
+            {
+                gameMode = GameMode.easy;
+            }
             var gamePlayers = new List<GamePlayer>();
             var player1 = new Player
             {
@@ -79,6 +94,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 GameStatus = GameState.Prep.ToString(),
                 GamePlayers = gamePlayers,
                 IsBotGame = bot,
+                GameMode = (Yoo.Trainees.ShipWars.DataBase.Entities.GameMode)gameMode,
                 Date = DateTime.Now
             };
 
@@ -123,7 +139,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         }
         public bool IsReady(Guid gameId)
-        { 
+        {
             var gamePlayers = from s in _applicationDbContext.GamePlayer
                               where s.GameId == gameId
                               select s;
@@ -135,7 +151,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                               select s;
 
             var count = gamePlayer1.Count() + gamePlayer2.Count();
-            
+
             return count == int.Parse(_configuration["Ships:MaxShips"]);
         }
         public ShipPositionDto[] GetCompleteShipPositionsForGamePlayer(Guid gamePlayerId)
@@ -169,7 +185,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         public void VerifyAndSaveShot(SaveShotsDto xy, Guid gamePlayerId)
         {
             var game = GetGame(gamePlayerId);
-            SaveShotsDto shot = new SaveShotsDto { X = xy.X, Y = xy.Y};
+            SaveShotsDto shot = new SaveShotsDto { X = xy.X, Y = xy.Y };
             var shots = (from s in _applicationDbContext.Shot
                          where s.Player.Id == gamePlayerId
                          select new SaveShotsDto { X = s.X, Y = s.Y })
@@ -206,7 +222,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             var game = GetGame(gamePlayerId);
             var player2 = (from gp in _applicationDbContext.GamePlayer
                            where gp.GameId.Equals(game.Id) && gp.Id != gamePlayerId
-                           select gp).SingleOrDefault(); 
+                           select gp).SingleOrDefault();
             var shots = (from s in _applicationDbContext.Shot
                          where s.Player != null && s.Player.Id.Equals(player2.Id)
                          select new SaveShotsDto { X = s.X, Y = s.Y }).ToList();
@@ -220,7 +236,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                          select new SaveShotsDto { X = s.X, Y = s.Y }).ToList();
             return shots;
         }
-        
+
         public void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
         {
             var gamePlayer = _applicationDbContext.GamePlayer.FirstOrDefault(x => x.Id == gamePlayerId);
@@ -260,7 +276,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             if (game.GameStatus
                 != GameState.Ongoing.ToString())
-            game.NextPlayer = isPlayer1Loser ? player2.Id : player1.Id;
+                game.NextPlayer = isPlayer1Loser ? player2.Id : player1.Id;
 
             _applicationDbContext.Game.Update(game);
             _applicationDbContext.SaveChanges();
@@ -316,7 +332,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                          select s).Count();
 
             // Return number of Shots and if you are the next player
-            return new ShotInfoDto { ShotCount = count, IsNextPlayer = game.NextPlayer};
+            return new ShotInfoDto { ShotCount = count, IsNextPlayer = game.NextPlayer };
         }
 
         public GameState GetGameState(Guid gamePlayerId)
@@ -331,7 +347,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                                 join sp in _applicationDbContext.ShipPosition on gp equals sp.GamePlayer
                                 where gp.Game.Equals(game) && gp.Id != gamePlayerId
                                 select sp).ToList();
-            if( !IsAnyShipAlive(shipsPlayer1) || !IsAnyShipAlive(shipsPlayer2))
+            if (!IsAnyShipAlive(shipsPlayer1) || !IsAnyShipAlive(shipsPlayer2))
             {
                 game.GameStatus = GameState.Complete.ToString();
                 _applicationDbContext.Game.Update(game);
@@ -377,7 +393,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return user;
         }
 
-        private Game? GetGame(Guid gamePlayerId) { 
+        private Game? GetGame(Guid gamePlayerId)
+        {
             return (from g in _applicationDbContext.GamePlayer
                     where g.Id.Equals(gamePlayerId)
                     select g.Game).SingleOrDefault();
@@ -400,8 +417,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                          select s).ToList();
             foreach (var s in ships)
             {
-                var shipType = (from st in _applicationDbContext.Ship 
-                                where st.Id.Equals(s.ShipId) 
+                var shipType = (from st in _applicationDbContext.Ship
+                                where st.Id.Equals(s.ShipId)
                                 select st).SingleOrDefault();
                 for (int i = 0; i < shipType.Length; i++)
                 {
