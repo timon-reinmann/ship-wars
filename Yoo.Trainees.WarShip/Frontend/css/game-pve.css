@@ -59,12 +59,12 @@
 
   .ship__selection,
   .chatBox {
-    margin: 1rem 1rem 1rem 1rem !important;
+    margin: 1rem !important;
     justify-self: stretch !important;
   }
 
   .mute__button {
-    right: 5% !important;
+    right: 5%;
     left: auto !important;
   }
 }
