@@ -70,7 +70,6 @@ function EventListernerOpen(item) {
 }
 function EventListernerClose(Item) {
   Item.addEventListener("click", (e) => {
-    debugger;
     e.target.parentElement.close();
   });
 }
