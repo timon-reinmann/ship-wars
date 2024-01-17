@@ -2,6 +2,7 @@
   font-family: "walkingdead";
   src: url(../font/BadGrunge.ttf);
 }
+
 @media screen and (height < 800px) {
   .shipwars__title {
     left: 4% !important;
@@ -43,6 +44,10 @@
   to {
     right: 0%;
   }
+}
+
+.buttons {
+  padding-bottom: 20px;
 }
 
 .shipwars__title {
