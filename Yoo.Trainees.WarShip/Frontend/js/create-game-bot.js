@@ -59,8 +59,7 @@ submit_button.addEventListener("click", async function () {
     })
       .then((response) => response.json())
       .then((data) => {
-        joinGame.href = data.player1;
-        link = data.player1;
+        joinGame.href = data.player1 + "&gameMode=" + hard_game;
         console.log(data.player1);
       })
       .catch((error) => {

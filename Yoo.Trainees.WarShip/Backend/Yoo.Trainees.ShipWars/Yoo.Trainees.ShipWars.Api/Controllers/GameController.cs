@@ -79,17 +79,26 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
 
         [HttpPost("{gamePlayerId}/CheckBotHitShip")]
-        public IActionResult CheckBotHitShip(Guid gamePlayerId, [FromBody] SaveShotsDto xy, Guid gameId)
+        public IActionResult CheckBotHitShip(Guid gamePlayerId, [FromBody] SaveShotsDto xy, Guid gameId, bool hardGame, bool easyGame)
         {
             try
             {
-                var shipHit = _botLogic.CheckIfBotHit(xy, gamePlayerId);
+                var shipHit = DataBase.Entities.ShipHit.Missed;
+                if (easyGame)
+                {
+                    shipHit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)_botLogic.CheckIfBotHit(xy, gamePlayerId);
+                }
+                else if (hardGame) 
+                {
+                    shipHit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)_botLogic.GetShipHit(xy, gamePlayerId, gameId);
+                }
                 return Ok(new { hit = shipHit });
             }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(new { bad = -1 });
             }
+            return BadRequest();
         }
 
         // It saves the Shot in the DB and returns if a ship was hit.
@@ -245,12 +254,12 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{gamePlayerId}/GetShotsFromBot")]
         public IActionResult GetBotShots(Guid gamePlayerId)
         {
-            SaveBotShotsDto botShotPositions = null;
+            SaveShotsDto botShotPositions = null;
             var game = _botLogic.GetGame(gamePlayerId);
             GameMode gameMode = (Yoo.Trainees.ShipWars.Api.Controllers.GameController.GameMode)_botLogic.GetGameMode(game.Id);
             if (gameMode == GameMode.easy)
             {
-                botShotPositions = _botLogic.BotShotPosition(gamePlayerId);
+                botShotPositions = _botLogic.BotRandomShotPosition(gamePlayerId);
             }
             else if (gameMode == GameMode.hard) 
             {

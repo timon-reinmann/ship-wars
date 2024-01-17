@@ -2,6 +2,9 @@ let isHuman = false;
 
 let showExposion = false;
 
+const hard_game = urlParams.get("gameMode");
+let easy_game = hard_game ? false : true;
+
 let isReadyToShotBot = false;
 
 CheckIfBoardSet(gamePlayerId).then(() => {
@@ -9,7 +12,7 @@ CheckIfBoardSet(gamePlayerId).then(() => {
     Promise.all([
       loadHitShips(gamePlayerId),
       loadFiredShots(gamePlayerId),
-      loadShotsFromBot(gamePlayerId, showExposion),
+      loadShotsFromBot(gamePlayerId, showExposion, hard_game, easy_game),
     ]).then();
   }
 });
@@ -78,7 +81,7 @@ async function sendShips(ships) {
     });
 }
 
-function getShotsFromBot(gamePlayerId, showExposion) {
+function getShotsFromBot(gamePlayerId, showExposion, hard_game, easy_game) {
   const API_URL = api + gamePlayerId + "/GetShotsFromBot";
   return fetch(API_URL, {
     credentials: "omit",
@@ -103,7 +106,15 @@ function getShotsFromBot(gamePlayerId, showExposion) {
           `[data-x="${X}"][data-y="${Y}"]`
         );
         showExposion = true;
-        proveIfShipHit(X, Y, gamePlayerId, ownField, showExposion);
+        proveIfShipHit(
+          X,
+          Y,
+          gamePlayerId,
+          ownField,
+          showExposion,
+          hard_game,
+          easy_game
+        );
       }
     })
     .catch((error) => {
@@ -166,13 +177,21 @@ opponentFields.forEach((opponentField) => {
         }
         isReadyToShotBot = notReadyToShot(isReadyToShotBot);
         setTimeout(() => {
-          getShotsFromBot(gamePlayerId, getShotsFromBot);
+          getShotsFromBot(gamePlayerId, getShotsFromBot, hard_game, easy_game);
         }, 1500);
       });
   });
 });
 
-function proveIfShipHit(X, Y, gamePlayerId, field, showExposion) {
+function proveIfShipHit(
+  X,
+  Y,
+  gamePlayerId,
+  field,
+  showExposion,
+  hard_game,
+  easy_game
+) {
   const API_URL = api + gamePlayerId + "/CheckBotHitShip";
   fetch(API_URL, {
     credentials: "omit",
@@ -184,7 +203,7 @@ function proveIfShipHit(X, Y, gamePlayerId, field, showExposion) {
       "Content-Type": "application/json",
       "Sec-Fetch-Dest": "empty",
     },
-    body: JSON.stringify({ X: X, Y: Y }),
+    body: JSON.stringify({ X: X, Y: Y, hard_game, easy_game }),
     method: "POST",
   })
     .then((response) => response.json())
@@ -201,7 +220,7 @@ function proveIfShipHit(X, Y, gamePlayerId, field, showExposion) {
     });
 }
 
-function loadShotsFromBot(gamePlayerId, showExposion) {
+function loadShotsFromBot(gamePlayerId, showExposion, hard_game, easy_game) {
   const API_URL = api + gamePlayerId + "/LoadShotsFromBot";
   return fetch(API_URL, {
     credentials: "omit",
@@ -226,7 +245,15 @@ function loadShotsFromBot(gamePlayerId, showExposion) {
           const ownField = ownFields.querySelector(
             `[data-x="${X}"][data-y="${Y}"]`
           );
-          proveIfShipHit(X, Y, gamePlayerId, ownField, showExposion);
+          proveIfShipHit(
+            X,
+            Y,
+            gamePlayerId,
+            ownField,
+            showExposion,
+            hard_game,
+            easy_game
+          );
         });
       }
     })

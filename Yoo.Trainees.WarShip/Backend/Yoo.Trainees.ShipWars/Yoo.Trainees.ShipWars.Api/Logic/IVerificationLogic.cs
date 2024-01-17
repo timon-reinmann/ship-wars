@@ -8,6 +8,6 @@
         bool VerifyShot(List<SaveShotsDto> shotsDto, SaveShotsDto shot);
         SaveShipDto VerifyShipHit(List<SaveShipDto> shipsDB, SaveShotsDto shot);
         bool VerifyShipPositionBot(SaveShipDto[] shipDtos);
-        bool VerifyBotShot(IList<SaveBotShotsDto> shots, SaveBotShotsDto lastShot);
+        bool VerifyBotShot(IList<SaveShotsDto> shots, SaveShotsDto lastShot);
     }
 }

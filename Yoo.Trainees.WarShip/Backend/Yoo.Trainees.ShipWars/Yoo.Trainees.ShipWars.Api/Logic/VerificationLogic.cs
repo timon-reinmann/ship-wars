@@ -168,7 +168,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return true;
         }
 
-        public bool VerifyBotShot(IList<SaveBotShotsDto> shots, SaveBotShotsDto lastShot)
+        public bool VerifyBotShot(IList<SaveShotsDto> shots, SaveShotsDto lastShot)
         {
             if (lastShot.X > 9 || lastShot.X < 0 || lastShot.Y > 9 || lastShot.Y < 0)
             {
