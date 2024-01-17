@@ -51,13 +51,15 @@
 }
 
 .shipwars__title {
+  --responsive-dimension: clamp(7.5rem, 1rem + 15vw, 15rem);
+
   font-family: "walkingdead", Brush Script MT, Brush Script Std, cursive;
   position: relative;
   left: 2.5vw;
   width: 100%;
   top: -1rem;
-  height: clamp(7.5rem, 1rem + 15vw, 15rem);
-  font-size: clamp(7.5rem, 1rem + 15vw, 15rem);
+  height: var(--responsive-dimension);
+  font-size: var(--responsive-dimension);
   color: #fefefe;
   text-shadow: 2px 2px 2px black;
   display: flex;
