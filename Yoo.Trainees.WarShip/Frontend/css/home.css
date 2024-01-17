@@ -187,7 +187,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  height: 100vh;
+  height: 100vmax;
   width: 40%;
   padding: 5%;
   background-color: white;
@@ -249,15 +249,14 @@ form {
 }
 
 .sidebar-close {
+  position: absolute;
+  left: 0px;
+  top: 0px;
   transform: scale(0);
   width: 50px;
   height: 50px;
   border-radius: 1rem 0 1rem 0;
   background-color: rgb(61, 61, 61, 0.7);
-  border: 2px solid black;
-  position: absolute;
-  top: -0.3%;
-  right: 94.7%;
   z-index: 100;
 }
 .sidebar-close--active {
