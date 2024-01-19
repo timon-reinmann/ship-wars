@@ -185,16 +185,23 @@
   }
 }
 
+.container {
+  display: grid;
+}
+
 #sidebar {
   position: absolute;
+  justify-self: stretch;
+  min-height: 100%;
+  box-sizing: border-box;
   right: 0;
   top: 0;
-  height: 100vmax;
   width: 40%;
-  padding: 5%;
+  padding: 5% 5% 0% 5%;
+  margin: 0;
   background-color: white;
   border-radius: 1em 0 0 1em;
-  border: 2px solid black;
+  outline: 2px solid black;
   transform: scale(0);
   overflow: hidden;
   color: #fafafa;

@@ -2,7 +2,7 @@ body {
   font-family: Brush Script MT, Brush Script Std, cursive;
   list-style: none;
   overflow-x: hidden;
-  height: 100vh;
+  height: 100%;
 }
 
 :root {
