@@ -151,42 +151,78 @@ draggables.forEach((draggable) => {
   });
 
   draggable.addEventListener("dragstart", (e) => {
-    let img = new Image();
-    const imgName = draggable.getAttribute("data-name");
-    img.src = "../img/" + imgName + ".png";
-    e.dataTransfer.setDragImage(img, 0, 0);
-    originField = draggable.parentNode;
-    draggable.classList.add("dragging");
-    deleteShipHitBox(draggable.parentNode);
+    dragstart(draggable, e);
   });
 
   draggable.addEventListener("dragend", () => {
-    draggable.classList.remove("dragging");
-    currentField.style.zIndex = zIndexChange + 1;
-    const currentX = parseInt(currentField.getAttribute("data-x"));
-    const currentY = parseInt(currentField.getAttribute("data-y"));
-    const shipSize = parseInt(draggable.getAttribute("data-size"));
-    for (let i = -1; i <= shipSize; i++) {
-      for (let j = -1; j < 2; j++) {
-        const field =
-          draggable.getAttribute("data-direction") !== "vertical"
-            ? document.querySelector(
-                `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
-              )
-            : document.querySelector(
-                `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
-              );
-        if (field) {
-          field.setAttribute(
-            "data-ships",
-            parseInt(field.getAttribute("data-ships")) + 1
-          );
-        }
-      }
-    }
-    zIndexChange++;
+    dragend(draggable);
+  });
+
+  draggable.addEventListener("touchstart", (e) => {
+    dragstart(draggable, e);
+  });
+
+  draggable.addEventListener("touchmove", (e) => {
+    dragMove(draggable, e);
+  });
+
+  draggable.addEventListener("touchend", () => {
+    dragend(draggable);
   });
 });
+
+function dragstart(draggable, e) {
+  let img = new Image();
+  const imgName = draggable.getAttribute("data-name");
+  img.src = "../img/" + imgName + ".png";
+  e.dataTransfer.setDragImage(img, 0, 0);
+  originField = draggable.parentNode;
+  draggable.classList.add("dragging");
+  deleteShipHitBox(draggable.parentNode);
+}
+
+function dragMove(draggable, e) {
+  const gridElement = document.getElementById("ship_container");
+  const rect = gridElement.getBoundingClientRect();
+  e.preventDefault();
+  draggable.setAttribute(
+    "style",
+    "position: absolute;" +
+      // "z-index: 1" +
+      "top: " +
+      (e.touches[0].clientY - draggable.offsetHeight / 2 - rect.top) +
+      "px; left: " +
+      (e.touches[0].clientX - draggable.offsetHeight / 2 - rect.left) +
+      "px;"
+  );
+}
+
+function dragend(draggable) {
+  draggable.classList.remove("dragging");
+  currentField.style.zIndex = zIndexChange + 1;
+  const currentX = parseInt(currentField.getAttribute("data-x"));
+  const currentY = parseInt(currentField.getAttribute("data-y"));
+  const shipSize = parseInt(draggable.getAttribute("data-size"));
+  for (let i = -1; i <= shipSize; i++) {
+    for (let j = -1; j < 2; j++) {
+      const field =
+        draggable.getAttribute("data-direction") !== "vertical"
+          ? document.querySelector(
+              `[data-x="${currentX + i}"][data-y="${currentY + j}"]`
+            )
+          : document.querySelector(
+              `[data-x="${currentX + j}"][data-y="${currentY + i}"]`
+            );
+      if (field) {
+        field.setAttribute(
+          "data-ships",
+          parseInt(field.getAttribute("data-ships")) + 1
+        );
+      }
+    }
+  }
+  zIndexChange++;
+}
 
 containers.forEach((container) => {
   container.addEventListener("dragover", (e) => {
