@@ -12,6 +12,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const gamePlayerId = urlParams.get("gamePlayerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
+let lastContainer = null;
 
 const connectionGameHub = new signalR.HubConnectionBuilder()
   .withUrl(gameHubApi)
@@ -163,7 +164,13 @@ draggables.forEach((draggable) => {
   });
 
   draggable.addEventListener("touchmove", (e) => {
+    const container = document.elementFromPoint(
+      e.touches[0].clientX,
+      e.touches[0].clientY
+    );
+    dragover(container, e);
     dragMove(draggable, e);
+    lastContainer = container;
   });
 
   draggable.addEventListener("touchend", () => {
@@ -187,18 +194,21 @@ function dragMove(draggable, e) {
   e.preventDefault();
   draggable.setAttribute(
     "style",
-    "position: absolute;" +
-      // "z-index: 1" +
+    "position: relative;" +
+      "z-index: 1;" +
       "top: " +
-      (e.touches[0].clientY - draggable.offsetHeight / 2 - rect.top) +
+      (e.touches[0].clientY - draggable.offsetHeight / 2) +
       "px; left: " +
-      (e.touches[0].clientX - draggable.offsetHeight / 2 - rect.left) +
+      (e.touches[0].clientX - draggable.offsetHeight / 2) +
       "px;"
   );
 }
 
 function dragend(draggable) {
   draggable.classList.remove("dragging");
+  lastContainer.appendChild(draggable);
+
+  draggable.setAttribute("style", "position: static;");
   currentField.style.zIndex = zIndexChange + 1;
   const currentX = parseInt(currentField.getAttribute("data-x"));
   const currentY = parseInt(currentField.getAttribute("data-y"));
@@ -224,63 +234,67 @@ function dragend(draggable) {
   zIndexChange++;
 }
 
+function dragover(container, e) {
+  e.preventDefault();
+  if (container.firstChild === null) {
+    container.style.zIndex = 0;
+  }
+  const draggable = document.querySelector(".dragging");
+  if (!draggable) return;
+
+  const shipSize = parseInt(draggable.getAttribute("data-size"));
+  const currentX = parseInt(container.getAttribute("data-x"));
+  const currentY = parseInt(container.getAttribute("data-y"));
+  let shipCheck = 0;
+
+  const checkField = document.querySelector(
+    `[data-x="${currentX}"][data-y="${currentY}"]`
+  );
+  if (checkField) {
+    const dataCheck = parseInt(checkField.getAttribute("data-size"));
+    if (!isNaN(dataCheck)) {
+      shipCheck = dataCheck;
+    }
+  }
+  // Überprüfen, ob genug Platz für das Schiff vorhanden ist
+  let isPlacementValid = true;
+
+  for (let i = 0; i < shipSize; i++) {
+    const freeField =
+      draggable.dataset.direction !== "vertical"
+        ? document.querySelector(
+            `[data-x="${currentX + i}"][data-y="${currentY}"]`
+          )
+        : document.querySelector(
+            `[data-x="${currentX}"][data-y="${currentY + i}"]`
+          );
+
+    if (!freeField || freeField.getAttribute("data-ships") > 0) {
+      // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
+      isPlacementValid = false;
+      break;
+    }
+    if (shipCheck > 0) {
+      isPlacementValid = false;
+    }
+  }
+  if (isPlacementValid) {
+    // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf
+
+    // Platziere das Schiff und setze data-size für alle belegten Felder
+    container.appendChild(draggable);
+    currentField = container; // Aktualisiere das aktuelle linke Feld
+    draggable.classList.remove("invalid");
+  } else {
+    // Das Schiff kann nicht platziert werden
+    draggable.classList.add("invalid");
+  }
+}
 containers.forEach((container) => {
   container.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    if (container.firstChild === null) {
-      container.style.zIndex = 0;
-    }
-    const draggable = document.querySelector(".dragging");
-    if (!draggable) return;
-
-    const shipSize = parseInt(draggable.getAttribute("data-size"));
-    const currentX = parseInt(container.getAttribute("data-x"));
-    const currentY = parseInt(container.getAttribute("data-y"));
-    let shipCheck = 0;
-
-    const checkField = document.querySelector(
-      `[data-x="${currentX}"][data-y="${currentY}"]`
-    );
-    if (checkField) {
-      const dataCheck = parseInt(checkField.getAttribute("data-size"));
-      if (!isNaN(dataCheck)) {
-        shipCheck = dataCheck;
-      }
-    }
-    // Überprüfen, ob genug Platz für das Schiff vorhanden ist
-    let isPlacementValid = true;
-
-    for (let i = 0; i < shipSize; i++) {
-      const freeField =
-        draggable.dataset.direction !== "vertical"
-          ? document.querySelector(
-              `[data-x="${currentX + i}"][data-y="${currentY}"]`
-            )
-          : document.querySelector(
-              `[data-x="${currentX}"][data-y="${currentY + i}"]`
-            );
-
-      if (!freeField || freeField.getAttribute("data-ships") > 0) {
-        // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
-        isPlacementValid = false;
-        break;
-      }
-      if (shipCheck > 0) {
-        isPlacementValid = false;
-      }
-    }
-    if (isPlacementValid) {
-      // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf
-
-      // Platziere das Schiff und setze data-size für alle belegten Felder
-      container.appendChild(draggable);
-      currentField = container; // Aktualisiere das aktuelle linke Feld
-      draggable.classList.remove("invalid");
-    } else {
-      // Das Schiff kann nicht platziert werden
-      draggable.classList.add("invalid");
-    }
+    dragover(container, e);
   });
+
   // Komischer Weise geht das auch mit drag anstatt drop
   container.addEventListener("drop", (e) => {
     e.preventDefault();
