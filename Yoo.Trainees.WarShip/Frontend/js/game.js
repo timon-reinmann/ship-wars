@@ -438,7 +438,8 @@ function isDirectionChangeAllowed(draggable, currentX, currentY, shipSize) {
   return true; // Is valid
 }
 // ...
-commit_button.addEventListener("click", () => {
+commit_button.addEventListener("click", (e) => {
+  e.preventDefault();
   let ship_selector = document.querySelector(".ship__selection");
   if (ship_selector.children.length === 0) {
     commitShips(commit_button);
