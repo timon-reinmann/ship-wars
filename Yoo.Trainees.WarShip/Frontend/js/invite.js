@@ -12,7 +12,8 @@ const input = copyText.querySelector("input.text");
 let link = null;
 let lobbyName = null;
 
-copyText.querySelector("button").addEventListener("click", () => {
+copyText.querySelector("button").addEventListener("click", (e) => {
+  e.preventDefault();
   joinGame.classList.add("active");
   input.select();
   document.execCommand("copy");
