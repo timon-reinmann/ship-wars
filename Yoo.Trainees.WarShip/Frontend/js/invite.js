@@ -12,7 +12,8 @@ const input = copyText.querySelector("input.text");
 let link = null;
 let lobbyName = null;
 
-copyText.querySelector("button").addEventListener("click", () => {
+copyText.querySelector("button").addEventListener("click", (e) => {
+  e.preventDefault();
   joinGame.classList.add("active");
   input.select();
   document.execCommand("copy");
@@ -75,7 +76,8 @@ submit_button.addEventListener("click", async function () {
     });
 });
 
-send_email.addEventListener("click", async () => {
+send_email.addEventListener("click", async (e) => {
+  e.preventDefault();
   const email = document.getElementById("email-input").value;
   joinGame.classList.add("active");
   let daten = {
