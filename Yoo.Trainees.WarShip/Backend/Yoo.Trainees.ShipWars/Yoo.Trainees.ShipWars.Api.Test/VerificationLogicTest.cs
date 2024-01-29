@@ -5,7 +5,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
 {
     public class VerificationLogicTest
     {
-        private static String[] ships = {   "warship",
+        readonly static String[] ships = {   "warship",
                                             "cruiser",
                                             "cruiser",
                                             "destroyer",
@@ -21,7 +21,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
         {
             var verificationLogic = new VerificationLogic();
 
-            var shipDtos = new SaveShipDto[] {};
+            var shipDtos = new SaveShipDto[] { };
 
             Assert.False(verificationLogic.VerifyEverything(shipDtos));
         }
@@ -134,8 +134,8 @@ namespace Yoo.Trainees.ShipWars.Api.Test
             };
 
             Assert.False(verificationLogic.VerifyEverything(shipDtos));
-        }  
-    
+        }
+
         [Test]
         public void TestVerifyHaveShotsSamePosition_ShouldReturnFalse()
         {
@@ -150,7 +150,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShotsDto{X = 1, Y = 5},
                 new SaveShotsDto{X = 3, Y = 2}
             };
-            var shot = new SaveShotsDto{ X = 3, Y = 2 };
+            var shot = new SaveShotsDto { X = 3, Y = 2 };
 
             Assert.False(verificationLogic.VerifyShot(shotsDto, shot));
         }
@@ -169,7 +169,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShotsDto{X = 8, Y = 4},
                 new SaveShotsDto{X = 2, Y = 5}
             };
-            var shot = new SaveShotsDto{ X =  3, Y = -7 };
+            var shot = new SaveShotsDto { X = 3, Y = -7 };
 
             Assert.False(verificationLogic.VerifyShot(shotsDto, shot));
         }
@@ -188,7 +188,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
                 new SaveShotsDto{X = 4, Y = 8},
                 new SaveShotsDto{X = 2, Y = 8}
             };
-            var shot = new SaveShotsDto{ X = 3, Y = 7 };
+            var shot = new SaveShotsDto { X = 3, Y = 7 };
 
             Assert.True(verificationLogic.VerifyShot(shotsDto, shot));
         }
@@ -251,7 +251,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
         {
             var verificationLogic = new VerificationLogic();
             var saveShipDtos = new SaveShipDto[10];
-            Random rnd = new Random();
+            var rnd = new Random();
 
             for (var i = 0; i < 9; i++)
             {
@@ -266,9 +266,7 @@ namespace Yoo.Trainees.ShipWars.Api.Test
 
 
                 i = verificationLogic.VerifyShipPositionBot(saveShipDtos) ? i : i - 1;
-
             }
-
             Assert.True(verificationLogic.VerifyShipPositionBot(saveShipDtos));
         }
     }

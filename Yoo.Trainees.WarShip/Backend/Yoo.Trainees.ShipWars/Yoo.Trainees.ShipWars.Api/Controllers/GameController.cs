@@ -67,13 +67,13 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         public IActionResult CheckReadyToShoot(Guid gameId, Guid gamePlayerId)
         {
             bool isBotLobby = _botLogic.IsBotLobby(gameId);
-            if (_gameLogic.UpdateAndCheckNextPlayer(gameId, gamePlayerId) || isBotLobby)
+            if (isBotLobby || _gameLogic.UpdateAndCheckNextPlayer(gameId, gamePlayerId))
                 return Ok();
             return BadRequest();
         }
 
         [HttpPost("{gamePlayerId}/CheckBotHitShip")]
-        public IActionResult CheckBotHitShip(Guid gamePlayerId, [FromBody] SaveShotsDto xy, Guid gameId)
+        public IActionResult CheckBotHitShip(Guid gamePlayerId, [FromBody] SaveShotsDto xy)
         {
             try
             {
@@ -161,9 +161,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // POST api/<GameController>.
         [HttpPost]
-        public IActionResult Post(bool gameId, [FromBody] GameDto gameDto)
+        public IActionResult Post([FromBody] GameDto gameDto)
         {
-            var game = _gameLogic.CreateGame(gameDto.Name, gameDto.Bot);
+            var game = _gameLogic.CreateGame(gameDto.Name, gameDto.isBot);
             var isBotLobby = _botLogic.IsBotLobby(game.Id);
             var linkPlayer1 = CreateLink(game.Id, game.GamePlayers.First().Id, isBotLobby);
             var linkPlayer2 = CreateLink(game.Id, game.GamePlayers.ToArray()[1].Id, isBotLobby);
@@ -193,13 +193,13 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 return BadRequest();
             }
 
-            if (!isBotLobby)
+            if (isBotLobby)
             {
-                _gameLogic.CreateBoard(ships);
+                _botLogic.SaveShipPositionsInBotGame(ships);
             }
             else
             {
-                _botLogic.SaveShipPositionsInBotGame(ships);
+                _gameLogic.CreateBoard(ships);
             }
             return Ok();
         }
@@ -254,7 +254,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         private String CreateLink(Guid gameId, Guid gamePlayerId, bool isBotLobby)
         {
 
-            return isBotLobby ? _configuration["Link:URL-PVE"] + gameId + "&gamePlayerId=" + gamePlayerId : _configuration["Link:URL-PVP"] + gameId + "&gamePlayerId=" + gamePlayerId;
+            return (isBotLobby ? _configuration["Link:URL-PVE"] : _configuration["Link:URL-PVP"]) + gameId + "&gamePlayerId=" + gamePlayerId;
         }
 
     }

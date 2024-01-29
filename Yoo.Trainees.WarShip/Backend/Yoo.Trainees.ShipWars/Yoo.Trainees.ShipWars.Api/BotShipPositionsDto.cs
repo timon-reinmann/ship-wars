@@ -4,7 +4,6 @@
     {
         public Guid GameId { get; set; }
         public Guid GamePlayerId { get; set; }
-
         public BotShipPositionDto[] Ships { get; set; }
     }
 }

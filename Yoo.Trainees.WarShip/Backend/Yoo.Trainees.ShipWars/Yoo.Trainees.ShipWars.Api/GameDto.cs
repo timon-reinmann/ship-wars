@@ -3,6 +3,6 @@
     public class GameDto
     {
         public string Name { get; set; }
-        public bool Bot { get; set; }
+        public bool isBot { get; set; }
     }
 }
