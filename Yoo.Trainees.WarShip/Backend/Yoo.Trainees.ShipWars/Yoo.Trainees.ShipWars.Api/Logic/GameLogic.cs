@@ -22,8 +22,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     public enum GameState
     {
         Ongoing,
-        Lost,
         Won,
+        Lost,
         Prep,
         Complete
     }
@@ -339,11 +339,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             }
             if (!IsAnyShipAlive(shipsPlayer2))
             {
-                return gameState = GameState.Lost;
+                return gameState = GameState.Won;
             }
             if (!IsAnyShipAlive(shipsPlayer1))
             {
-                return gameState = GameState.Won;
+                return gameState = GameState.Lost;
             }
 
             if (gameState.ToString() != game.GameStatus)
