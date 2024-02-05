@@ -120,7 +120,7 @@ draggables.forEach((draggable) => {
       currentY,
       parseInt(draggable.getAttribute("data-size"))
     );
-    if (isValid) {
+    if (isValid && !draggable.classList.contains(".dragging")) {
       draggable.style.setProperty("--opacityBefore", 1);
       hoverTimer = setTimeout(() => {
         draggable.style.setProperty("--opacityAfter", 1);
@@ -133,30 +133,28 @@ draggables.forEach((draggable) => {
     clearTimeout(hoverTimer);
   });
   draggable.addEventListener("click", (e) => {
-    let currentShip = draggable.parentNode;
-    const currentX = parseInt(currentShip.getAttribute("data-x"));
-    const currentY = parseInt(currentShip.getAttribute("data-y"));
-    const shipSize = parseInt(currentShip.firstChild.getAttribute("data-size"));
-    const isValid = isDirectionChangeAllowed(
-      draggable,
-      currentX,
-      currentY,
-      parseInt(draggable.getAttribute("data-size"))
-    );
-    if (isValid) {
-      draggable.setAttribute("data-direction", "vertical");
-      toggle = draggable.classList.toggle("vertical");
-      changeHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
-      changeHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
-    }
+    click(draggable);
   });
 
   draggable.addEventListener("dragstart", (e) => {
     dragstart(draggable, e);
   });
 
-  draggable.addEventListener("dragend", () => {
-    dragend(draggable);
+  draggable.addEventListener("dragend", (e) => {
+    dragend(draggable, e);
+  });
+
+  draggable.addEventListener("drag", (e) => {
+    const x = e.clientX;
+    const y = e.clientY;
+    const container = document.elementFromPoint(x, y);
+    const isPlacementValid = dragover(container, e);
+    if (isPlacementValid) {
+      lastContainer = container;
+    }
+    if (!originField.classList.contains("ownField")) {
+      dragMove(draggable, x, y);
+    }
   });
 
   draggable.addEventListener("touchstart", (e) => {
@@ -164,54 +162,106 @@ draggables.forEach((draggable) => {
   });
 
   draggable.addEventListener("touchmove", (e) => {
-    const container = document.elementFromPoint(
-      e.touches[0].clientX,
-      e.touches[0].clientY
-    );
-    dragover(container, e);
-    dragMove(draggable, e);
-    lastContainer = container;
+    const touch = e.touches[0];
+    const x = touch.clientX;
+    const y = touch.clientY;
+    const container = document.elementFromPoint(x, y);
+    const isPlacementValid = dragover(container, e);
+    if (isPlacementValid) {
+      lastContainer = container;
+    }
+
+    if (!originField.classList.contains("ownField")) {
+      dragMove(draggable, x, y);
+    }
   });
 
-  draggable.addEventListener("touchend", () => {
-    dragend(draggable);
+  draggable.addEventListener("touchend", (e) => {
+    dragend(draggable, e);
+    const parentElement = draggable.parentNode;
+    if (parentElement === originField) {
+      click(draggable);
+    }
   });
 });
 
+function click(draggable) {
+  let currentShip = draggable.parentNode;
+  const currentX = parseInt(currentShip.getAttribute("data-x"));
+  const currentY = parseInt(currentShip.getAttribute("data-y"));
+  const shipSize = parseInt(currentShip.firstChild.getAttribute("data-size"));
+  const isValid = isDirectionChangeAllowed(
+    draggable,
+    currentX,
+    currentY,
+    parseInt(draggable.getAttribute("data-size"))
+  );
+  if (isValid) {
+    draggable.setAttribute("data-direction", "vertical");
+    toggle = draggable.classList.toggle("vertical");
+    changeHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
+    changeHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
+  }
+}
+
 function dragstart(draggable, e) {
   let img = new Image();
-  const imgName = draggable.getAttribute("data-name");
-  img.src = "../img/" + imgName + ".png";
-  e.dataTransfer.setDragImage(img, 0, 0);
+  img.src = "../img/Unsichtbares-Logo.png";
+  try {
+    e.dataTransfer.setDragImage(img, 0, 0);
+  } catch (error) {
+    // If datatransfer is not supported, do nothing because its the phone version
+  }
   originField = draggable.parentNode;
   draggable.classList.add("dragging");
   deleteShipHitBox(draggable.parentNode);
 }
 
-function dragMove(draggable, e) {
-  const gridElement = document.getElementById("ship_container");
-  const rect = gridElement.getBoundingClientRect();
-  e.preventDefault();
-  draggable.setAttribute(
-    "style",
-    "position: relative;" +
-      "z-index: 1;" +
-      "top: " +
-      (e.touches[0].clientY - draggable.offsetHeight / 2) +
-      "px; left: " +
-      (e.touches[0].clientX - draggable.offsetHeight / 2) +
-      "px;"
-  );
+function dragMove(draggable, x, y) {
+  const fakeShip = document.querySelector(".ship--fake");
+  const imgName = draggable.getAttribute("data-name");
+  const imgURL = "../img/" + imgName + ".png";
+  const computedStyle = window.getComputedStyle(draggable);
+  const gemeinsamerTeiler = draggable.offsetWidth % 52;
+
+  fakeShip.classList.add("ship--fake--active");
+
+  fakeShip.style.backgroundImage = `url(${imgURL})`;
+  fakeShip.style.width = draggable.offsetWidth + "px";
+  fakeShip.style.height = draggable.offsetHeight + "px";
+  fakeShip.style.backgroundSize = computedStyle.backgroundSize;
+  fakeShip.style.left =
+    x - draggable.offsetWidth / 2 - 52 * (gemeinsamerTeiler - 1) + "px";
+  fakeShip.style.top = y - draggable.offsetHeight / 2 + "px";
 }
 
-function dragend(draggable) {
+function dragend(draggable, e) {
+  let isPlacementValid = true;
+  if (
+    dragover(lastContainer, e) &&
+    !lastContainer.classList.contains("opponentField")
+  ) {
+    lastContainer.appendChild(draggable);
+  } else {
+    isPlacementValid = false;
+    originField.appendChild(draggable);
+  }
+  const fakeShip = document.querySelector(".ship--fake");
+  fakeShip.classList.remove("ship--fake--active");
   draggable.classList.remove("dragging");
-  lastContainer.appendChild(draggable);
 
   draggable.setAttribute("style", "position: static;");
   currentField.style.zIndex = zIndexChange + 1;
-  const currentX = parseInt(currentField.getAttribute("data-x"));
-  const currentY = parseInt(currentField.getAttribute("data-y"));
+  const currentX = parseInt(
+    isPlacementValid
+      ? currentField.getAttribute("data-x")
+      : originField.getAttribute("data-x")
+  );
+  const currentY = parseInt(
+    isPlacementValid
+      ? currentField.getAttribute("data-y")
+      : originField.getAttribute("data-y")
+  );
   const shipSize = parseInt(draggable.getAttribute("data-size"));
   for (let i = -1; i <= shipSize; i++) {
     for (let j = -1; j < 2; j++) {
@@ -240,7 +290,7 @@ function dragover(container, e) {
     container.style.zIndex = 0;
   }
   const draggable = document.querySelector(".dragging");
-  if (!draggable) return;
+  if (!draggable) return false;
 
   const shipSize = parseInt(draggable.getAttribute("data-size"));
   const currentX = parseInt(container.getAttribute("data-x"));
@@ -256,7 +306,7 @@ function dragover(container, e) {
       shipCheck = dataCheck;
     }
   }
-  // Überprüfen, ob genug Platz für das Schiff vorhanden ist
+  // Check if there is enough space for the ship
   let isPlacementValid = true;
 
   for (let i = 0; i < shipSize; i++) {
@@ -269,8 +319,12 @@ function dragover(container, e) {
             `[data-x="${currentX}"][data-y="${currentY + i}"]`
           );
 
-    if (!freeField || freeField.getAttribute("data-ships") > 0) {
-      // Es gibt ein Hindernis auf dem Platz oder der Platz ist außerhalb des Spielfelds
+    if (
+      !freeField ||
+      freeField.getAttribute("data-ships") > 0 ||
+      freeField.classList.contains("opponentField")
+    ) {
+      // There is a obstacle or the field isn't on the game board anymore
       isPlacementValid = false;
       break;
     }
@@ -279,20 +333,23 @@ function dragover(container, e) {
     }
   }
   if (isPlacementValid) {
-    // Falls ein altes Feld existiert, setze dessen data-size und der anderen Felder auf
-
-    // Platziere das Schiff und setze data-size für alle belegten Felder
+    // Place the ship and set data-size for all fields
     container.appendChild(draggable);
-    currentField = container; // Aktualisiere das aktuelle linke Feld
+    currentField = container; // update the currnt Field value
     draggable.classList.remove("invalid");
   } else {
-    // Das Schiff kann nicht platziert werden
+    // Ship can't be placed
     draggable.classList.add("invalid");
   }
+  return isPlacementValid;
 }
 containers.forEach((container) => {
   container.addEventListener("dragover", (e) => {
     dragover(container, e);
+    const isPlacementValid = dragover(container, e);
+    if (isPlacementValid) {
+      lastContainer = container;
+    }
   });
 
   // Komischer Weise geht das auch mit drag anstatt drop
@@ -397,8 +454,8 @@ function deleteShipHitBox(container) {
     const oldX = parseInt(originField.dataset.x);
     const oldY = parseInt(originField.dataset.y);
     const oldShipSize = parseInt(originField.firstChild?.dataset.size);
-    const startingPoint = -1; // -1, weil das Schiff auch die Herumliegenden Felder belegt
-    const shipWidth = 2; // 2 weil das Schiff immer gleich breit ist (horizontal und vertikal)
+    const startingPoint = -1; // -1, because the ship also need space for the fields around him
+    const shipWidth = 2; // 2 because the ship is allways the same width (horizontal an vertical)
     const isVertical = container.firstChild?.dataset.direction === "vertical";
     for (let i = startingPoint; i <= oldShipSize; i++) {
       for (let j = startingPoint; j < shipWidth; j++) {
@@ -611,19 +668,19 @@ function screenBlocker() {
 }
 
 function showExplosionAnimation(fieldElement) {
-  // Erstelle ein neues <img> Element
+  // Create new <img> Element
   const img = document.createElement("img");
   img.src = "../img/explosion.gif";
   img.style.height = "50px";
   img.style.width = "50px";
 
-  // Füge das <img> Element zum Ziel-Feld hinzu
+  // Add <img> Element to fieldElement
   fieldElement.appendChild(img);
 
-  // Entferne das <img> Element nach einer bestimmten Zeit (z.B. 3 Sekunden)
+  // remove the <img> Element after animation end
   setTimeout(() => {
     fieldElement.removeChild(img);
-  }, 800); // 3000 Millisekunden = 3 Sekunden
+  }, 800); // 800 Milliseconds = 0.8 sec
 }
 
 async function checkReadyToShoot(gamePlayerId) {
@@ -760,6 +817,7 @@ function loadGameBoard(data) {
     const shipSize = parseInt(ship.getAttribute("data-size"));
     const currentX = parseInt(X);
     const currentY = parseInt(Y);
+    const screenBlocker = document.querySelector(".screen-blocker");
 
     for (let i = 0; i < 10 && !shipFound; i++) {
       for (let j = 0; j < 10 && !shipFound; j++) {
@@ -768,6 +826,8 @@ function loadGameBoard(data) {
             `[data-x="${i}"][data-y="${j}"]`
           );
           container.appendChild(ship);
+
+          container.style.zIndex = 1000;
 
           ship.setAttribute(
             "data-direction",

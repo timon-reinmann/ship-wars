@@ -182,7 +182,7 @@ body {
   align-self: center;
   position: absolute;
   transform: scale(0);
-  z-index: 100;
+  z-index: 2000;
   font-family: walkingdead;
   font-size: 90px;
   padding-left: 45px;
@@ -212,7 +212,7 @@ body {
 .ship {
   cursor: crosshair;
 }
-.ship:hover:not(.vertical):before {
+.ship:hover:not(.dragging)::before {
   content: "";
   opacity: var(--opacityBefore);
   position: absolute;
@@ -227,7 +227,7 @@ body {
   border-radius: 50%;
 }
 
-.ship:hover:not(.vertical)::after {
+.ship:hover:not(.vertical):not(.dragging)::after {
   content: "";
   position: absolute;
   opacity: var(--opacityAfter);
@@ -259,6 +259,7 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .cruiser {
   height: calc(52px * 1);
   width: calc(52px * 3);
@@ -272,6 +273,7 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .destroyer {
   height: calc(52px * 1);
   width: calc(52px * 2);
@@ -285,6 +287,7 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .submarine {
   height: calc(52px * 1);
   width: calc(52px * 1);
@@ -298,12 +301,15 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .ship.dragging {
   background-color: rgba(143, 240, 143, 0.25);
 }
+
 .ship.dragging.invalid {
   background-color: rgba(248, 110, 86, 0.25);
 }
+
 .commit-button {
   font-family: walkingdead;
   font-size: 50px;
@@ -388,8 +394,8 @@ body {
 
 .ring {
   position: absolute;
-  top: 47%;
-  left: 25.9%;
+  top: 75%;
+  left: 50%;
   transform: translate(-50%, -50%);
   width: 150px;
   height: 150px;
@@ -405,12 +411,12 @@ body {
   text-transform: uppercase;
   text-shadow: 0 0 10px #fff000;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  z-index: 300;
+  z-index: 2000;
   transform: scale(0);
   user-select: none;
 }
 .ring--active {
-  transform: scale(1);
+  transform: translate(-50%, -50%) scale(1);
 }
 .ring::before {
   content: "";
@@ -442,7 +448,7 @@ span {
   height: 520px;
   align-self: center;
   position: absolute;
-  z-index: 200;
+  z-index: 2000;
   transform: scale(0);
 }
 .screen-blocker--active {
@@ -843,4 +849,16 @@ span {
 
 .overlay--show {
   display: block;
+}
+
+.ship--fake {
+  position: absolute;
+  z-index: 100;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: scale(0);
+}
+
+.ship--fake--active {
+  transform: scale(1);
 }

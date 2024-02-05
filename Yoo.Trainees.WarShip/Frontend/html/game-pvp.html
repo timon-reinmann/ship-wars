@@ -18,15 +18,16 @@
   </head>
   <body>
     <div class="background-animation"></div>
-    <div class="container">
+    <div class="container" id="container">
       <div class="cursor"></div>
+      <div class="ship--fake"></div>
       <div class="alert__box"></div>
       <div class="overlay"></div>
       <nav class="shipwars__navbar">
         <a href="../index.html" class="shipwars__logo"></a>
         <div class="navbar__list">
           <ul>
-            <li><a style="user-select: none" href="#">Home</a></li>
+            <li><a style="user-select: none" href="../index.html">Home</a></li>
             <li><a style="user-select: none" href="#">Friends</a></li>
           </ul>
           <div class="hamburger">
@@ -118,16 +119,13 @@
           </div>
           <div class="error-popup__screen-blocker"></div>
           <div class="screen-blocker"></div>
-        </div>
-
-        <div class="ring">
-          Loading
-          <span></span>
+          <div class="ring">
+            Loading
+            <span></span>
+          </div>
         </div>
 
         <div id="opponent__board" class="board"></div>
-
-        <div class="chatbox"></div>
 
         <div class="error-popup">
           <i
