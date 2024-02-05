@@ -14,6 +14,11 @@ const gamePlayerId = urlParams.get("gamePlayerId");
 const SRPChoice = document.querySelectorAll(".SRP-choice");
 let lastContainer = null;
 
+// Informationbox
+const dialogCloseButton = document.querySelector(".dialog--close");
+const informationDialog = document.querySelector(".information__dialog");
+const informationButton = document.querySelector(".information__button");
+
 const connectionGameHub = new signalR.HubConnectionBuilder()
   .withUrl(gameHubApi)
   .build();
@@ -108,6 +113,14 @@ const paper = document.querySelector(".paper");
 const SRP = document.querySelector(".rock-paper-scissors-container");
 
 localStorage.setItem("srpReload", "false");
+
+informationButton.addEventListener("click", () => {
+  informationDialog.showModal();
+});
+
+dialogCloseButton.addEventListener("click", () => {
+  informationDialog.close();
+});
 
 draggables.forEach((draggable) => {
   draggable.addEventListener("mouseover", (e) => {
