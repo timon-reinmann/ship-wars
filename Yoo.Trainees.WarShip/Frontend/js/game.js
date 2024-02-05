@@ -115,11 +115,20 @@ const SRP = document.querySelector(".rock-paper-scissors-container");
 localStorage.setItem("srpReload", "false");
 
 informationButton.addEventListener("click", () => {
+  informationDialog.classList.add("animation__dialog--in");
   informationDialog.showModal();
 });
 
+informationDialog.addEventListener("animationend", () => {
+  informationDialog.classList.remove("animation__dialog--in");
+});
+
 dialogCloseButton.addEventListener("click", () => {
-  informationDialog.close();
+  informationDialog.classList.add("animation__dialog--out");
+  setTimeout(() => {
+    informationDialog.close();
+    informationDialog.classList.remove("animation__dialog--out");
+  }, 1000);
 });
 
 draggables.forEach((draggable) => {

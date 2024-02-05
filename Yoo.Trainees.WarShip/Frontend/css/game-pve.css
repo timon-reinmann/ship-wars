@@ -43,6 +43,17 @@
   }
 }
 
+@keyframes dialogSlideIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 @font-face {
   font-family: "walkingdead";
   src: url(../font/BadGrunge.ttf);
@@ -148,17 +159,36 @@ body {
   font-size: 2rem;
 }
 
+.information__dialog {
+  scale: 0;
+  transition: ease-in-out 2s;
+}
+
 .information__dialog[open] {
-  display: flex;
+  display: grid;
+  scale: 1;
   justify-content: center;
+  color: var(--white);
   align-items: center;
   height: 40vh;
   width: 30vw;
   border: 2px solid var(--white);
-  background-color: rgba(211, 84, 84, 0.5);
-  transition: ease-in-out 2s;
-  box-shadow: inset 0px 0px 5px 7px rgba(238, 83, 83, 0.75),
+  background-color: rgba(211, 84, 84, 0.7);
+  box-shadow: inset 0px 0px 5px 7px rgba(238, 83, 83, 0.7),
     0px 0px 20px 20px rgba(68, 68, 68, 0.7);
+}
+
+.animation__dialog--in {
+  animation: dialogSlideIn 1s ease forwards;
+}
+
+.animation__dialog--out {
+  animation: dialogSlideIn 1s ease forwards;
+  animation-direction: reverse;
+}
+
+.imgInformation {
+  box-shadow: 0px 0px 20px 20px rgba(68, 68, 68, 0.3);
 }
 
 .dialog--close {
