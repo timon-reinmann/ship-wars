@@ -78,6 +78,10 @@
     right: 5%;
     left: auto !important;
   }
+
+  .information__dialog[open] {
+    height: 70% !important;
+  }
 }
 
 @media screen and (max-width: 1300px) and (min-width: 900px) {
@@ -170,13 +174,13 @@ body {
   justify-content: center;
   color: var(--white);
   align-items: center;
-  height: 40vh;
-  width: 30vw;
+  height: 40%;
+  width: 30%;
   border: 2px solid var(--white);
   background-color: rgba(211, 84, 84, 0.7);
   box-shadow: inset 0px 0px 5px 7px rgba(238, 83, 83, 0.7),
     0px 0px 20px 20px rgba(68, 68, 68, 0.7),
-    0px 0px 0px 100vh rgba(0, 0, 0, 0.4);
+    0px 0px 0px 100vw rgba(0, 0, 0, 0.4);
 }
 
 .animation__dialog--in {
