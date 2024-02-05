@@ -175,7 +175,8 @@ body {
   border: 2px solid var(--white);
   background-color: rgba(211, 84, 84, 0.7);
   box-shadow: inset 0px 0px 5px 7px rgba(238, 83, 83, 0.7),
-    0px 0px 20px 20px rgba(68, 68, 68, 0.7);
+    0px 0px 20px 20px rgba(68, 68, 68, 0.7),
+    0px 0px 0px 100vh rgba(0, 0, 0, 0.4);
 }
 
 .animation__dialog--in {
