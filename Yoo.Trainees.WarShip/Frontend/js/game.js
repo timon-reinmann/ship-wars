@@ -228,7 +228,7 @@ function click(draggable) {
 
 function dragstart(draggable, e) {
   let img = new Image();
-  img.src = "../img/Unsichtbares-Logo.png";
+  img.src = "../img/invisivble_ship.png";
   try {
     e.dataTransfer.setDragImage(img, 0, 0);
   } catch (error) {
@@ -246,7 +246,7 @@ function dragMove(draggable, x, y) {
   const computedStyle = window.getComputedStyle(draggable);
   const gemeinsamerTeiler = draggable.offsetWidth % 52;
 
-  fakeShip.classList.add("ship--fake--active");
+  fakeShip.classList.add("ship--active");
 
   fakeShip.style.backgroundImage = `url(${imgURL})`;
   fakeShip.style.width = draggable.offsetWidth + "px";
