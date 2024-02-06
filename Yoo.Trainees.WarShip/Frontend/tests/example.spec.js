@@ -20,13 +20,13 @@ test("get started link", async ({ page }) => {
 
   await page.click("#lobbyinput");
 
+  await page.waitForLoadState("networkidle");
+
   await page.getByRole("button", { name: "Link for friend" }).click();
 
   await page.click("#button--copy");
 
   await expect(page.getByText(/Game/)).toBeVisible();
-
-  await page.waitForTimeout(2000);
 
   await page.getByText(/Game/).click();
 
@@ -38,6 +38,8 @@ test("get startet email", async ({ page }) => {
 
   await page.click("#lobbyinput");
 
+  await page.waitForLoadState("networkidle");
+
   await page.getByRole("button", { name: "Link for friend" }).click();
 
   await page.getByRole("link", { name: "send Email" }).click();
@@ -45,8 +47,6 @@ test("get startet email", async ({ page }) => {
   await page.fill("#email-input", "alex@uscata.com");
 
   await page.click("#email");
-
-  await page.waitForTimeout(2000);
 
   await page.getByText(/Game/).click();
 });
@@ -56,11 +56,11 @@ test("place ships", async ({ page }) => {
 
   await page.click("#lobbyinput");
 
+  await page.waitForLoadState("networkidle");
+
   await page.getByRole("button", { name: "Link for friend" }).click();
 
   await page.click("#button--copy");
-
-  await page.waitForTimeout(2000);
 
   await page.getByText(/Game/).click();
 
@@ -86,7 +86,7 @@ test("place ships", async ({ page }) => {
 
   await page.click("#commit_button");
 
-  await page.waitForTimeout(2000);
+  await page.waitForLoadState("networkidle");
 
   await expect(page.getByText(/finished!!!/)).toBeVisible();
 });
@@ -96,11 +96,11 @@ test("send message", async ({ page }) => {
 
   await page.click("#lobbyinput");
 
+  await page.waitForLoadState("networkidle");
+
   await page.getByRole("button", { name: "Link for friend" }).click();
 
   await page.click("#button--copy");
-
-  await page.waitForTimeout(2000);
 
   await page.getByText(/Game/).click();
 
