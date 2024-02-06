@@ -62,6 +62,7 @@ body {
   height: 50px;
   pointer-events: none;
 }
+
 .recoil-animation {
   animation: recoil 0.2s linear;
 }
@@ -77,11 +78,13 @@ body {
   bottom: 5%;
   left: 5%;
 }
+
 .mute__button:hover {
   background-color: var(--white) 0.75;
   color: black;
   cursor: pointer;
 }
+
 .mute__button i {
   color: var(--white);
   font-size: 2rem;
@@ -174,9 +177,11 @@ body {
   transform: rotate(90deg) translateY(-52px);
   transform-origin: top left;
 }
+
 .ship {
   cursor: crosshair;
 }
+
 .ship:hover:not(.vertical):before {
   content: "";
   opacity: var(--opacityBefore);
@@ -224,6 +229,7 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .cruiser {
   height: calc(52px * 1);
   width: calc(52px * 3);
@@ -237,6 +243,7 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .destroyer {
   height: calc(52px * 1);
   width: calc(52px * 2);
@@ -250,6 +257,7 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .submarine {
   height: calc(52px * 1);
   width: calc(52px * 1);
@@ -263,12 +271,15 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .ship.dragging {
   background-color: rgba(143, 240, 143, 0.25);
 }
+
 .ship.dragging.invalid {
   background-color: rgba(248, 110, 86, 0.25);
 }
+
 .commit-button {
   font-family: walkingdead;
   font-size: 50px;
@@ -372,9 +383,11 @@ body {
   transform: scale(0);
   user-select: none;
 }
+
 .ring--active {
   transform: scale(1);
 }
+
 .ring::before {
   content: "";
   position: absolute;
@@ -496,12 +509,15 @@ span {
   background-color: rgba(124, 124, 124, 0.837);
   cursor: pointer;
 }
+
 .field--hit {
   background-color: rgb(255, 0, 0, 0.25);
 }
+
 .field--hit--ship {
   background-color: rgb(255, 0, 0, 0.75);
 }
+
 .counter {
   font-size: 8rem;
   font-family: "walkingdead";
@@ -521,9 +537,11 @@ span {
   box-shadow: inset 0px 0px 10px 3px rgb(255 255 255 / 75%);
   user-select: none;
 }
+
 .counter--active {
   background-color: rgba(0, 255, 0, 0.25);
 }
+
 .win {
   position: absolute;
   z-index: 1000;
@@ -535,6 +553,7 @@ span {
   background-color: rgba(0, 0, 0, 0.5);
   user-select: none;
 }
+
 .win img {
   position: absolute;
   top: 50%;
@@ -546,6 +565,7 @@ span {
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
+
 .lost {
   position: absolute;
   z-index: 1000;
@@ -557,6 +577,7 @@ span {
   background-color: rgba(0, 0, 0, 0.5);
   user-select: none;
 }
+
 .lost img {
   position: absolute;
   top: 50%;
