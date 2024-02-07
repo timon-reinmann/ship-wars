@@ -309,7 +309,6 @@ function dragover(container, e) {
   e.preventDefault();
   if (container.firstChild === null) {
     container.style.zIndex = 0;
-    console.log(container);
   }
   const draggable = document.querySelector(".dragging");
   if (!draggable) return false;
