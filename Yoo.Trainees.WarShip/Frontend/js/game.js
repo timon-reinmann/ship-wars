@@ -167,16 +167,7 @@ draggables.forEach((draggable) => {
   });
 
   draggable.addEventListener("drag", (e) => {
-    const x = e.pageX;
-    const y = e.pageY;
-    const container = document.elementFromPoint(x, y);
-    const isPlacementValid = dragover(container, e);
-    if (isPlacementValid) {
-      lastContainer = container;
-    }
-    if (!originField.classList.contains("own--field")) {
-      dragMove(draggable, x, y);
-    }
+    drag(draggable, e, e);
   });
 
   draggable.addEventListener("touchstart", (e) => {
@@ -185,25 +176,15 @@ draggables.forEach((draggable) => {
 
   draggable.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
-    const xClient = touch.clientX;
-    const yClient = touch.clientY;
-    const xPage = touch.pageX;
-    const yPage = touch.pageY;
-
-    const container = document.elementFromPoint(xClient, yClient);
-    const isPlacementValid = dragover(container, e);
-    if (isPlacementValid) {
-      lastContainer = container;
-    }
-
-    if (!originField.classList.contains("own--field")) {
-      dragMove(draggable, xPage, yPage);
-    }
+    drag(draggable, touch, e);
   });
 
   draggable.addEventListener("touchend", (e) => {
-    dragend(draggable, e);
     const parentElement = draggable.parentNode;
+    if (parentElement.classList.contains("ship_selection")) {
+      return;
+    }
+    dragend(draggable, e);
     if (parentElement === originField) {
       click(draggable);
     }
@@ -226,6 +207,22 @@ function click(draggable) {
     toggle = draggable.classList.toggle("vertical");
     changeHitBoxOnClick(toggle, currentX, currentY, shipSize, 0);
     changeHitBoxOnClick(!toggle, currentX, currentY, shipSize, shipSize);
+  }
+}
+
+function drag(draggable, pointXY, e) {
+  const xClient = pointXY.clientX;
+  const yClient = pointXY.clientY;
+  const xPage = pointXY.pageX;
+  const yPage = pointXY.pageY;
+
+  const container = document.elementFromPoint(xClient, yClient);
+  const isPlacementValid = dragover(container, e);
+  if (isPlacementValid) {
+    lastContainer = container;
+  }
+  if (!originField.classList.contains("own--field")) {
+    dragMove(draggable, xPage, yPage);
   }
 }
 

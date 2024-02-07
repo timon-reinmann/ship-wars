@@ -932,6 +932,15 @@ span {
     grid-template-rows: 1fr 1fr;
   }
 
+  .board,
+  .ship__selection,
+  .chatBox,
+  .commit-button,
+  .mute__button,
+  .information__button {
+    scale: 0.8;
+  }
+
   .ship__selection,
   .chatBox {
     margin: 1rem;
