@@ -167,8 +167,8 @@ draggables.forEach((draggable) => {
   });
 
   draggable.addEventListener("drag", (e) => {
-    const x = e.clientX;
-    const y = e.clientY;
+    const x = e.pageX;
+    const y = e.pageY;
     const container = document.elementFromPoint(x, y);
     const isPlacementValid = dragover(container, e);
     if (isPlacementValid) {
@@ -185,16 +185,19 @@ draggables.forEach((draggable) => {
 
   draggable.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
-    const x = touch.clientX;
-    const y = touch.clientY;
-    const container = document.elementFromPoint(x, y);
+    const xClient = touch.clientX;
+    const yClient = touch.clientY;
+    const xPage = touch.pageX;
+    const yPage = touch.pageY;
+
+    const container = document.elementFromPoint(xClient, yClient);
     const isPlacementValid = dragover(container, e);
     if (isPlacementValid) {
       lastContainer = container;
     }
 
     if (!originField.classList.contains("own--field")) {
-      dragMove(draggable, x, y);
+      dragMove(draggable, xPage, yPage);
     }
   });
 
