@@ -167,16 +167,7 @@ draggables.forEach((draggable) => {
   });
 
   draggable.addEventListener("drag", (e) => {
-    const x = e.clientX;
-    const y = e.clientY;
-    const container = document.elementFromPoint(x, y);
-    const isPlacementValid = dragover(container, e);
-    if (isPlacementValid) {
-      lastContainer = container;
-    }
-    if (!originField.classList.contains("own--field")) {
-      dragMove(draggable, x, y);
-    }
+    drag(draggable, e, e);
   });
 
   draggable.addEventListener("touchstart", (e) => {
@@ -185,22 +176,15 @@ draggables.forEach((draggable) => {
 
   draggable.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
-    const x = touch.clientX;
-    const y = touch.clientY;
-    const container = document.elementFromPoint(x, y);
-    const isPlacementValid = dragover(container, e);
-    if (isPlacementValid) {
-      lastContainer = container;
-    }
-
-    if (!originField.classList.contains("own--field")) {
-      dragMove(draggable, x, y);
-    }
+    drag(draggable, touch, e);
   });
 
   draggable.addEventListener("touchend", (e) => {
-    dragend(draggable, e);
     const parentElement = draggable.parentNode;
+    if (parentElement.classList.contains("ship_selection")) {
+      return;
+    }
+    dragend(draggable, e);
     if (parentElement === originField) {
       click(draggable);
     }
@@ -226,6 +210,22 @@ function click(draggable) {
   }
 }
 
+function drag(draggable, pointXY, e) {
+  const xClient = pointXY.clientX;
+  const yClient = pointXY.clientY;
+  const xPage = pointXY.pageX;
+  const yPage = pointXY.pageY;
+
+  const container = document.elementFromPoint(xClient, yClient);
+  const isPlacementValid = dragover(container, e);
+  if (isPlacementValid) {
+    lastContainer = container;
+  }
+  if (!originField.classList.contains("own--field")) {
+    dragMove(draggable, xPage, yPage);
+  }
+}
+
 function dragstart(draggable, e) {
   let img = new Image();
   try {
@@ -243,7 +243,9 @@ function dragMove(draggable, x, y) {
   const imgName = draggable.getAttribute("data-name");
   const imgURL = "../img/" + imgName + ".png";
   const computedStyle = window.getComputedStyle(draggable);
-  const gemeinsamerTeiler = draggable.offsetWidth % 52;
+  const commonDivisor = draggable.offsetWidth % 52;
+  // the 1x1 Ship witdh is allways 52px
+  const shipWitdh = 52;
 
   fakeShip.classList.add("ship--active");
 
@@ -251,8 +253,7 @@ function dragMove(draggable, x, y) {
   fakeShip.style.width = draggable.offsetWidth + "px";
   fakeShip.style.height = draggable.offsetHeight + "px";
   fakeShip.style.backgroundSize = computedStyle.backgroundSize;
-  fakeShip.style.left =
-    x - draggable.offsetWidth / 2 - 52 * (gemeinsamerTeiler - 1) + "px";
+  fakeShip.style.left = x - shipWitdh / 2 - shipWitdh * commonDivisor + "px";
   fakeShip.style.top = y - draggable.offsetHeight / 2 + "px";
 }
 

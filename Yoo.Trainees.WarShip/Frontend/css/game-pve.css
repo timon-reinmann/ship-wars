@@ -923,7 +923,7 @@ span {
   transform: scale(1);
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 900px), (max-height: 850px) {
   .middle {
     grid-template-areas:
       "ship player1"
@@ -932,23 +932,44 @@ span {
     grid-template-rows: 1fr 1fr;
   }
 
+  .board,
+  .ship__selection,
+  .chatBox,
+  .commit-button,
+  .mute__button,
+  .information__button {
+    scale: 0.8;
+  }
+
   .ship__selection,
   .chatBox {
     margin: 1rem;
     justify-self: stretch;
   }
+  .information__button,
+  .mute__button {
+    left: auto;
+    right: 2%;
+  }
 
   .mute__button {
-    right: 5%;
-    left: auto;
+    bottom: 0%;
+  }
+
+  .information__button {
+    bottom: 15%;
   }
 
   .information__dialog[open] {
     height: 70%;
   }
+
+  .information__dialog[open] * {
+    scale: 0.8;
+  }
 }
 
-@media screen and (max-width: 1300px) and (min-width: 900px) {
+@media screen and (max-width: 1300px) {
   .ship__selection,
   .chatBox,
   .commit-button {
