@@ -103,7 +103,7 @@ let intervalSRP;
 let hoverTimer = null;
 
 const draggables = document.querySelectorAll(".ship");
-const containers = document.querySelectorAll(".ownField");
+const containers = document.querySelectorAll(".own--field");
 const shipSelection = document.querySelector(".ship__selection");
 const opponentFields = document.querySelectorAll(".opponentField");
 
@@ -174,7 +174,7 @@ draggables.forEach((draggable) => {
     if (isPlacementValid) {
       lastContainer = container;
     }
-    if (!originField.classList.contains("ownField")) {
+    if (!originField.classList.contains("own--field")) {
       dragMove(draggable, x, y);
     }
   });
@@ -193,7 +193,7 @@ draggables.forEach((draggable) => {
       lastContainer = container;
     }
 
-    if (!originField.classList.contains("ownField")) {
+    if (!originField.classList.contains("own--field")) {
       dragMove(draggable, x, y);
     }
   });
@@ -228,7 +228,6 @@ function click(draggable) {
 
 function dragstart(draggable, e) {
   let img = new Image();
-  img.src = "../img/invisivble_ship.png";
   try {
     e.dataTransfer.setDragImage(img, 0, 0);
   } catch (error) {
@@ -269,7 +268,7 @@ function dragend(draggable, e) {
     originField.appendChild(draggable);
   }
   const fakeShip = document.querySelector(".ship--fake");
-  fakeShip.classList.remove("ship--fake--active");
+  fakeShip.classList.remove("ship--active");
   draggable.classList.remove("dragging");
 
   draggable.setAttribute("style", "position: static;");
@@ -310,6 +309,7 @@ function dragover(container, e) {
   e.preventDefault();
   if (container.firstChild === null) {
     container.style.zIndex = 0;
+    console.log(container);
   }
   const draggable = document.querySelector(".dragging");
   if (!draggable) return false;
@@ -535,7 +535,7 @@ function createBoard(gameBoard, isMyBoard) {
       div.dataset.x = x;
       div.dataset.y = y;
       if (isMyBoard) {
-        div.classList.add("ownField");
+        div.classList.add("own--field");
         div.id = `box${countingFields}`;
         div.dataset.ships = 0;
       }

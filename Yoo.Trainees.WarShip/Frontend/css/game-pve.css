@@ -59,43 +59,6 @@
   src: url(../font/BadGrunge.ttf);
 }
 
-@media screen and (max-width: 900px) {
-  .middle {
-    grid-template-areas:
-      "ship player1"
-      "chatbox player2" !important;
-    grid-template-columns: 0.25fr 1fr !important;
-    grid-template-rows: 1fr 1fr !important;
-  }
-
-  .ship__selection,
-  .chatBox {
-    margin: 1rem !important;
-    justify-self: stretch !important;
-  }
-
-  .mute__button {
-    right: 5%;
-    left: auto !important;
-  }
-
-  .information__dialog[open] {
-    height: 70% !important;
-  }
-}
-
-@media screen and (max-width: 1300px) and (min-width: 900px) {
-  .ship__selection,
-  .chatBox,
-  .commit-button {
-    transform: scale(0.8) !important;
-  }
-
-  .board {
-    transform: translateX(-50%) scale(0.8) !important;
-  }
-}
-
 body {
   cursor: crosshair;
 }
@@ -958,4 +921,41 @@ span {
 
 .ship--fake.ship--active {
   transform: scale(1);
+}
+
+@media screen and (max-width: 900px) {
+  .middle {
+    grid-template-areas:
+      "ship player1"
+      "chatbox player2";
+    grid-template-columns: 0.25fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .ship__selection,
+  .chatBox {
+    margin: 1rem;
+    justify-self: stretch;
+  }
+
+  .mute__button {
+    right: 5%;
+    left: auto;
+  }
+
+  .information__dialog[open] {
+    height: 70%;
+  }
+}
+
+@media screen and (max-width: 1300px) and (min-width: 900px) {
+  .ship__selection,
+  .chatBox,
+  .commit-button {
+    transform: scale(0.8);
+  }
+
+  .board {
+    transform: translateX(-50%) scale(0.8);
+  }
 }

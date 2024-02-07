@@ -3,30 +3,6 @@
   src: url(../font/BadGrunge.ttf);
 }
 
-@media screen and (height < 800px) {
-  .shipwars__title {
-    left: 4% !important;
-  }
-  .shipwars__buttons {
-    top: -4rem !important;
-  }
-}
-
-@media screen and (max-width: 500px), (max-height: 920px) {
-  .shipwars__button {
-    width: 18rem !important;
-    height: 3rem !important;
-  }
-
-  .shipwars__button-text {
-    font-size: 2.5rem !important;
-  }
-
-  .shipwars__title {
-    width: 95% !important;
-  }
-}
-
 @keyframes slideout {
   from {
     right: 0%;
@@ -298,4 +274,28 @@ form {
 
 .clicktosendemail {
   width: 400px;
+}
+
+@media screen and (height < 800px) {
+  .shipwars__title {
+    left: 4%;
+  }
+  .shipwars__buttons {
+    top: -4rem;
+  }
+}
+
+@media screen and (max-width: 500px), (max-height: 920px) {
+  .shipwars__button {
+    width: 18rem;
+    height: 3rem;
+  }
+
+  .shipwars__button-text {
+    font-size: 2.5rem;
+  }
+
+  .shipwars__title {
+    width: 95%;
+  }
 }
