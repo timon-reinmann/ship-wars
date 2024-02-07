@@ -17,9 +17,12 @@
       sizes="32x32" />
   </head>
   <body>
-    <div class="background-animation"></div>
-    <div class="container">
+    <div class="ship--fake ship--active"></div>
+    <div class="container" id="container">
+      <div class="background-animation"></div>
       <div class="cursor"></div>
+      <div class="alert__box"></div>
+      <div class="overlay"></div>
       <nav class="shipwars__navbar">
         <a href="../index.html" class="shipwars__logo"></a>
         <div class="navbar__list">
@@ -27,6 +30,9 @@
             <li><a style="user-select: none" href="../index.html">Home</a></li>
             <li><a style="user-select: none" href="#">Friends</a></li>
           </ul>
+          <div class="hamburger">
+            <i class="hamburger__icon fa-solid fa-bars"></i>
+          </div>
         </div>
       </nav>
       <div class="counter">0</div>
@@ -113,16 +119,13 @@
           </div>
           <div class="error-popup__screen-blocker"></div>
           <div class="screen-blocker"></div>
-        </div>
-
-        <div class="ring">
-          Loading
-          <span></span>
+          <div class="ring">
+            Loading
+            <span></span>
+          </div>
         </div>
 
         <div id="opponent__board" class="board"></div>
-
-        <div class="chatbox"></div>
 
         <div class="error-popup">
           <i
@@ -132,17 +135,6 @@
             <i class="fa-solid fa-xmark"></i>
           </div>
         </div>
-
-        <div class="rock-paper-scissors-container">
-          <p>Play rock paper scissors to choose who starts</p>
-          <button class="scissors SRP-choice" data-choice="scissors">✂️</button>
-          <button class="rock SRP-choice" data-choice="rock">🪨</button>
-          <button class="paper SRP-choice" data-choice="paper">📄</button>
-        </div>
-
-        <button class="mute__button">
-          <i class="fa-solid fa-volume-high"></i>
-        </button>
 
         <div class="chatBox">
           <ul id="message-list"></ul>
@@ -156,9 +148,33 @@
           </div>
         </div>
       </main>
+      <div class="rock-paper-scissors-container">
+        <p>Play rock paper scissors to choose who starts</p>
+        <button class="scissors SRP-choice" data-choice="scissors">✂️</button>
+        <button class="rock SRP-choice" data-choice="rock">🪨</button>
+        <button class="paper SRP-choice" data-choice="paper">📄</button>
+      </div>
+      <button class="mute__button">
+        <i class="fa-solid fa-volume-high"></i>
+      </button>
+      <button class="information__button">
+        <i class="fa-solid fa-info"></i>
+      </button>
+      <dialog class="information__dialog">
+        <h1>Information</h1>
+        <img
+          src="../img/ship-turning.gif"
+          class="information__img"
+          alt="rotating ship gif" />
+        <button class="button dialog--close">
+          <i class="fa-solid fa-circle-xmark dialog__img--close"></i>
+        </button>
+        Click on me to rotate me
+      </dialog>
     </div>
-
+    <script src="../js/styles-overrides.js"></script>
     <script src="../js/signalr.js"></script>
+    <script src="../js/screenOrientationCheck.js"></script>
     <script defer src="../js/game.js"></script>
     <script src="../js/Play-Easter-eggs-Video.js"></script>
     <script

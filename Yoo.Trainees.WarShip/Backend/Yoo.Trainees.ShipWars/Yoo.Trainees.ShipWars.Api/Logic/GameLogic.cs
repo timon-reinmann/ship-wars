@@ -86,6 +86,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return game;
         }
+
         public void CreateBoard(SaveShipsDto SwaggerData)
         {
             var game = _applicationDbContext.Game.Find(SwaggerData.GameId);
@@ -114,6 +115,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             }
             _applicationDbContext.SaveChanges();
         }
+
         public bool IsReady(Guid gameId)
         { 
             var gamePlayers = from s in _applicationDbContext.GamePlayer
@@ -175,6 +177,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 throw new InvalidOperationException("Shot not valid");
             }
         }
+
         public void SaveShot(SaveShotsDto shot, Guid gamePlayerId)
         {
             var player = _applicationDbContext.GamePlayer
@@ -193,6 +196,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             _applicationDbContext.Shot.Add(shotToSave);
             _applicationDbContext.SaveChanges();
         }
+
         public List<SaveShotsDto> GetAllShotsOfOpponent(Guid gamePlayerId)
         {
             var game = GetGame(gamePlayerId);
@@ -212,6 +216,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                          select new SaveShotsDto { X = s.X, Y = s.Y }).ToList();
             return shots;
         }
+
         public void SaveChoiceIntoDB(ScissorsRockPaper scissorsRockPaperBet, Guid gamePlayerId)
         {
             var gamePlayer = _applicationDbContext.GamePlayer.FirstOrDefault(x => x.Id == gamePlayerId);
@@ -223,6 +228,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 _applicationDbContext.SaveChanges();
             }
         }
+
         public RockPaperScissorsState GetResultOfTheSRP(Guid gamePlayerId)
         {
             var game = GetGame(gamePlayerId);
