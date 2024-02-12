@@ -92,7 +92,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                     Direction = (Direction)rnd.Next(0, 2)
                 };
 
-                i = _verificationLogic.VerifyShipPositionBot(saveShipDtos) ? i : i - 1;
+                i = _verificationLogic.VerifyShipLocations(saveShipDtos, true) ? i : i - 1;
             }
             
             foreach (var ship in saveShipDtos)

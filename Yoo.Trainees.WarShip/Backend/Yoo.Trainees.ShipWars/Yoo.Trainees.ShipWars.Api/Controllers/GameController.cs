@@ -178,7 +178,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // Post api/<Game>/5/SaveShips.
         [HttpPost("{id}/SaveShips")]
-        public async Task<IActionResult> SaveShips([FromBody] SaveShipsDto Ships, Guid id)
+        public async Task<IActionResult> SaveShips([FromBody] SaveShipsDto ships, Guid id)
         {
             var gameId = ships.GameId;
             if (id != gameId)
@@ -187,7 +187,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
             }
             bool isBotLobby = _botLogic.IsBotLobby(gameId);
 
-            bool isValidRequest = _verificationLogic.VerifyEverything(ships.Ships);
+            bool isValidRequest = _verificationLogic.VerifyEverything(ships.Ships, false);
             if (!isValidRequest)
             {
                 return BadRequest();
