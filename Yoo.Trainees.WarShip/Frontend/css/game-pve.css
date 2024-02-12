@@ -370,6 +370,11 @@ body {
   background-color: rgba(248, 110, 86, 0.25);
 }
 
+.commit__anker {
+  text-decoration: none;
+  color: var(--white);
+}
+
 .commit-button {
   font-family: walkingdead;
   font-size: 50px;
@@ -390,6 +395,10 @@ body {
 .commit-button:hover {
   background: white;
   color: black;
+
+  .commit__anker {
+    color: black;
+  }
 }
 
 .commit-button--active {
@@ -517,11 +526,11 @@ span {
 
 .rock-paper-scissors-container {
   background-color: rgba(65, 91, 42, 0.76);
-  display: grid;
+  display: inline-grid;
   grid-template-areas:
-    "text text text"
-    "scissors rock paper";
-  grid-template-columns: 1fr 1fr 1fr;
+    ". text ."
+    ". srp .";
+  grid-template-columns: 1fr 3fr 1fr;
   grid-template-rows: 1fr 1fr;
   justify-content: space-around;
   height: 100%;
@@ -531,7 +540,7 @@ span {
   left: 0px;
   font-family: walkingdead;
   color: white;
-  font-size: 130px;
+  font-size: 8rem;
   text-align: center;
   transform: scale(0);
 }
@@ -550,6 +559,7 @@ span {
 .paper {
   height: 200px;
   width: 200px;
+  align-self: flex-start;
   background-color: rgba(124, 124, 124, 0.567);
   border: 2px solid #3c3c3c;
   border-radius: 10px;
@@ -558,21 +568,18 @@ span {
 }
 
 .scissors {
-  grid-area: scissors;
+  grid-area: srp;
   justify-self: end;
-  align-self: center;
 }
 
 .rock {
-  grid-area: rock;
+  grid-area: srp;
   justify-self: center;
-  align-self: center;
 }
 
 .paper {
-  grid-area: paper;
+  grid-area: srp;
   justify-self: start;
-  align-self: center;
 }
 
 .scissors--active {
@@ -630,7 +637,7 @@ span {
   background-color: rgba(0, 255, 0, 0.25);
 }
 .win {
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   top: 50%;
   left: 50%;
@@ -652,7 +659,7 @@ span {
   animation-timing-function: linear;
 }
 .lost {
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   top: 50%;
   left: 50%;
@@ -932,6 +939,18 @@ span {
       "chatbox player2";
     grid-template-columns: 0.25fr 1fr;
     grid-template-rows: 1fr 1fr;
+  }
+
+  .rock-paper-scissors-container {
+    font-size: 5rem;
+  }
+
+  .scissors,
+  .rock,
+  .paper {
+    height: 100px;
+    width: 100px;
+    font-size: 50px;
   }
 
   .board,

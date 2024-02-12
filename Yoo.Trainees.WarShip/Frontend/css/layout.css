@@ -4,6 +4,7 @@ body {
   overflow-x: hidden;
   height: calc(100vh - 8px);
   margin-bottom: 0;
+  scroll-behavior: smooth;
 }
 
 :root {
