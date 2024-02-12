@@ -64,8 +64,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // It checks if gamePlayer is the NextPlayer --> Game.NextPlayer == gamePlayerId?
         [HttpGet("{gamePlayerId}/{gameId}/CheckReadyToShoot")]
-        public IActionResult CheckReadyToShoot(Guid gameId, Guid gamePlayerId)
+        public IActionResult CheckReadyToShoot(Guid gamePlayerId)
         {
+            Guid gameId = _botLogic.GetGame(gamePlayerId).Id;
             bool isBotLobby = _botLogic.IsBotLobby(gameId);
             if (isBotLobby || _gameLogic.UpdateAndCheckNextPlayer(gameId, gamePlayerId))
                 return Ok();
@@ -88,8 +89,9 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // It saves the Shot in the DB and returns if a ship was hit.
         [HttpPost("{gamePlayerId}/SaveShot")]
-        public IActionResult SaveShot([FromBody] SaveShotsDto xy, Guid gameId, Guid gamePlayerId)
+        public IActionResult SaveShot([FromBody] SaveShotsDto xy, Guid gamePlayerId)
         {
+            Guid gameId = _botLogic.GetGame(gamePlayerId).Id;
             bool isBotLobby = _botLogic.IsBotLobby(gameId);
             try
             {

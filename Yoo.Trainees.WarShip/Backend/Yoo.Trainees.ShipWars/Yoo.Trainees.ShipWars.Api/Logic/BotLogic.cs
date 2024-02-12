@@ -42,8 +42,6 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 throw new Exception("game not found");
             }
 
-            var botGamePlayerId = GetBotGamePlayerId(gamePlayerId);
-
             for (var i = 0; i < SwaggerData.Ships.Length; i++)
             {
                 var ship = SwaggerData.Ships[i];
