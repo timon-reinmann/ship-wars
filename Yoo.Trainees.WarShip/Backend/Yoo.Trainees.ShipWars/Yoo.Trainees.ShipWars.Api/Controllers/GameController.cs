@@ -178,7 +178,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
 
         // Post api/<Game>/5/SaveShips.
         [HttpPost("{id}/SaveShips")]
-        public async Task<IActionResult> SaveShips( Guid id, [FromBody] SaveShipsDto ships)
+        public async Task<IActionResult> SaveShips([FromBody] SaveShipsDto Ships, Guid id)
         {
             var gameId = ships.GameId;
             if (id != gameId)

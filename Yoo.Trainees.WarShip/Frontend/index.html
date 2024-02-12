@@ -13,8 +13,7 @@
     <video class="video" id="myVideo" data-length="199200" controls>
       <source
         src="/Frontend/img/Rick Astley - Never Gonna Give You Up (Official Music Video).mp4"
-        type="video/mp4"
-      />
+        type="video/mp4" />
     </video>
 
     <div class="background-animation"></div>
@@ -22,13 +21,15 @@
       <nav class="shipwars__navbar">
         <a
           href="https://en.wikipedia.org/wiki/Battleship_(game)"
-          class="shipwars__logo"
-        ></a>
+          class="shipwars__logo"></a>
         <div class="navbar__list">
           <ul>
             <li><a style="user-select: none" href="#">Home</a></li>
             <li><a style="user-select: none" href="#">Friends</a></li>
           </ul>
+          <div class="hamburger">
+            <i class="hamburger__icon fa-solid fa-bars"></i>
+          </div>
         </div>
       </nav>
       <div class="shipwars__title">
@@ -46,121 +47,115 @@
           ><p class="shipwars__button-text">VS Player</p></a
         >
 
-        <button id="sidebarBtn" class="btn">
-          <p class="btn-text">Directions</p>
+        <button id="sidebarBtn" class="btn shipwars__button">
+          <p class="btn-text shipwars__button-text">Directions</p>
         </button>
-        <selection id="sidebar" class="sidebar-text">
-          <h1>Directions</h1>
-          <br />
-          <p>Click on the topic that interests you.</p>
-          <button id="sidebarBtn-close" class="sidebar-close">
-            <i class="fa-solid fa-xmark-large fa-2xl"></i>
-          </button>
-          <div class="direction-btn">
-            <!------------------------------- homescreen ----------------------------------->
-            <div class="container">
-              -
-              <button class="button open-button">Homescreen</button>
-
-              <dialog class="modal" id="modal">
-                <h2>Homescreen</h2>
-                <img class="homescreen-img" src="img/homescreen.png" alt="" />
-                <p>
-                  You can see that it has three buttons, the top one (vsBot)
-                  allows
-                  <br />
-                  you to play against a computer. In the second button
-                  (vsPlayer)
-                  <br />
-                  you can play against a friend and at the bottom (Directions)
-                  you
-                  <br />
-                  can look at the rules, how the game works or what functions
-                  the
-                  <br />
-                  program has
-                </p>
-
-                <button class="button close-button">close modal</button>
-              </dialog>
-            </div>
-            <br />
-            <br />
-            <!------------------------------- VS Bot ----------------------------------->
-            <div class="container">
-              -
-              <button class="button open-button">VS Bot</button>
-
-              <dialog class="modal-pvp" id="modal-pvp">
-                <h2>VS Bot</h2>
-
-                <button class="button close-button">close modal</button>
-              </dialog>
-            </div>
-            <br />
-            <br />
-            <!------------------------------- Create Game ----------------------------------->
-            <div class="container">
-              -
-              <button class="button open-button">VS Player</button>
-
-              <dialog class="modal" id="modal-pvp">
-                <h2>VS PLayer</h2>
-                <p>
-                  Enter your lobby name here and press the icon on the page to
-                  <br />
-                  create the game
-                  <br />
-                </p>
-                <img class="lobbyname" src="img/lobbyname.png" alt="" />
-                <img src="img/created.png" alt="" />
-                <p>
-                  Once you have created the game you can copy the link for
-                  players
-                  <br />
-                  or send it by email. As soon as you have copied or sent the
-                  link
-                  <br />
-                  you can join the game yourself using the JoinGame button
-                  <br />
-                </p>
-                <img class="copylink" src="img/copylink.png" alt="" />
-                <img class="copied" src="img/copied.png" alt="" /> <br />
-                <img class="sendemail" src="img/sendemail.png" alt="" />
-                <img
-                  src="img/clicktosendemail.png"
-                  alt=""
-                  class="clicktosendemail"
-                />
-                <button class="button close-button">close modal</button>
-              </dialog>
-            </div>
-            <br />
-            <br />
-            <!------------------------------- How to Play ----------------------------------->
-            <div class="container">
-              -
-              <button class="button open-button">How to Play</button>
-
-              <dialog class="modal-pvp" id="modal-rules">
-                <h2>How to Play</h2>
-
-                <p></p>
-
-                <button class="button close-button">close modal</button>
-              </dialog>
-            </div>
-            <br />
-            <br />
-          </div>
-        </selection>
       </div>
+      <selection id="sidebar" class="sidebar-text">
+        <h1>Directions</h1>
+        <br />
+        <p>Click on the topic that interests you.</p>
+        <button id="sidebarBtn-close" class="sidebar-close">
+          <i class="fa-solid fa-xmark-large fa-2xl"></i>
+        </button>
+        <div class="direction-btn">
+          <!------------------------------- homescreen ----------------------------------->
+          <div class="container">
+            -
+            <button class="button open-button">Homescreen</button>
+
+            <dialog class="modal" id="modal">
+              <h2>Homescreen</h2>
+              <img class="homescreen-img" src="img/homescreen.png" alt="" />
+              <p>
+                You can see that it has three buttons, the top one (vsBot)
+                allows
+                <br />
+                you to play against a computer. In the second button (vsPlayer)
+                <br />
+                you can play against a friend and at the bottom (Directions) you
+                <br />
+                can look at the rules, how the game works or what functions the
+                <br />
+                program has
+              </p>
+
+              <button class="button close-button">close modal</button>
+            </dialog>
+          </div>
+          <br />
+          <br />
+          <!------------------------------- VS Bot ----------------------------------->
+          <div class="container">
+            -
+            <button class="button open-button">VS Bot</button>
+
+            <dialog class="modal-pvp" id="modal-pvp">
+              <h2>VS Bot</h2>
+
+              <button class="button close-button">close modal</button>
+            </dialog>
+          </div>
+          <br />
+          <br />
+          <!------------------------------- Create Game ----------------------------------->
+          <div class="container">
+            -
+            <button class="button open-button">VS Player</button>
+
+            <dialog class="modal" id="modal-pvp">
+              <h2>VS PLayer</h2>
+              <p>
+                Enter your lobby name here and press the icon on the page to
+                <br />
+                create the game
+                <br />
+              </p>
+              <img class="lobbyname" src="img/lobbyname.png" alt="" />
+              <img src="img/created.png" alt="" />
+              <p>
+                Once you have created the game you can copy the link for players
+                <br />
+                or send it by email. As soon as you have copied or sent the link
+                <br />
+                you can join the game yourself using the JoinGame button
+                <br />
+              </p>
+              <img class="copylink" src="img/copylink.png" alt="" />
+              <img class="copied" src="img/copied.png" alt="" /> <br />
+              <img class="sendemail" src="img/sendemail.png" alt="" />
+              <img
+                src="img/clicktosendemail.png"
+                alt=""
+                class="clicktosendemail" />
+              <button class="button close-button">close modal</button>
+            </dialog>
+          </div>
+          <br />
+          <br />
+          <!------------------------------- How to Play ----------------------------------->
+          <div class="container">
+            -
+            <button class="button open-button">How to Play</button>
+
+            <dialog class="modal-pvp" id="modal-rules">
+              <h2>How to Play</h2>
+
+              <p></p>
+
+              <button class="button close-button">close modal</button>
+            </dialog>
+          </div>
+          <br />
+          <br />
+        </div>
+      </selection>
     </div>
+    <script src="js/styles-overrides.js"></script>
     <script src="js/home.js"></script>
     <script src="js/Play-Easter-eggs-Video.js"></script>
     <script
       src="https://kit.fontawesome.com/d6df3707cf.js"
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
   </body>
 </html>

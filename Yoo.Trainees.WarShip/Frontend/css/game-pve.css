@@ -43,6 +43,17 @@
   }
 }
 
+@keyframes dialogSlideIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 @font-face {
   font-family: "walkingdead";
   src: url(../font/BadGrunge.ttf);
@@ -62,6 +73,7 @@ body {
   height: 50px;
   pointer-events: none;
 }
+
 .recoil-animation {
   animation: recoil 0.2s linear;
 }
@@ -77,14 +89,95 @@ body {
   bottom: 5%;
   left: 5%;
 }
+
 .mute__button:hover {
   background-color: var(--white) 0.75;
   color: black;
   cursor: pointer;
 }
+
 .mute__button i {
   color: var(--white);
   font-size: 2rem;
+}
+
+.information__button {
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  background-color: rgba(128, 128, 128, 0.5);
+  border: 1px solid var(--white);
+  box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
+  transition: ease-in-out 0.5s;
+  border-radius: 50%;
+  bottom: 5%;
+  left: 10%;
+}
+
+.information__button:hover {
+  background-color: var(--white) 0.75;
+  color: black;
+  cursor: help;
+  scale: 1.1;
+}
+
+.information__button i {
+  color: var(--white);
+  font-size: 2rem;
+}
+
+.information__dialog {
+  scale: 0;
+  transition: ease-in-out 2s;
+}
+
+.information__dialog[open] {
+  display: grid;
+  scale: 1;
+  justify-content: center;
+  color: var(--white);
+  align-items: center;
+  height: 40%;
+  width: 30%;
+  border: 2px solid var(--white);
+  background-color: rgba(211, 84, 84, 0.7);
+  box-shadow: inset 0px 0px 5px 7px rgba(238, 83, 83, 0.7),
+    0px 0px 20px 20px rgba(68, 68, 68, 0.7),
+    0px 0px 0px 100vw rgba(0, 0, 0, 0.4);
+}
+
+.animation__dialog--in {
+  animation: dialogSlideIn 1s ease forwards;
+}
+
+.animation__dialog--out {
+  animation: dialogSlideIn 1s ease forwards;
+  animation-direction: reverse;
+}
+
+.information__img {
+  box-shadow: 0px 0px 20px 20px rgba(68, 68, 68, 0.3);
+}
+
+.dialog--close {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+  top: 5%;
+  right: 5%;
+}
+
+.dialog--close:hover {
+  background-color: var(--white) 0.75;
+  transition: ease-in-out 0.5s;
+  color: black;
+  cursor: pointer;
+  scale: 1.1;
+}
+
+.dialog__img--close {
+  color: var(--white);
+  font-size: 3rem;
 }
 
 .field {
@@ -96,6 +189,7 @@ body {
 
 .middle {
   display: grid;
+  position: relative;
   margin-top: -2rem;
   grid-template-areas: "ship player1 player2 chatbox";
   grid-template-columns: 0.5fr 1fr 1fr 0.5fr;
@@ -127,15 +221,16 @@ body {
 }
 
 .board {
+  display: inline-grid;
   background-color: rgba(128, 128, 128, 0.5);
   border: 2px solid var(--white);
   box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
-  width: 520px;
-  height: 520px;
-  display: grid;
   grid-template-columns: repeat(10, 1fr);
+  border-collapse: collapse;
   align-self: center;
-  position: relative;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .finish {
@@ -147,7 +242,7 @@ body {
   align-self: center;
   position: absolute;
   transform: scale(0);
-  z-index: 100;
+  z-index: 2000;
   font-family: walkingdead;
   font-size: 90px;
   padding-left: 45px;
@@ -177,7 +272,7 @@ body {
 .ship {
   cursor: crosshair;
 }
-.ship:hover:not(.vertical):before {
+.ship:hover:not(.dragging)::before {
   content: "";
   opacity: var(--opacityBefore);
   position: absolute;
@@ -192,7 +287,7 @@ body {
   border-radius: 50%;
 }
 
-.ship:hover:not(.vertical)::after {
+.ship:hover:not(.vertical):not(.dragging)::after {
   content: "";
   position: absolute;
   opacity: var(--opacityAfter);
@@ -224,6 +319,7 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .cruiser {
   height: calc(52px * 1);
   width: calc(52px * 3);
@@ -237,6 +333,7 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .destroyer {
   height: calc(52px * 1);
   width: calc(52px * 2);
@@ -250,6 +347,7 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .submarine {
   height: calc(52px * 1);
   width: calc(52px * 1);
@@ -263,12 +361,15 @@ body {
   overflow: visible;
   border-radius: 250%;
 }
+
 .ship.dragging {
   background-color: rgba(143, 240, 143, 0.25);
 }
+
 .ship.dragging.invalid {
   background-color: rgba(248, 110, 86, 0.25);
 }
+
 .commit-button {
   font-family: walkingdead;
   font-size: 50px;
@@ -278,7 +379,9 @@ body {
   box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
   position: absolute;
   border: 3px white solid;
-  margin: 650px 344px;
+  grid-area: player1;
+  bottom: 0%;
+  margin-bottom: 1rem;
   cursor: pointer;
   transform: scale(1);
   user-select: none;
@@ -357,8 +460,8 @@ body {
 
 .ring {
   position: absolute;
-  top: 47%;
-  left: 25.9%;
+  top: 75%;
+  left: 50%;
   transform: translate(-50%, -50%);
   width: 150px;
   height: 150px;
@@ -374,12 +477,12 @@ body {
   text-transform: uppercase;
   text-shadow: 0 0 10px #fff000;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  z-index: 300;
+  z-index: 2000;
   transform: scale(0);
   user-select: none;
 }
 .ring--active {
-  transform: scale(1);
+  transform: translate(-50%, -50%) scale(1);
 }
 .ring::before {
   content: "";
@@ -411,7 +514,7 @@ span {
   height: 525px;
   align-self: center;
   position: absolute;
-  z-index: 200;
+  z-index: 2000;
   transform: scale(0);
 }
 .screen-blocker--active {
@@ -609,12 +712,12 @@ span {
   grid-template-areas:
     "user"
     "message send";
+  grid-area: chatbox;
   flex-direction: column;
   align-items: center;
   margin: 1rem 1rem 1rem 4rem;
   padding: 1rem;
-  position: absolute;
-  right: 0%;
+
   height: 660px;
   width: 300px;
   background-color: rgba(128, 128, 128, 0.5);
@@ -675,7 +778,7 @@ span {
 }
 
 ::-webkit-scrollbar-thumb {
-  box-shadow: inset 0 0 10px white;
+  box-shadow: inset 0 0 10px var(--white);
   border-radius: 10px;
 }
 
@@ -736,9 +839,9 @@ span {
   width: 0px;
   height: 0px;
   position: absolute;
-  border-left: 10px solid white;
+  border-left: 10px solid var(--white);
   border-right: 10px solid transparent;
-  border-top: 10px solid white;
+  border-top: 10px solid var(--white);
   border-bottom: 10px solid transparent;
   right: -15px;
   top: 10px;
@@ -758,9 +861,9 @@ span {
   width: 0px;
   height: 0px;
   position: absolute;
-  border-left: 10px solid white;
+  border-left: 10px solid var(--white);
   border-right: 10px solid transparent;
-  border-top: 10px solid white;
+  border-top: 10px solid var(--white);
   border-bottom: 10px solid transparent;
   left: -15px;
   top: 10px;
@@ -770,4 +873,116 @@ span {
 #message-list p {
   margin-block-start: 0em;
   margin-block-end: 0em;
+}
+
+.alert__box {
+  display: none;
+  position: absolute;
+  inset: 50%;
+  justify-content: center;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 20%;
+  border: 3px solid var(--white);
+  background-color: rgba(223, 62, 62, 0.701);
+  box-shadow: inset 0px 0px 100px 10px red;
+  z-index: 1000;
+}
+
+.alert__box--show {
+  display: flex;
+}
+
+.alert__text {
+  font-family: walkingdead;
+  font-size: 3rem;
+  color: var(--white);
+  text-align: center;
+  user-select: none;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: none;
+}
+
+.overlay--show {
+  display: block;
+}
+
+.ship--fake {
+  position: absolute;
+  z-index: 100;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: scale(0);
+}
+
+.ship--fake.ship--active {
+  transform: scale(1);
+}
+
+@media screen and (max-width: 900px), (max-height: 850px) {
+  .middle {
+    grid-template-areas:
+      "ship player1"
+      "chatbox player2";
+    grid-template-columns: 0.25fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .board,
+  .ship__selection,
+  .chatBox,
+  .commit-button,
+  .mute__button,
+  .information__button {
+    scale: 0.8;
+  }
+
+  .ship__selection,
+  .chatBox {
+    margin: 1rem;
+    justify-self: stretch;
+  }
+  .information__button,
+  .mute__button {
+    left: auto;
+    right: 2%;
+  }
+
+  .mute__button {
+    bottom: 0%;
+  }
+
+  .information__button {
+    bottom: 15%;
+  }
+
+  .information__dialog[open] {
+    height: 70%;
+  }
+
+  .information__dialog[open] * {
+    scale: 0.8;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .ship__selection,
+  .chatBox,
+  .commit-button {
+    transform: scale(0.8);
+  }
+
+  .board {
+    transform: translateX(-50%) scale(0.8);
+  }
 }

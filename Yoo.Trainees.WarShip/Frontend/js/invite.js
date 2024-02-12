@@ -7,7 +7,7 @@ const registerLink = document.querySelector(".register-link");
 const btnPopup = document.querySelector(".btnLogin-popup");
 const iconClose = document.querySelector(".icon-close");
 const joinGame = document.querySelector(".join__button");
-const input = copyText.querySelector("input.text");
+const input = document.getElementById("linkoutput");
 
 let link = null;
 let lobbyName = null;
@@ -35,7 +35,8 @@ loginLink.addEventListener("click", () => {
   joinGame.classList.remove("active");
 });
 
-btnPopup.addEventListener("click", () => {
+btnPopup.addEventListener("click", (e) => {
+  e.preventDefault();
   wrapper.classList.add("active-popup");
 });
 
@@ -44,7 +45,8 @@ iconClose.addEventListener("click", () => {
   wrapper.classList.remove("active-popup");
 });
 
-submit_button.addEventListener("click", async function () {
+submit_button.addEventListener("click", async (e) => {
+  e.preventDefault();
   const createGame = document.querySelector(".submit__lobbyname");
   createGame.classList.add("active");
   setTimeout(() => {
