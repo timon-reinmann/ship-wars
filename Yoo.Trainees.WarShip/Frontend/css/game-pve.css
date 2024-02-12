@@ -517,9 +517,16 @@ span {
 
 .rock-paper-scissors-container {
   background-color: rgba(65, 91, 42, 0.76);
+  display: grid;
+  grid-template-areas:
+    "text text text"
+    "scissors rock paper";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  justify-content: space-around;
   height: 100%;
   width: 100%;
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 0px;
   font-family: walkingdead;
@@ -529,15 +536,18 @@ span {
   transform: scale(0);
 }
 
+.SRP__text {
+  grid-area: text;
+}
+
 .SRP--active {
   transform: scale(1);
   user-select: none;
 }
 
-.scissors {
-  position: absolute;
-  left: 30.4%;
-  top: 75%;
+.scissors,
+.rock,
+.paper {
   height: 200px;
   width: 200px;
   background-color: rgba(124, 124, 124, 0.567);
@@ -545,32 +555,24 @@ span {
   border-radius: 10px;
   font-size: 100px;
   transform: scale(0);
+}
+
+.scissors {
+  grid-area: scissors;
+  justify-self: end;
+  align-self: center;
 }
 
 .rock {
-  position: absolute;
-  left: 43.4%;
-  top: 75%;
-  height: 200px;
-  width: 200px;
-  background-color: rgba(124, 124, 124, 0.567);
-  border: 2px solid #3c3c3c;
-  border-radius: 10px;
-  font-size: 100px;
-  transform: scale(0);
+  grid-area: rock;
+  justify-self: center;
+  align-self: center;
 }
 
 .paper {
-  position: absolute;
-  left: 56.4%;
-  top: 75%;
-  height: 200px;
-  width: 200px;
-  background-color: rgba(124, 124, 124, 0.567);
-  border: 2px solid #3c3c3c;
-  border-radius: 10px;
-  font-size: 100px;
-  transform: scale(0);
+  grid-area: paper;
+  justify-self: start;
+  align-self: center;
 }
 
 .scissors--active {
