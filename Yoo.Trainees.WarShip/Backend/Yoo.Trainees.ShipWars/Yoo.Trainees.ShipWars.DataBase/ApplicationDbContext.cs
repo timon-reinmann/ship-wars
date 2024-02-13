@@ -18,6 +18,7 @@ namespace Yoo.Trainees.ShipWars.DataBase
         public virtual DbSet<Ship> Ship { get; set; }
         public virtual DbSet<ShipPosition> ShipPosition { get; set; }
         public virtual DbSet<Shot> Shot { get; set; }
+        public virtual DbSet<HardGameShot> HardGameShot { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

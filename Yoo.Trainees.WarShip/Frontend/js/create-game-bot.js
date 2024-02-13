@@ -3,6 +3,9 @@ const joinGame = document.querySelector(".join__button");
 const hard_button = document.querySelector(".hard-mode");
 const easy_button = document.querySelector(".easy-mode");
 
+let hard_game = false;
+let easy_game = false;
+
 let link = null;
 let lobbyName = null;
 let isFetchEnable = false;
@@ -12,12 +15,16 @@ const isBotGame = true;
 hard_button.addEventListener("click", function () {
   hard_button.classList.add("hard-mode--active");
   easy_button.classList.remove("easy-mode--active");
+  hard_game = true;
+  easy_game = false;
   isFetchEnable = true;
 });
 
 easy_button.addEventListener("click", function () {
   easy_button.classList.add("easy-mode--active");
   hard_button.classList.remove("hard-mode--active");
+  easy_game = true;
+  hard_game = false;
   isFetchEnable = true;
 });
 
@@ -43,13 +50,16 @@ submit_button.addEventListener("click", async function () {
         "Content-Type": "application/json",
         "Sec-Fetch-Dest": "empty",
       },
-      body: JSON.stringify({ Name: lobbyName, Bot: isBotGame }),
+      body: JSON.stringify({
+        Name: lobbyName,
+        Bot: isBotGame,
+        EasyGame: easy_game,
+      }),
       method: "POST",
     })
       .then((response) => response.json())
       .then((data) => {
-        joinGame.href = data.player1;
-        link = data.player1;
+        joinGame.href = data.player1 + "&gameMode=" + hard_game;
         console.log(data.player1);
       })
       .catch((error) => {

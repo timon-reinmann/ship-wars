@@ -26,6 +26,12 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 new Ship { Length = 1, Name = "submarine" }
         };
 
+        public enum GameMode
+        {
+            hard,
+            easy
+        }
+
         public GameController(IGameLogic gameLogic, IEmailSender emailSender, IConfiguration configuration, IVerificationLogic verificationLogic, IBotLogic botLogic)
         {
             this._gameLogic = gameLogic;
@@ -74,17 +80,26 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         }
 
         [HttpPost("{gamePlayerId}/CheckBotHitShip")]
-        public IActionResult CheckBotHitShip(Guid gamePlayerId, [FromBody] SaveShotsDto xy)
+        public IActionResult CheckBotHitShip(Guid gamePlayerId, [FromBody] SaveShotsDto xy, Guid gameId, bool hardGame, bool easyGame)
         {
             try
             {
-                var shipHit = _botLogic.CheckIfBotHit(xy, gamePlayerId);
+                var shipHit = DataBase.Entities.ShipHit.Missed;
+                if (easyGame)
+                {
+                    shipHit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)_botLogic.CheckIfBotHit(xy, gamePlayerId);
+                }
+                else if (hardGame) 
+                {
+                    shipHit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)_botLogic.GetShipHit(xy, gamePlayerId, gameId);
+                }
                 return Ok(new { hit = shipHit });
             }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(new { bad = -1 });
             }
+            return BadRequest();
         }
 
         // It saves the Shot in the DB and returns if a ship was hit.
@@ -160,7 +175,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] GameDto gameDto)
         {
-            var game = _gameLogic.CreateGame(gameDto.Name, gameDto.isBot);
+            var game = _gameLogic.CreateGame(gameDto.Name, gameDto.Bot, gameDto.EasyGame);
             var isBotLobby = _botLogic.IsBotLobby(game.Id);
             var linkPlayer1 = CreateLink(game.Id, game.GamePlayers.First().Id, isBotLobby);
             var linkPlayer2 = CreateLink(game.Id, game.GamePlayers.ToArray()[1].Id, isBotLobby);
@@ -235,8 +250,22 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpGet("{gamePlayerId}/GetShotsFromBot")]
         public IActionResult GetBotShots(Guid gamePlayerId)
         {
-            var botShotPositions = _botLogic.BotShotPosition(gamePlayerId);
-            return Ok(new { BotShots = botShotPositions });
+            SaveShotsDto botShotPositions = null;
+            var game = _botLogic.GetGame(gamePlayerId);
+            GameMode gameMode = (Yoo.Trainees.ShipWars.Api.Controllers.GameController.GameMode)_botLogic.GetGameMode(game.Id);
+            if (gameMode == GameMode.easy)
+            {
+                botShotPositions = _botLogic.BotRandomShotPosition(gamePlayerId);
+            }
+            else if (gameMode == GameMode.hard) 
+            {
+                botShotPositions = _botLogic.HardGameMode(gamePlayerId);    
+            }
+            if (botShotPositions != null)
+            {
+                return Ok(new { BotShots = botShotPositions });
+            }
+            return BadRequest();
         }
 
         [HttpGet("{gamePlayerId}/LoadShotsFromBot")]

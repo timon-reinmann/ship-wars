@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Yoo.Trainees.ShipWars.DataBase;
 
@@ -11,9 +12,11 @@ using Yoo.Trainees.ShipWars.DataBase;
 namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240115110022_GameMode")]
+    partial class GameMode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,40 +80,6 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.HasIndex("PlayerId");
 
                     b.ToTable("GamePlayer");
-                });
-
-            modelBuilder.Entity("Yoo.Trainees.ShipWars.DataBase.Entities.HardGameShot", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Direction")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Hit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("MainShot")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("PlayerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Step")
-                        .HasColumnType("int");
-
-                    b.Property<int>("X")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Y")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlayerId");
-
-                    b.ToTable("HardGameShot");
                 });
 
             modelBuilder.Entity("Yoo.Trainees.ShipWars.DataBase.Entities.Message", b =>
@@ -268,17 +237,6 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                         .IsRequired();
 
                     b.Navigation("Game");
-
-                    b.Navigation("Player");
-                });
-
-            modelBuilder.Entity("Yoo.Trainees.ShipWars.DataBase.Entities.HardGameShot", b =>
-                {
-                    b.HasOne("Yoo.Trainees.ShipWars.DataBase.Entities.GamePlayer", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Player");
                 });

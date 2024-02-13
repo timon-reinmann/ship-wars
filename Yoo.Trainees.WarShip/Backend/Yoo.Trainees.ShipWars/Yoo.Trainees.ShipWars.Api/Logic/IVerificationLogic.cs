@@ -7,6 +7,6 @@
         bool TestVerifyeToManyShipsFromSameType(SaveShipDto[] shipDtos);
         bool VerifyShot(List<SaveShotsDto> shotsDto, SaveShotsDto shot);
         SaveShipDto VerifyShipHit(List<SaveShipDto> shipsDB, SaveShotsDto shot);
-        bool VerifyBotShot(IList<SaveBotShotsDto> shots, SaveBotShotsDto lastShot);
+        bool VerifyBotShot(IList<SaveShotsDto> shots, SaveShotsDto lastShot);
     }
 }
