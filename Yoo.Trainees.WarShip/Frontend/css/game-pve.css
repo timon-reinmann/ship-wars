@@ -78,8 +78,35 @@ body {
   animation: recoil 0.2s linear;
 }
 
+.down__anker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  width: 75px;
+  height: 75px;
+  background-color: rgba(128, 128, 128, 0.5);
+  border: 1px solid var(--white);
+  box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
+  border-radius: 50%;
+  bottom: 5%;
+  left: 15%;
+  text-decoration: none;
+}
+
+.down__anker:hover {
+  background-color: var(--white) 0.75;
+  color: black;
+  cursor: pointer;
+}
+
+.down__anker i {
+  color: var(--white);
+  font-size: 2rem;
+}
+
 .mute__button {
-  position: absolute;
+  position: fixed;
   width: 75px;
   height: 75px;
   background-color: rgba(128, 128, 128, 0.5);
@@ -102,7 +129,7 @@ body {
 }
 
 .information__button {
-  position: absolute;
+  position: fixed;
   width: 75px;
   height: 75px;
   background-color: rgba(128, 128, 128, 0.5);
@@ -958,23 +985,31 @@ span {
   .chatBox,
   .commit-button,
   .mute__button,
-  .information__button {
+  .down__anker,
+  .information__button,
+  .information__dialog[open] * {
     scale: 0.8;
   }
 
-  .ship__selection,
+  .ship--fake .ship__selection,
   .chatBox {
     margin: 1rem;
     justify-self: stretch;
   }
+
   .information__button,
-  .mute__button {
+  .mute__button,
+  .down__anker {
     left: auto;
-    right: 2%;
+    left: 2%;
   }
 
   .mute__button {
     bottom: 0%;
+  }
+
+  .down__anker {
+    bottom: 30%;
   }
 
   .information__button {
@@ -983,10 +1018,6 @@ span {
 
   .information__dialog[open] {
     height: 70%;
-  }
-
-  .information__dialog[open] * {
-    scale: 0.8;
   }
 }
 

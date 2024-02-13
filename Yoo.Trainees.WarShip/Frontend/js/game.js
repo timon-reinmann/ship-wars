@@ -215,6 +215,7 @@ function drag(draggable, pointXY, e) {
   const yClient = pointXY.clientY;
   const xPage = pointXY.pageX;
   const yPage = pointXY.pageY;
+  console.log(`${yClient} | ${yPage}`);
 
   const container = document.elementFromPoint(xClient, yClient);
   const isPlacementValid = dragover(container, e);
@@ -244,17 +245,21 @@ function dragMove(draggable, x, y) {
   const imgURL = "../img/" + imgName + ".png";
   const computedStyle = window.getComputedStyle(draggable);
   const commonDivisor = draggable.offsetWidth % 52;
+  let scale = 1;
+  if (window.innerWidth < 900 || window.innerHeight < 900) {
+    scale = 0.6;
+  }
   // the 1x1 Ship witdh is allways 52px
-  const shipWitdh = 52;
+  const shipWitdh = 52 * scale;
 
   fakeShip.classList.add("ship--active");
 
   fakeShip.style.backgroundImage = `url(${imgURL})`;
-  fakeShip.style.width = draggable.offsetWidth + "px";
-  fakeShip.style.height = draggable.offsetHeight + "px";
+  fakeShip.style.width = draggable.offsetWidth * scale + "px";
+  fakeShip.style.height = draggable.offsetHeight * scale + "px";
   fakeShip.style.backgroundSize = computedStyle.backgroundSize;
   fakeShip.style.left = x - shipWitdh / 2 - shipWitdh * commonDivisor + "px";
-  fakeShip.style.top = y - draggable.offsetHeight / 2 + "px";
+  fakeShip.style.top = y - (draggable.offsetHeight * scale) / 2 + "px";
 }
 
 function dragend(draggable, e) {
@@ -791,9 +796,11 @@ function loadFiredShots(gamePlayerId) {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
 }
+
 function loadShotsFromOpponent() {
   loadShotsFromOpponentFromTheDB(gamePlayerId);
 }
+
 function loadShotsFromOpponentFromTheDB(gamePlayerId) {
   const API_URL = api + gamePlayerId + "/LoadShotsFromOpponent";
   fetch(API_URL, {
@@ -968,6 +975,7 @@ SRPChoice.forEach((srp) => {
     });
   });
 });
+
 async function IsSRPIsSet() {
   const API_URL = api + gamePlayerId + "/CheckIfSRPIsSet";
   const result = await fetch(API_URL, {

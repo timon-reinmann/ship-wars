@@ -1,11 +1,19 @@
+html {
+}
+
 body {
   font-family: Brush Script MT, Brush Script Std, cursive;
   list-style: none;
   overflow-x: hidden;
   height: calc(100vh - 8px);
+  width: calc(100vw);
   margin-bottom: 0;
   scroll-behavior: smooth;
 }
+
+/* * {
+  outline: 3px solid red;
+} */
 
 :root {
   --white: #fefefe;
@@ -52,6 +60,7 @@ body {
 .shipwars__navbar {
   display: flex;
   justify-content: space-between;
+  overflow-x: hidden;
   user-select: none;
 }
 
@@ -64,8 +73,7 @@ body {
 }
 
 .navbar__list {
-  position: relative;
-  left: 5%;
+  position: absolute;
   width: 40vw;
   height: 5rem;
   background-color: rgba(128, 128, 128, 0.5);
@@ -138,12 +146,6 @@ body {
   .hamburger {
     display: block;
     transform: skew(-30deg);
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .navbar__list {
-    left: 10%;
   }
 }
 
