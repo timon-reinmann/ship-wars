@@ -93,23 +93,18 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         {
             Guid gameId = _botLogic.GetGame(gamePlayerId).Id;
             bool isBotLobby = _botLogic.IsBotLobby(gameId);
+            var finalGamePlayerId = isBotLobby ? _botLogic.GetBotGamePlayerId(gamePlayerId) : gamePlayerId;
             try
             {
-                if (isBotLobby)
-                {
-                    _gameLogic.VerifyAndSaveShot(xy, gamePlayerId);
-                    var botGamePlayerId = _botLogic.GetBotGamePlayerId(gamePlayerId);
-                    var shipHit = _gameLogic.CheckIfShipHit(xy, botGamePlayerId);
-                    return Ok(new { hit = shipHit });
+                _gameLogic.VerifyAndSaveShot(xy, gamePlayerId);
+                var shipHit = _gameLogic.CheckIfShipHit(xy, finalGamePlayerId);
 
-                }
-                else
+                if (!isBotLobby)
                 {
-                    _gameLogic.VerifyAndSaveShot(xy, gamePlayerId);
-                    var shipHit = _gameLogic.CheckIfShipHit(xy, gamePlayerId);
                     _gameLogic.SaveShot(xy, gamePlayerId);
-                    return Ok(new { hit = shipHit });
                 }
+
+                return Ok(new { hit = shipHit });
             }
             catch (InvalidOperationException ex)
             {

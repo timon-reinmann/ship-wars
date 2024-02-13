@@ -1,5 +1,8 @@
-﻿using System.Data;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Data;
+using System.Diagnostics.Metrics;
 using Yoo.Trainees.ShipWars.Api.Controllers;
+using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
@@ -7,41 +10,35 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     public class VerificationLogic : IVerificationLogic
     {
         private List<Ship> ships = GameController.Ships;
+        private DataTable dtShip = default;
+        private readonly ApplicationDbContext applicationDbContext;
 
-        public bool VerifyEverything(SaveShipDto[] shipDtos, bool isBotLobby)
+        public bool VerifyEverything(SaveShipDto[] shipDtos)
         {
-            return TestVerifyeToManyShipsFromSameType(shipDtos) && VerifyShipLocations(shipDtos, isBotLobby);
+            return TestVerifyeToManyShipsFromSameType(shipDtos) && VerifyShipLocations(shipDtos);
         }
 
-        public bool VerifyShipLocations(SaveShipDto[] shipDtos, bool isBotLobby)
+        public bool VerifyShipLocations(SaveShipDto[] shipDtos)
         {
-
-            if (isBotLobby)
+            var amountOfShips = 10;
+            if (shipDtos.Length != amountOfShips)
             {
-                shipDtos = shipDtos.Where(x => x != null).ToArray();
-            }
-            else
-            {
-                var amountOfShips = 10;
-                if (shipDtos.Length != amountOfShips)
-                {
-                    return false;
-                }
+                return false;
             }
 
-            foreach (var _ishipDtos in shipDtos)
+            foreach (var ship in shipDtos)
             {
-                var shipType = ships.SingleOrDefault(x => x.Name.ToUpper() == _ishipDtos.ShipType.ToUpper());
-                var shipX = _ishipDtos.X;
-                var shipY = _ishipDtos.Y;
+                var shipType = ships.SingleOrDefault(x => x.Name.ToUpper() == ship.ShipType.ToUpper());
+                var shipX = ship.X;
+                var shipY = ship.Y;
                 var shipLength = shipType.Length;
-                var _iY1 = shipY - 1;
-                var _iY2 = shipY + 1;
-                var _iX1 = shipX - 1;
-                var _iX2 = shipX + 1;
-                var shipDirection = _ishipDtos.Direction;
-                int _iXl;
-                int _iYl;
+                var y1 = shipY - 1;
+                var y2 = shipY + 1;
+                var x1 = shipX - 1;
+                var x2 = shipX + 1;
+                var shipDirection = ship.Direction;
+                int xl;
+                int yl;
                 var maxBoardLength = 9;
                 var minBoardLength = 0;
 
@@ -65,33 +62,33 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                     }
                 }
 
-                foreach (var ship in shipDtos)
+                foreach (var innerSaveShipDto in shipDtos)
                 {
-                    var ShipType = ships.SingleOrDefault(x => x.Name.ToLower() == ship.ShipType.ToLower());
-                    int Length = ShipType.Length;
+                    var jShipType = ships.SingleOrDefault(x => x.Name.ToLower() == innerSaveShipDto.ShipType.ToLower());
+                    int jLength = jShipType.Length;
                     //var jShipType = ships.SingleOrDefault(x => x.Name == j.ShipType);
-                    for (int i = 0; i < Length; i++)
+                    for (int i = 0; i < jLength; i++)
                     {
                         for (int l = -1; l <= shipLength; l++)
                         {
-                            _iXl = shipX + l;
-                            _iYl = shipY + l;
+                            xl = shipX + l;
+                            yl = shipY + l;
 
-                            if (_ishipDtos != ship)
+                            if (ship != innerSaveShipDto)
                             {
                                 switch (shipDirection)
                                 {
                                     case Direction.horizontal:
-                                        switch (ship.Direction)
+                                        switch (innerSaveShipDto.Direction)
                                         {
                                             case Direction.horizontal:
-                                                if (ship.X + i == _iXl && ship.Y == shipY || ship.X + i == _iXl && ship.Y == _iY1 || ship.X + i == _iXl && ship.Y == _iY2)
+                                                if (innerSaveShipDto.X + i == xl && innerSaveShipDto.Y == shipY || innerSaveShipDto.X + i == xl && innerSaveShipDto.Y == y1 || innerSaveShipDto.X + i == xl && innerSaveShipDto.Y == y2)
                                                 {
                                                     return false;
                                                 }
                                                 break;
                                             case Direction.vertical:
-                                                if (ship.X == _iXl && ship.Y + i == shipY || ship.X == _iXl && ship.Y + i == _iY1 || ship.X == _iXl && ship.Y + i == _iY2)
+                                                if (innerSaveShipDto.X == xl && innerSaveShipDto.Y + i == shipY || innerSaveShipDto.X == xl && innerSaveShipDto.Y + i == y1 || innerSaveShipDto.X == xl && innerSaveShipDto.Y + i == y2)
                                                 {
                                                     return false;
                                                 }
@@ -99,10 +96,10 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                                         }
                                         break;
                                     case Direction.vertical:
-                                        switch (ship.Direction)
+                                        switch (innerSaveShipDto.Direction)
                                         {
                                             case Direction.horizontal:
-                                                if (ship.Y == _iYl && ship.X + i == shipX || ship.Y == _iYl && ship.X + i == _iX1 || ship.Y == _iYl && ship.X + i == _iX2)
+                                                if (innerSaveShipDto.Y == yl && innerSaveShipDto.X + i == shipX || innerSaveShipDto.Y == yl && innerSaveShipDto.X + i == x1 || innerSaveShipDto.Y == yl && innerSaveShipDto.X + i == x2)
                                                 {
                                                     return false;
                                                 }
@@ -110,7 +107,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
                                             case Direction.vertical:
 
-                                                if (ship.Y + i == _iYl && ship.X == shipX || ship.Y + i == _iYl && ship.X == _iX1 || ship.Y + i == _iYl && ship.X == _iX2)
+                                                if (innerSaveShipDto.Y + i == yl && innerSaveShipDto.X == shipX || innerSaveShipDto.Y + i == yl && innerSaveShipDto.X == x1 || innerSaveShipDto.Y + i == yl && innerSaveShipDto.X == x2)
                                                 {
                                                     return false;
                                                 }
@@ -171,7 +168,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return true;
         }
 
-        public bool VerifyBotShot(IList<SaveBotShotsDto> shots, SaveBotShotsDto lastShot)
+        public bool VerifyBotShot(IList<SaveShotsDto> shots, SaveShotsDto lastShot)
         {
             if (lastShot.X > 9 || lastShot.X < 0 || lastShot.Y > 9 || lastShot.Y < 0)
             {
@@ -211,6 +208,98 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
             return null;
         }
+
+        public bool VerifyShipPositionBot(SaveShipDto[] saveShipDtos)
+        {
+            saveShipDtos = saveShipDtos.Where(x => x != null).ToArray();
+
+            foreach (var ship in saveShipDtos)
+            {
+                var shipType = ships.SingleOrDefault(x => x.Name.ToUpper() == ship.ShipType.ToUpper());
+                var shipX = ship.X;
+                var shipY = ship.Y;
+                var shipLength = shipType.Length;
+                var y1 = shipY - 1;
+                var y2 = shipY + 1;
+                var x1 = shipX - 1;
+                var x2 = shipX + 1;
+                var shipDirection = ship.Direction;
+                int xl;
+                int yl;
+                var maxBoardLength = 9;
+                var minBoardLength = 0;
+
+                if (shipX > maxBoardLength || shipY > maxBoardLength || shipX < minBoardLength || shipY < minBoardLength || shipType == null || shipX + shipLength - 1 > maxBoardLength || shipY + shipLength + 1 > maxBoardLength)
+                {
+                    return false;
+                }
+
+                foreach (var innerSaveShipDto in saveShipDtos)
+                {
+                    var jShipType = ships.SingleOrDefault(x => x.Name.ToLower() == innerSaveShipDto.ShipType.ToLower());
+                    int jLength = jShipType.Length;
+
+                    for (int i = 0; i < jLength; i++)
+                    {
+                        for (int l = -1; l <= shipLength; l++)
+                        {
+                            xl = shipX + l;
+                            yl = shipY + l;
+
+                            if (ship != innerSaveShipDto)
+                            {
+                                switch (shipDirection)
+                                {
+                                    case Direction.horizontal:
+                                        switch (innerSaveShipDto.Direction)
+                                        {
+                                            case Direction.horizontal:
+                                                if (innerSaveShipDto.X + i == xl && innerSaveShipDto.Y == shipY || innerSaveShipDto.X + i == xl && innerSaveShipDto.Y == y1 || innerSaveShipDto.X + i == xl && innerSaveShipDto.Y == y2)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+                                            case Direction.vertical:
+                                                if (innerSaveShipDto.X == xl && innerSaveShipDto.Y + i == shipY || innerSaveShipDto.X == xl && innerSaveShipDto.Y + i == y1 || innerSaveShipDto.X == xl && innerSaveShipDto.Y + i == y2)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+                                        }
+                                        break;
+                                    case Direction.vertical:
+                                        switch (innerSaveShipDto.Direction)
+                                        {
+                                            case Direction.horizontal:
+                                                if (innerSaveShipDto.Y == yl && innerSaveShipDto.X + i == shipX || innerSaveShipDto.Y == yl && innerSaveShipDto.X + i == x1 || innerSaveShipDto.Y == yl && innerSaveShipDto.X + i == x2)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+
+                                            case Direction.vertical:
+
+                                                if (innerSaveShipDto.Y + i == yl && innerSaveShipDto.X == shipX || innerSaveShipDto.Y + i == yl && innerSaveShipDto.X == x1 || innerSaveShipDto.Y + i == yl && innerSaveShipDto.X == x2)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+                                            default:
+                                                return false;
+                                        }
+                                        break;
+                                    default:
+                                        return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+
+        }
+
     }
 }
 
