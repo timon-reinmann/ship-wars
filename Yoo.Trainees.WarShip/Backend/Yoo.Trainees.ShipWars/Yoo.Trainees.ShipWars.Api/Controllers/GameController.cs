@@ -176,7 +176,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         public IActionResult Post([FromBody] GameDto gameDto)
         {
             var game = _gameLogic.CreateGame(gameDto.Name, gameDto.IsBot, gameDto.EasyGame);
-            var isBotLobby = _botLogic.IsBotLobby(game.Id);
+            var isBotLobby = gameDto.IsBot;
             var linkPlayer1 = CreateLink(game.Id, game.GamePlayers.First().Id, isBotLobby);
             var linkPlayer2 = CreateLink(game.Id, game.GamePlayers.ToArray()[1].Id, isBotLobby);
 
@@ -279,7 +279,6 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         // Create link for invitation.
         private String CreateLink(Guid gameId, Guid gamePlayerId, bool isBotLobby)
         {
-
             return (isBotLobby ? _configuration["Link:URL-PVE"] : _configuration["Link:URL-PVP"]) + gameId + "&gamePlayerId=" + gamePlayerId;
         }
 

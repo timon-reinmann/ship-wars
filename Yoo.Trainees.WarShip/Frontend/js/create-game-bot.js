@@ -52,7 +52,7 @@ submit_button.addEventListener("click", async function () {
       },
       body: JSON.stringify({
         Name: lobbyName,
-        Bot: isBotGame,
+        IsBot: isBotGame,
         EasyGame: easy_game,
       }),
       method: "POST",

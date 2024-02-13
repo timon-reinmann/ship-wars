@@ -65,7 +65,7 @@ submit_button.addEventListener("click", async (e) => {
       "Content-Type": "application/json",
       "Sec-Fetch-Dest": "empty",
     },
-    body: JSON.stringify({ Name: lobbyName, Bot: isBotGame }),
+    body: JSON.stringify({ Name: lobbyName, IsBot: isBotGame }),
     method: "POST",
   })
     .then((response) => response.json())
