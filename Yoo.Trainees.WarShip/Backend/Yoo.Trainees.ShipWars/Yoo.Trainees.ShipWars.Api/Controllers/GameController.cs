@@ -175,7 +175,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] GameDto gameDto)
         {
-            var game = _gameLogic.CreateGame(gameDto.Name, gameDto.Bot, gameDto.EasyGame);
+            var game = _gameLogic.CreateGame(gameDto.Name, gameDto.IsBot, gameDto.EasyGame);
             var isBotLobby = _botLogic.IsBotLobby(game.Id);
             var linkPlayer1 = CreateLink(game.Id, game.GamePlayers.First().Id, isBotLobby);
             var linkPlayer2 = CreateLink(game.Id, game.GamePlayers.ToArray()[1].Id, isBotLobby);
