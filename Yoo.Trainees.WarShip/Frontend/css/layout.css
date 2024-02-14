@@ -1,19 +1,20 @@
 html {
+  position: static;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 body {
   font-family: Brush Script MT, Brush Script Std, cursive;
   list-style: none;
+  position: static;
   overflow-x: hidden;
   height: calc(100vh - 8px);
   width: calc(100vw);
-  margin-bottom: 0;
+  margin: 0;
   scroll-behavior: smooth;
 }
-
-/* * {
-  outline: 3px solid red;
-} */
 
 :root {
   --white: #fefefe;
@@ -59,6 +60,8 @@ body {
 
 .shipwars__navbar {
   display: flex;
+  position: relative;
+  margin-top: 8px;
   justify-content: space-between;
   overflow-x: hidden;
   user-select: none;

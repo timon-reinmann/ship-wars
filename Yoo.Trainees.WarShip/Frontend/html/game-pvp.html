@@ -157,27 +157,29 @@
         <button class="paper SRP-choice" data-choice="paper">📄</button>
       </div>
 
-      <a href="#opponent__board" class="down__anker">
-        <i class="fa-duotone fa-angles-down"></i>
-      </a>
-
-      <button class="mute__button">
-        <i class="fa-solid fa-volume-high"></i>
-      </button>
-      <button class="information__button">
-        <i class="fa-solid fa-info"></i>
-      </button>
-      <dialog class="information__dialog">
-        <h1>Information</h1>
-        <img
-          src="../img/ship-turning.gif"
-          class="information__img"
-          alt="rotating ship gif" />
-        <button class="button dialog--close">
-          <i class="fa-solid fa-circle-xmark dialog__img--close"></i>
+      <div class="game__buttons">
+        <button class="mute__button">
+          <i class="fa-solid fa-volume-high"></i>
         </button>
-        Click on me to rotate me
-      </dialog>
+        <button class="information__button">
+          <i class="fa-solid fa-info"></i>
+        </button>
+        <a href="#opponent__board" class="down__anker">
+          <i class="fa-duotone fa-angles-down"></i>
+        </a>
+
+        <dialog class="information__dialog">
+          <h1>Information</h1>
+          <img
+            src="../img/ship-turning.gif"
+            class="information__img"
+            alt="rotating ship gif" />
+          <button class="button dialog--close">
+            <i class="fa-solid fa-circle-xmark dialog__img--close"></i>
+          </button>
+          Click on me to rotate me
+        </dialog>
+      </div>
     </div>
     <script src="../js/styles-overrides.js"></script>
     <script src="../js/signalr.js"></script>

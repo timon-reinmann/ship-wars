@@ -246,9 +246,10 @@ function dragMove(draggable, x, y) {
   const computedStyle = window.getComputedStyle(draggable);
   const commonDivisor = draggable.offsetWidth % 52;
   let scale = 1;
-  if (window.innerWidth < 900 || window.innerHeight < 900) {
-    scale = 0.6;
+  if (window.innerWidth < 900 || window.innerHeight < 850) {
+    scale = 0.8;
   }
+  console.log(scale);
   // the 1x1 Ship witdh is allways 52px
   const shipWitdh = 52 * scale;
 
