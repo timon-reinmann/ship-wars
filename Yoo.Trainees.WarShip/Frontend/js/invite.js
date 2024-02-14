@@ -7,7 +7,7 @@ const registerLink = document.querySelector(".register-link");
 const btnPopup = document.querySelector(".btnLogin-popup");
 const iconClose = document.querySelector(".icon-close");
 const joinGame = document.querySelector(".join__button");
-const input = copyText.querySelector("input.text");
+const input = document.getElementById("linkoutput");
 
 let link = null;
 let lobbyName = null;
