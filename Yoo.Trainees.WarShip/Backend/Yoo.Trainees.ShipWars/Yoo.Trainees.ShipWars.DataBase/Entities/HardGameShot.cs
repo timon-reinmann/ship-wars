@@ -35,5 +35,7 @@ namespace Yoo.Trainees.ShipWars.DataBase.Entities
         public bool MainShot { get; set; }
         public Navigation Direction { get; set; }
         public GamePlayer Player { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public int HitShotsCounter { get; set; }
     }
 }

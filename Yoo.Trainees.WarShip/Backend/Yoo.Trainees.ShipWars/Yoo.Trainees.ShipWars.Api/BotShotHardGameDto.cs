@@ -11,5 +11,6 @@ namespace Yoo.Trainees.ShipWars.Api
         public ShipHit Hit { get; set; }
         public Step Step { get; set; }
         public bool MainShot { get; set; }
+        public int hitShotsCounter { get; set; }
     }
 }

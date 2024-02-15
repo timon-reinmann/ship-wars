@@ -32,6 +32,9 @@ const sound = new Audio("../sound/pewpew.mp3");
 createBoard(myBoard, true);
 createBoard(gameOpponent, false);
 
+Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
+loadHitShips(gamePlayerId);
+
 let zIndexChange = 1;
 let currentField = null;
 

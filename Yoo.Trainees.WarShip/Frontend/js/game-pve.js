@@ -41,15 +41,6 @@ async function commitShips(commit_button) {
   }, 1000);
 }
 
-commit_button.addEventListener("click", () => {
-  let ship_selector = document.querySelector(".ship__selection");
-  if (ship_selector.children.length === 0) {
-    commitShips(commit_button);
-  } else {
-    error_popup(commit_button);
-  }
-});
-
 async function sendShips(ships) {
   const API_URL = api + gameId + "/SaveShips";
   await fetch(API_URL, {
@@ -72,6 +63,8 @@ async function sendShips(ships) {
     .then((data) => {
       if (data.ok) {
         ifShipsPlaced = true;
+        createLoadingScreen();
+        intervalid = setInterval(checkIfPlayerReady, 1000);
       } else {
         error_popup(commit_button);
       }

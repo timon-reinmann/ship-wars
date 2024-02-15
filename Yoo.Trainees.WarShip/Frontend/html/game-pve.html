@@ -17,9 +17,12 @@
       sizes="32x32" />
   </head>
   <body>
-    <div class="background-animation"></div>
+    <div class="ship--fake ship--active"></div>
     <div class="container">
+      <div class="background-animation"></div>
       <div class="cursor"></div>
+      <div class="alert__box"></div>
+      <div class="overlay"></div>
       <nav class="shipwars__navbar">
         <a href="../index.html" class="shipwars__logo"></a>
         <div class="navbar__list">
@@ -125,8 +128,6 @@
 
         <div id="opponent__board" class="board"></div>
 
-        <div class="chatbox"></div>
-
         <div class="error-popup">
           <i
             class="fa-sharp fa-solid fa-circle-exclamation fa-beat-fade fa-2xl"></i>
@@ -135,16 +136,30 @@
             <i class="fa-solid fa-xmark"></i>
           </div>
         </div>
-
+      </div>
+    </main>
         <button class="mute__button">
           <i class="fa-solid fa-volume-high"></i>
         </button>
-        </div>
-      </main>
+        <button class="information__button">
+          <i class="fa-solid fa-info"></i>
+        </button>
+        <dialog class="information__dialog">
+          <h1>Information</h1>
+          <img
+            src="../img/ship-turning.gif"
+            class="information__img"
+            alt="rotating ship gif" />
+          <button class="button dialog--close">
+            <i class="fa-solid fa-circle-xmark dialog__img--close"></i>
+          </button>
+          Click on me to rotate me
+        </dialog>
+
     </div>
     <script src="../js/styles-overrides.js"></script>
     <script src="../js/API-ShipWars-ApiLink.js"></script>
-
+    <script src="../js/screenOrientationCheck.js"></script>
     <script defer src="../js/game.js"></script>
     <script defer src="../js/game-pve.js"></script>
     <script src="../js/Play-Easter-eggs-Video.js"></script>

@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections;
 using System.Linq;
 using Yoo.Trainees.ShipWars.Api.Controllers;
 using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
+using Yoo.Trainees.ShipWars.DataBase.Migrations;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
 {
@@ -119,9 +121,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         public SaveShotsDto BotRandomShotPosition(Guid gamePlayerId)
         {
+           
             var game = GetGame(gamePlayerId);
+            var isBotGame = IsBotLobby(gamePlayerId);
+            var gameMode = GetGameMode(game.Id);
+            var allBotShots = (gameMode == GameMode.hard) ? GetAllHardGameBotShots(gamePlayerId, game.Id) : GetAllBotShots(gamePlayerId, game.Id);
             var botGamePlayer = GetBotGamePlayer(gamePlayerId, game.Id);
-            var allBotShots = GetAllBotShots(gamePlayerId, game.Id);
             Random rnd = new Random();
             SaveShotsDto botShots;
 
@@ -136,20 +141,20 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
                 shotVerified = _verificationLogic.VerifyBotShot(allBotShots, botShots);
 
-                if (shotVerified)
-                {
-                    var shot = new Shot
-                    {
-                        Id = Guid.NewGuid(),
-                        X = botShots.X,
-                        Y = botShots.Y,
-                        Player = botGamePlayer
-                    };
-                    _applicationDbContext.Shot.Add(shot);
-                    _applicationDbContext.SaveChanges();
-                }
             } while (!shotVerified);
 
+            if (isBotGame)
+            {
+                var shot = new Shot
+                {
+                    Id = Guid.NewGuid(),
+                    X = botShots.X,
+                    Y = botShots.Y,
+                    Player = botGamePlayer
+                };
+                _applicationDbContext.Shot.Add(shot);
+                _applicationDbContext.SaveChanges();
+            }
             return botShots;
         }
 
@@ -184,6 +189,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
         public SaveShotsDto HardGameMode(Guid gamePlayerId)
         {
+            Console.WriteLine(gamePlayerId);
             SaveShotsDto testBotShot;
             HardGameShot botShot;
             var game = GetGame(gamePlayerId);
@@ -193,16 +199,19 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             {
                 testBotShot = BotRandomShotPosition(gamePlayerId);
                 var isHit = CheckIfBotHit(testBotShot, gamePlayerId);
+                var largestShip = GetLargestShip(gamePlayerId);
                 botShot = new HardGameShot()
                 {
                     Id = Guid.NewGuid(),
                     X = testBotShot.X,
                     Y = testBotShot.Y,
                     Hit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)isHit,
-                    Step = (isHit == ShipHit.Hit) ? Step.ShootAround : Step.Random,
+                    Step = (largestShip == 1 && isHit == ShipHit.Hit) ? Step.Random : ((isHit == ShipHit.Hit) ? Step.ShootAround : Step.Random),
                     MainShot = (isHit == ShipHit.Hit) ? true : false,
                     Direction = Navigation.none,
-                    Player = botGamePlayer
+                    Player = botGamePlayer,
+                    CreatedAt = DateTime.Now,
+                    HitShotsCounter = (isHit == ShipHit.Hit) ? 1 : 0
                 };
                 _applicationDbContext.HardGameShot.Add(botShot);
                 _applicationDbContext.SaveChanges();
@@ -212,33 +221,13 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 return testBotShot;
             }
 
-
-            var allBotShots = GetAllBotShots(gamePlayerId, game.Id);
-            var allHardGameBotShots = GetAllHardGameBotShots(gamePlayerId, game.Id);
             var mainShot = GetMainShot(gamePlayerId);
-            var lastHardGameShot = allHardGameBotShots[allHardGameBotShots.Count - 1];
+            var lastHardGameShot = GetLastBotShotHardGame(gamePlayerId);
             switch (lastHardGameShot.Step)
             {
                 case Step.Random:
                 default:
-                    testBotShot = BotRandomShotPosition(gamePlayerId);
-                    var isHit = CheckIfBotHit(testBotShot, gamePlayerId);
-                    botShot = new HardGameShot()
-                    {
-                        Id = Guid.NewGuid(),
-                        X = testBotShot.X,
-                        Y = testBotShot.Y,
-                        Hit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)isHit,
-                        Step = (isHit == ShipHit.Hit) ? Step.ShootAround : Step.Random,
-                        MainShot = (isHit == ShipHit.Hit) ? true : false,
-                        Direction = Navigation.none,
-                        Player = botGamePlayer
-                    };
-                    _applicationDbContext.HardGameShot.Add(botShot);
-                    _applicationDbContext.SaveChanges();
-
-                    SaveBotShotInDto(testBotShot, gamePlayerId);
-
+                    testBotShot = RandomShot(gamePlayerId);
                     break;
                 case Step.ShootAround:
                     testBotShot = ShootAround(mainShot, gamePlayerId);
@@ -261,13 +250,14 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             bool verifyresult = false;
             var game = GetGame(gamePlayerId);
             var botGamePlayer = GetBotGamePlayer(gamePlayerId, game.Id);
-            var lastShot = GetAllBotShots(gamePlayerId, game.Id).Last();
-            var allBotShots = GetAllBotShots(gamePlayerId, game.Id);
+            var allBotShots = GetAllHardGameBotShots(gamePlayerId, game.Id);
             var rnd = new Random();
+            var counter = 0;
             Navigation tempNavigation;
 
             do
             {
+                counter++;
                 var index = rnd.Next(0, 4);
 
                 switch (index)
@@ -309,10 +299,17 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
 
                 verifyresult = _verificationLogic.VerifyBotShot(allBotShots, testBotShot);
 
+                if (counter > 5)
+                {
+                    return RandomShot(gamePlayerId);
+                }
+
             } while (!verifyresult);
 
 
             var isHit = CheckIfBotHit(testBotShot, gamePlayerId);
+            var largestShip = GetLargestShip(gamePlayerId);
+
 
             var botShot = new HardGameShot()
             {
@@ -320,10 +317,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 X = testBotShot.X,
                 Y = testBotShot.Y,
                 Hit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)isHit,
-                Step = (isHit == ShipHit.Hit) ? Step.ShootInThisDirection : Step.ShootAround,
+                Step = (largestShip <= mainShot.hitShotsCounter + 1 && isHit == ShipHit.Hit) ? Step.Random : ((isHit == ShipHit.Hit) ? Step.ShootInThisDirection : Step.ShootAround),
                 MainShot = false,
                 Direction = (isHit == ShipHit.Hit) ? tempNavigation : Navigation.none,
-                Player = botGamePlayer
+                Player = botGamePlayer,
+                CreatedAt = DateTime.Now,
+                HitShotsCounter = (isHit == ShipHit.Hit) ? 2 : 1
             };
 
             _applicationDbContext.HardGameShot.Add(botShot);
@@ -337,10 +336,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         {
             var game = GetGame(gamePlayerId);
             var botGamePlayer = GetBotGamePlayer(gamePlayerId, game.Id);
-            var allBotShots = GetAllBotShots(gamePlayerId, game.Id);
-            var lastShot = allBotShots[allBotShots.Count - 1];
+            var allBotShots = GetAllHardGameBotShots(gamePlayerId, game.Id);
+            var lastShot = GetLastBotShotHardGame(gamePlayerId);
             var tempNavigation = GetNavigation(gamePlayerId);
             var reverceNavigation = Navigation.none;
+            var nextStep = false;
             SaveShotsDto testBotShot;
             var verifyResult = false;
             do
@@ -354,6 +354,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                             Y = lastShot.Y - 1,
                         };
                         reverceNavigation = Navigation.bottom;
+
+                        if (lastShot.Y - 1 == 0)
+                        {
+                            nextStep = true;
+                        }
                         break;
                     case Navigation.bottom:
                         testBotShot = new SaveShotsDto()
@@ -362,23 +367,38 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                             Y = lastShot.Y + 1,
                         };
                         reverceNavigation = Navigation.top;
+
+                        if (lastShot.Y + 1 == 9)
+                        {
+                            nextStep = true;
+                        }
                         break;
-                    case Navigation.left:           
+                    case Navigation.left:
                         testBotShot = new SaveShotsDto()
-                        {                           
-                            X = lastShot.X - 1,     
-                            Y = lastShot.Y,         
-                        };                          
+                        {
+                            X = lastShot.X - 1,
+                            Y = lastShot.Y,
+                        };
                         reverceNavigation = Navigation.right;
-                        break;                      
-                    case Navigation.right:          
-                    default:                        
+
+                        if (lastShot.X - 1 >= 0)
+                        {
+                            nextStep = true;
+                        }
+                        break;
+                    case Navigation.right:
+                    default:
                         testBotShot = new SaveShotsDto()
                         {
                             X = lastShot.X + 1,
                             Y = lastShot.Y,
                         };
                         reverceNavigation = Navigation.left;
+
+                        if (lastShot.X + 1 == 9)
+                        {
+                            nextStep = true;
+                        }
                         break;
                 }
 
@@ -387,6 +407,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             } while (!verifyResult);
 
             ShipHit isHit = CheckIfBotHit(testBotShot, gamePlayerId);
+            var largestShip = GetLargestShip(gamePlayerId);
 
             var botShot = new HardGameShot()
             {
@@ -394,10 +415,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 X = testBotShot.X,
                 Y = testBotShot.Y,
                 Hit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)isHit,
-                Step = (isHit == ShipHit.Hit) ? Step.ShootInThisDirection : Step.ShootInTheOtherDirection,
+                Step = (largestShip <= lastShot.hitShotsCounter + 1 && isHit == ShipHit.Hit) ? Step.Random : (nextStep ? Step.ShootInTheOtherDirection : ((isHit == ShipHit.Hit) ? Step.ShootInThisDirection : Step.ShootInTheOtherDirection)),
                 MainShot = false,
                 Direction = (isHit == ShipHit.Hit) ? tempNavigation : reverceNavigation,
-                Player = botGamePlayer
+                Player = botGamePlayer,
+                CreatedAt = DateTime.Now,
+                HitShotsCounter = (isHit == ShipHit.Hit) ? lastShot.hitShotsCounter + 1 : 0
             };
 
             _applicationDbContext.HardGameShot.Add(botShot);
@@ -412,52 +435,66 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
         {
             var game = GetGame(gamePlayerId);
             var botGamePlayer = GetBotGamePlayer(gamePlayerId, game.Id);
-            var allBotShots = GetAllBotShots(gamePlayerId, game.Id);
-            var lastShot = allBotShots[allBotShots.Count - 1];
+            var allBotShots = GetAllHardGameBotShots(gamePlayerId, game.Id);
+            var lastShot = GetLastBotShotHardGame(gamePlayerId);
             var tempNavigation = GetNavigation(gamePlayerId);
+            var mainShot = GetMainShot(gamePlayerId);
             var reverceNavigation = Navigation.none;
             SaveShotsDto testBotShot;
             var verifyResult = false;
+            var counter = 0;
+
             do
             {
+                counter++;
                 switch (tempNavigation)
                 {
                     case Navigation.top:
                         testBotShot = new SaveShotsDto()
                         {
-                            X = lastShot.X,
-                            Y = lastShot.Y - 1,
+                            X = mainShot.X,
+                            Y = mainShot.Y - 1,
                         };
                         break;
                     case Navigation.bottom:
                         testBotShot = new SaveShotsDto()
                         {
-                            X = lastShot.X,
-                            Y = lastShot.Y + 1,
+                            X = mainShot.X,
+                            Y = mainShot.Y + 1,
                         };
                         break;
                     case Navigation.left:
                         testBotShot = new SaveShotsDto()
                         {
-                            X = lastShot.X - 1,
-                            Y = lastShot.Y,
+                            X = mainShot.X - 1,
+                            Y = mainShot.Y,
                         };
                         break;
                     case Navigation.right:
                     default:
                         testBotShot = new SaveShotsDto()
                         {
-                            X = lastShot.X + 1,
-                            Y = lastShot.Y,
+                            X = mainShot.X + 1,
+                            Y = mainShot.Y,
                         };
                         break;
                 }
 
                 verifyResult = _verificationLogic.VerifyBotShot(allBotShots, testBotShot);
+                if (counter == 2)
+                {
+                    mainShot = lastShot;
+                }
+                else if (counter > 3)
+                {
+                    return RandomShot(gamePlayerId);
+                }
+
 
             } while (!verifyResult);
 
             var isHit = CheckIfBotHit(testBotShot, gamePlayerId);
+            var largestShip = GetLargestShip(gamePlayerId);
 
             var botShot = new HardGameShot()
             {
@@ -465,10 +502,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 X = testBotShot.X,
                 Y = testBotShot.Y,
                 Hit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)isHit,
-                Step = (isHit == ShipHit.Hit) ? Step.ShootInTheOtherDirection : Step.Random,
+                Step = (largestShip <= lastShot.hitShotsCounter + 1 && isHit == ShipHit.Hit) ? Step.Random : ((isHit == ShipHit.Hit) ? Step.ShootInTheOtherDirection : Step.Random),
                 MainShot = false,
                 Direction = tempNavigation,
-                Player = botGamePlayer
+                Player = botGamePlayer,
+                CreatedAt = DateTime.Now,
+                HitShotsCounter = (isHit == ShipHit.Hit) ? lastShot.hitShotsCounter + 1 : 0
             };
 
             _applicationDbContext.HardGameShot.Add(botShot);
@@ -487,7 +526,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 Id = Guid.NewGuid(),
                 Player = botGamePlayer,
                 X = xy.X,
-                Y= xy.Y
+                Y = xy.Y
             };
 
             _applicationDbContext.Shot.Add(botShot);
@@ -564,7 +603,8 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return (from hgs in _applicationDbContext.HardGameShot
                     where hgs.Player.Equals(botGamePayer) &&
                     hgs.MainShot.Equals(true)
-                    select new BotShotHardGameDto { X = hgs.X, Y = hgs.Y, Step = hgs.Step }).SingleOrDefault();
+                    orderby hgs.CreatedAt descending
+                    select new BotShotHardGameDto { X = hgs.X, Y = hgs.Y }).FirstOrDefault();
         }
 
         private Navigation GetNavigation(Guid gamePlayerId)
@@ -573,22 +613,68 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             var botGamePlayer = GetBotGamePlayer(gamePlayerId, game.Id);
             return (from hgs in _applicationDbContext.HardGameShot
                     where hgs.Player.Equals(botGamePlayer) && hgs.Direction != Navigation.none
-                    select hgs.Direction).SingleOrDefault();
+                    orderby hgs.CreatedAt descending
+                    select hgs.Direction).FirstOrDefault();
         }
-        public List<BotShotHardGameDto> GetAllHardGameBotShots(Guid gamePlayerId, Guid gameId)
+        public List<SaveShotsDto> GetAllHardGameBotShots(Guid gamePlayerId, Guid gameId)
         {
             var botGamePlayer = GetBotGamePlayer(gamePlayerId, gameId);
             return (from s in _applicationDbContext.HardGameShot
                     where s.Player.Equals(botGamePlayer)
-                    select new BotShotHardGameDto { X = s.X, Y = s.Y, Step = s.Step }).ToList();
+                    orderby s.CreatedAt descending
+                    select new SaveShotsDto { X = s.X, Y = s.Y }).ToList();
         }
 
         public ShipHit GetShipHit(SaveShotsDto xy, Guid gamePlayerId, Guid gameId)
         {
             var botGamePlayer = GetBotGamePlayer(gamePlayerId, gameId);
             return (Yoo.Trainees.ShipWars.Api.Logic.ShipHit)(from hgs in _applicationDbContext.HardGameShot
-                    where hgs.Player.Equals(botGamePlayer) && hgs.X == xy.X && hgs.Y == xy.Y
-                    select hgs.Hit).FirstOrDefault();
+                                                             where hgs.Player.Equals(botGamePlayer) && hgs.X == xy.X && hgs.Y == xy.Y
+                                                             orderby hgs.CreatedAt descending
+                                                             select hgs.Hit).FirstOrDefault();
+        }
+        private BotShotHardGameDto GetLastBotShotHardGame(Guid gamePlayerId)
+        {
+            var game = GetGame(gamePlayerId);
+            var botGamePayer = GetBotGamePlayer(gamePlayerId, game.Id);
+            return (from hgs in _applicationDbContext.HardGameShot
+                    where hgs.Player.Equals(botGamePayer)
+                    orderby hgs.CreatedAt descending
+                    select new BotShotHardGameDto { X = hgs.X, Y = hgs.Y, Step = hgs.Step, hitShotsCounter = hgs.HitShotsCounter }).FirstOrDefault();
+        }
+        private SaveShotsDto RandomShot(Guid gamePlayerId)
+        {
+            var gameId = GetGame(gamePlayerId).Id;
+            var botGamePlayer = GetBotGamePlayer(gamePlayerId, gameId);
+            var testBotShot = BotRandomShotPosition(gamePlayerId);
+            var isHit = CheckIfBotHit(testBotShot, gamePlayerId);
+            var largestShip = GetLargestShip(gamePlayerId);
+            var botShot = new HardGameShot()
+            {
+                Id = Guid.NewGuid(),
+                X = testBotShot.X,
+                Y = testBotShot.Y,
+                Hit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)isHit,
+                Step = (largestShip == 1 && isHit == ShipHit.Hit) ? Step.Random : ((isHit == ShipHit.Hit) ? Step.ShootAround : Step.Random),
+                MainShot = (isHit == ShipHit.Hit) ? true : false,
+                Direction = Navigation.none,
+                Player = botGamePlayer,
+                CreatedAt = DateTime.Now,
+                HitShotsCounter = (isHit == ShipHit.Hit) ? 1 : 0
+            };
+            _applicationDbContext.HardGameShot.Add(botShot);
+            _applicationDbContext.SaveChanges();
+
+            SaveBotShotInDto(testBotShot, gamePlayerId);
+            return testBotShot;
+        }
+        private int? GetLargestShip(Guid gamePlayerId)
+        {
+            var largestShip = (from sh in _applicationDbContext.ShipPosition
+                               where sh.GamePlayerId.Equals(gamePlayerId)
+                               orderby sh.Life descending
+                               select sh.Life).FirstOrDefault();
+            return largestShip;
         }
     }
 }

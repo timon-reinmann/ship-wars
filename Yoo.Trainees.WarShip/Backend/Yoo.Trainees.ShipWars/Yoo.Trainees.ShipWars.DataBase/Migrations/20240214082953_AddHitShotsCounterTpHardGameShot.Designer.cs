@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Yoo.Trainees.ShipWars.DataBase;
 
@@ -11,9 +12,11 @@ using Yoo.Trainees.ShipWars.DataBase;
 namespace Yoo.Trainees.ShipWars.DataBase.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240214082953_AddHitShotsCounterTpHardGameShot")]
+    partial class AddHitShotsCounterTpHardGameShot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,9 +97,6 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                     b.Property<int>("Hit")
                         .HasColumnType("int");
 
-                    b.Property<int>("HitShotsCounter")
-                        .HasColumnType("int");
-
                     b.Property<bool>("MainShot")
                         .HasColumnType("bit");
 
@@ -110,6 +110,9 @@ namespace Yoo.Trainees.ShipWars.DataBase.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Y")
+                        .HasColumnType("int");
+
+                    b.Property<int>("hitShotsCounter")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
