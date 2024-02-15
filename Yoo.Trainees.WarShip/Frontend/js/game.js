@@ -70,8 +70,10 @@ getUser(gamePlayerId);
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
-let myBoard = document.getElementById("game__board");
-let gameOpponent = document.getElementById("opponent__board");
+const myBoard = document.getElementById("game__board");
+const gameOpponent = document.getElementById("opponent__board");
+
+const scrollAnker = document.querySelector(".down__anker");
 
 let finishField = null;
 const commit_button = document.querySelector(".commit-button");
@@ -1262,3 +1264,14 @@ function showCountShots(shots, nextPlayer, gameState) {
     });
   }
 }
+
+scrollAnker.addEventListener("click", () => {
+  scrollAnker.classList.toggle("up__anker");
+  ankerHref = scrollAnker.href;
+  setTimeout(() => {
+    // tooggle from #opponent__board to #game__board and back
+    scrollAnker.href = ankerHref.includes("#opponent__board")
+      ? "#container"
+      : "#opponent__board";
+  });
+});

@@ -79,6 +79,7 @@ body {
   position: absolute;
   width: 40vw;
   height: 5rem;
+  right: 0%;
   background-color: rgba(128, 128, 128, 0.5);
   display: flex;
   justify-content: center;

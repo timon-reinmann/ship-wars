@@ -89,6 +89,7 @@ body {
 
 .down__anker {
   display: flex;
+  position: relative;
   scale: 0;
   justify-content: center;
   align-items: center;
@@ -97,8 +98,13 @@ body {
   background-color: rgba(128, 128, 128, 0.5);
   border: 1px solid var(--white);
   box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
+  transition: ease-in-out 0.5s;
   border-radius: 50%;
   text-decoration: none;
+}
+
+.up__anker {
+  transform: rotate(180deg);
 }
 
 .down__anker:hover {
