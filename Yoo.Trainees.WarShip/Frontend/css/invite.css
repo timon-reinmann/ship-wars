@@ -30,7 +30,10 @@
 
 .copy__text,
 .submit__lobbyname {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   padding: 5px;
   padding-left: 10px;
   background: #fff;
@@ -176,7 +179,7 @@
 
 .wrapper .form-box {
   width: 100%;
-  padding: 40px;
+  height: 100%;
 }
 
 .wrapper .form-box.login {
@@ -221,16 +224,18 @@
   font-size: 2em;
   color: #162938;
   position: absolute;
-  top: -125%;
-  left: 47%;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .email-title {
   font-size: 2em;
   color: #162938;
   position: absolute;
-  top: -150%;
-  left: 40%;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .btn {
@@ -245,8 +250,9 @@
   color: #fff;
   font-weight: 500;
   position: absolute;
-  left: 30%;
-  top: 125%;
+  left: 50%;
+  bottom: 25%;
+  transform: translate(-50%, -50%);
   border: #fff 1px solid;
 }
 
@@ -254,8 +260,10 @@
   font-size: 20px;
   color: #ffffff;
   position: absolute;
-  left: 42%;
-  top: 150%;
+  white-space: nowrap;
+  left: 50%;
+  bottom: 5%;
+  transform: translate(-50%, -50%);
   font-weight: 500;
   margin: 25px 0 10px;
 }
@@ -273,20 +281,24 @@
 
 .email-input {
   position: absolute;
-  left: 29.5%;
+  inset: 50%;
+  transform: translate(-50%, -50%);
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 10px;
   padding-left: 10px;
-  min-width: 300px;
+  width: 50vw;
+  max-width: 600px;
+  min-height: 20px;
 }
+
 .join__button {
   font-family: "walkingdead";
   padding-top: 0.5rem;
   font-size: 2.5rem;
   padding-bottom: 0.5rem;
-  width: 20%;
+  min-width: 20%;
   background-color: rgba(79, 110, 51, 0.6);
   color: white;
   display: block;
@@ -298,11 +310,12 @@
   position: absolute;
   left: 50%;
   top: 40%;
-  transform: translateX(-50%);
-  opacity: 0;
+  transform: translate(-50%, -50%);
+  scale: 0;
 }
+
 .join__button.active {
-  opacity: 1;
+  scale: 1;
 }
 
 #moving-button {

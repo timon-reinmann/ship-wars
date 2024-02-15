@@ -78,31 +78,21 @@ body {
   animation: recoil 0.2s linear;
 }
 
-.mute__button {
-  position: absolute;
-  width: 75px;
-  height: 75px;
-  background-color: rgba(128, 128, 128, 0.5);
-  border: 1px solid var(--white);
-  box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
-  border-radius: 50%;
-  bottom: 5%;
-  left: 5%;
+.game__buttons {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 3%;
+  left: 1%;
+  z-index: 1000;
 }
 
-.mute__button:hover {
-  background-color: var(--white) 0.75;
-  color: black;
-  cursor: pointer;
-}
-
-.mute__button i {
-  color: var(--white);
-  font-size: 2rem;
-}
-
-.information__button {
-  position: absolute;
+.game__down-anker {
+  display: flex;
+  position: relative;
+  scale: 0;
+  justify-content: center;
+  align-items: center;
   width: 75px;
   height: 75px;
   background-color: rgba(128, 128, 128, 0.5);
@@ -110,28 +100,73 @@ body {
   box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
   transition: ease-in-out 0.5s;
   border-radius: 50%;
-  bottom: 5%;
-  left: 10%;
+  text-decoration: none;
 }
 
-.information__button:hover {
+.game__down-anker--up {
+  transform: rotate(180deg);
+}
+
+.game__down-anker:hover {
+  background-color: var(--white) 0.75;
+  color: black;
+  cursor: pointer;
+}
+
+.game__down-anker-icon {
+  color: var(--white);
+  font-size: 2rem;
+}
+
+.mute-button {
+  width: 75px;
+  height: 75px;
+  background-color: rgba(128, 128, 128, 0.5);
+  border: 1px solid var(--white);
+  transition: ease-in-out 0.5s;
+  box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
+  border-radius: 50%;
+}
+
+.mute-button:hover {
+  background-color: var(--white) 0.75;
+  color: black;
+  cursor: pointer;
+}
+
+.mute-button__icon {
+  color: var(--white);
+  font-size: 2rem;
+}
+
+.information-button {
+  width: 75px;
+  height: 75px;
+  background-color: rgba(128, 128, 128, 0.5);
+  border: 1px solid var(--white);
+  box-shadow: inset 0px 0px 5px 7px rgba(128, 128, 128, 0.75);
+  transition: ease-in-out 0.5s;
+  border-radius: 50%;
+}
+
+.information-button:hover {
   background-color: var(--white) 0.75;
   color: black;
   cursor: help;
   scale: 1.1;
 }
 
-.information__button i {
+.information-button__icon {
   color: var(--white);
   font-size: 2rem;
 }
 
-.information__dialog {
+.information-dialog {
   scale: 0;
   transition: ease-in-out 2s;
 }
 
-.information__dialog[open] {
+.information-dialog[open] {
   display: grid;
   scale: 1;
   justify-content: center;
@@ -146,20 +181,20 @@ body {
     0px 0px 0px 100vw rgba(0, 0, 0, 0.4);
 }
 
-.animation__dialog--in {
+.information-dialog--slide-in {
   animation: dialogSlideIn 1s ease forwards;
 }
 
-.animation__dialog--out {
+.information-dialog--slide-out {
   animation: dialogSlideIn 1s ease forwards;
   animation-direction: reverse;
 }
 
-.information__img {
+.information-dialog__image {
   box-shadow: 0px 0px 20px 20px rgba(68, 68, 68, 0.3);
 }
 
-.dialog--close {
+.dialog-close {
   position: absolute;
   background-color: rgba(0, 0, 0, 0);
   border: 0;
@@ -167,7 +202,7 @@ body {
   right: 5%;
 }
 
-.dialog--close:hover {
+.dialog-close:hover {
   background-color: var(--white) 0.75;
   transition: ease-in-out 0.5s;
   color: black;
@@ -175,7 +210,7 @@ body {
   scale: 1.1;
 }
 
-.dialog__img--close {
+.dialog-close__icon {
   color: var(--white);
   font-size: 3rem;
 }
@@ -371,6 +406,11 @@ body {
   background-color: rgba(248, 110, 86, 0.25);
 }
 
+.commit__anker {
+  text-decoration: none;
+  color: var(--white);
+}
+
 .commit-button {
   font-family: walkingdead;
   font-size: 50px;
@@ -391,6 +431,10 @@ body {
 .commit-button:hover {
   background: white;
   color: black;
+
+  .commit__anker {
+    color: black;
+  }
 }
 
 .commit-button--active {
@@ -524,16 +568,27 @@ span {
 
 .rock-paper-scissors-container {
   background-color: rgba(65, 91, 42, 0.76);
+  display: inline-grid;
+  grid-template-areas:
+    ". text ."
+    ". srp .";
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  justify-content: space-around;
   height: 100%;
   width: 100%;
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 0px;
   font-family: walkingdead;
   color: white;
-  font-size: 130px;
+  font-size: 8rem;
   text-align: center;
   transform: scale(0);
+}
+
+.SRP__text {
+  grid-area: text;
 }
 
 .SRP--active {
@@ -541,43 +596,32 @@ span {
   user-select: none;
 }
 
-.scissors {
-  position: absolute;
-  left: 30.4%;
-  top: 75%;
+.scissors,
+.rock,
+.paper {
   height: 200px;
   width: 200px;
+  align-self: flex-start;
   background-color: rgba(124, 124, 124, 0.567);
   border: 2px solid #3c3c3c;
   border-radius: 10px;
   font-size: 100px;
   transform: scale(0);
+}
+
+.scissors {
+  grid-area: srp;
+  justify-self: end;
 }
 
 .rock {
-  position: absolute;
-  left: 43.4%;
-  top: 75%;
-  height: 200px;
-  width: 200px;
-  background-color: rgba(124, 124, 124, 0.567);
-  border: 2px solid #3c3c3c;
-  border-radius: 10px;
-  font-size: 100px;
-  transform: scale(0);
+  grid-area: srp;
+  justify-self: center;
 }
 
 .paper {
-  position: absolute;
-  left: 56.4%;
-  top: 75%;
-  height: 200px;
-  width: 200px;
-  background-color: rgba(124, 124, 124, 0.567);
-  border: 2px solid #3c3c3c;
-  border-radius: 10px;
-  font-size: 100px;
-  transform: scale(0);
+  grid-area: srp;
+  justify-self: start;
 }
 
 .scissors--active {
@@ -635,7 +679,7 @@ span {
   background-color: rgba(0, 255, 0, 0.25);
 }
 .win {
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   top: 50%;
   left: 50%;
@@ -657,7 +701,7 @@ span {
   animation-timing-function: linear;
 }
 .lost {
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   top: 50%;
   left: 50%;
@@ -939,40 +983,60 @@ span {
     grid-template-rows: 1fr 1fr;
   }
 
+  .game__buttons {
+    flex-direction: column-reverse;
+  }
+
+  .rock-paper-scissors-container {
+    font-size: 5rem;
+  }
+
+  .scissors,
+  .rock,
+  .paper {
+    height: 100px;
+    width: 100px;
+    font-size: 50px;
+  }
+
   .board,
   .ship__selection,
   .chatBox,
   .commit-button,
-  .mute__button,
-  .information__button {
+  .mute-button,
+  .game__down-anker,
+  .information-button,
+  .information-dialog[open] * {
     scale: 0.8;
   }
 
-  .ship__selection,
+  .ship--fake .ship__selection,
   .chatBox {
     margin: 1rem;
     justify-self: stretch;
   }
-  .information__button,
-  .mute__button {
+
+  .information-button,
+  .mute-button,
+  .game__down-anker {
     left: auto;
-    right: 2%;
+    left: 2%;
   }
 
-  .mute__button {
+  .mute-button {
     bottom: 0%;
   }
 
-  .information__button {
+  .game__down-anker {
+    bottom: 30%;
+  }
+
+  .information-button {
     bottom: 15%;
   }
 
-  .information__dialog[open] {
+  .information-dialog[open] {
     height: 70%;
-  }
-
-  .information__dialog[open] * {
-    scale: 0.8;
   }
 }
 
@@ -985,5 +1049,19 @@ span {
 
   .board {
     transform: translateX(-50%) scale(0.8);
+  }
+}
+
+@media screen and (width < 2100px), (height < 1100px) {
+  .ship__selection,
+  .chatBox,
+  .commit-button,
+  .information-button,
+  .mute-button {
+    transform: scale(0.9);
+  }
+
+  .board {
+    transform: translateX(-50%) scale(0.9);
   }
 }
