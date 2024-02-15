@@ -87,7 +87,7 @@ body {
   z-index: 1000;
 }
 
-.down__anker {
+.game__down-anker {
   display: flex;
   position: relative;
   scale: 0;
@@ -103,22 +103,22 @@ body {
   text-decoration: none;
 }
 
-.up__anker {
+.game__down-anker--up {
   transform: rotate(180deg);
 }
 
-.down__anker:hover {
+.game__down-anker:hover {
   background-color: var(--white) 0.75;
   color: black;
   cursor: pointer;
 }
 
-.down__anker i {
+.game__down-anker-icon {
   color: var(--white);
   font-size: 2rem;
 }
 
-.mute__button {
+.mute-button {
   width: 75px;
   height: 75px;
   background-color: rgba(128, 128, 128, 0.5);
@@ -128,18 +128,18 @@ body {
   border-radius: 50%;
 }
 
-.mute__button:hover {
+.mute-button:hover {
   background-color: var(--white) 0.75;
   color: black;
   cursor: pointer;
 }
 
-.mute__button i {
+.mute-button__icon {
   color: var(--white);
   font-size: 2rem;
 }
 
-.information__button {
+.information-button {
   width: 75px;
   height: 75px;
   background-color: rgba(128, 128, 128, 0.5);
@@ -149,24 +149,24 @@ body {
   border-radius: 50%;
 }
 
-.information__button:hover {
+.information-button:hover {
   background-color: var(--white) 0.75;
   color: black;
   cursor: help;
   scale: 1.1;
 }
 
-.information__button i {
+.information-button__icon {
   color: var(--white);
   font-size: 2rem;
 }
 
-.information__dialog {
+.information-dialog {
   scale: 0;
   transition: ease-in-out 2s;
 }
 
-.information__dialog[open] {
+.information-dialog[open] {
   display: grid;
   scale: 1;
   justify-content: center;
@@ -181,20 +181,20 @@ body {
     0px 0px 0px 100vw rgba(0, 0, 0, 0.4);
 }
 
-.animation__dialog--in {
+.information-dialog--slide-in {
   animation: dialogSlideIn 1s ease forwards;
 }
 
-.animation__dialog--out {
+.information-dialog--slide-out {
   animation: dialogSlideIn 1s ease forwards;
   animation-direction: reverse;
 }
 
-.information__img {
+.information-dialog__image {
   box-shadow: 0px 0px 20px 20px rgba(68, 68, 68, 0.3);
 }
 
-.dialog--close {
+.dialog-close {
   position: absolute;
   background-color: rgba(0, 0, 0, 0);
   border: 0;
@@ -202,7 +202,7 @@ body {
   right: 5%;
 }
 
-.dialog--close:hover {
+.dialog-close:hover {
   background-color: var(--white) 0.75;
   transition: ease-in-out 0.5s;
   color: black;
@@ -210,7 +210,7 @@ body {
   scale: 1.1;
 }
 
-.dialog__img--close {
+.dialog-close__icon {
   color: var(--white);
   font-size: 3rem;
 }
@@ -996,10 +996,10 @@ span {
   .ship__selection,
   .chatBox,
   .commit-button,
-  .mute__button,
-  .down__anker,
-  .information__button,
-  .information__dialog[open] * {
+  .mute-button,
+  .game__down-anker,
+  .information-button,
+  .information-dialog[open] * {
     scale: 0.8;
   }
 
@@ -1009,26 +1009,26 @@ span {
     justify-self: stretch;
   }
 
-  .information__button,
-  .mute__button,
-  .down__anker {
+  .information-button,
+  .mute-button,
+  .game__down-anker {
     left: auto;
     left: 2%;
   }
 
-  .mute__button {
+  .mute-button {
     bottom: 0%;
   }
 
-  .down__anker {
+  .game__down-anker {
     bottom: 30%;
   }
 
-  .information__button {
+  .information-button {
     bottom: 15%;
   }
 
-  .information__dialog[open] {
+  .information-dialog[open] {
     height: 70%;
   }
 }
@@ -1049,8 +1049,8 @@ span {
   .ship__selection,
   .chatBox,
   .commit-button,
-  .information__button,
-  .mute__button {
+  .information-button,
+  .mute-button {
     transform: scale(0.9);
   }
 

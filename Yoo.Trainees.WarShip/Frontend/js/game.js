@@ -15,9 +15,9 @@ const SRPChoice = document.querySelectorAll(".SRP-choice");
 let lastContainer = null;
 
 // Informationbox
-const dialogCloseButton = document.querySelector(".dialog--close");
-const informationDialog = document.querySelector(".information__dialog");
-const informationButton = document.querySelector(".information__button");
+const dialogCloseButton = document.querySelector(".dialog-close");
+const informationDialog = document.querySelector(".information-dialog");
+const informationButton = document.querySelector(".information-button");
 
 const connectionGameHub = new signalR.HubConnectionBuilder()
   .withUrl(gameHubApi)
@@ -62,7 +62,7 @@ connectionGameHub
 Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
 loadHitShips(gamePlayerId);
 
-const muteButton = document.querySelector(".mute__button");
+const muteButton = document.querySelector(".mute-button");
 let mute = false;
 
 getUser(gamePlayerId);
@@ -73,7 +73,7 @@ let toggle = false;
 const myBoard = document.getElementById("game__board");
 const gameOpponent = document.getElementById("opponent__board");
 
-const scrollAnker = document.querySelector(".down__anker");
+const scrollAnker = document.querySelector(".game__down-anker");
 
 let finishField = null;
 const commit_button = document.querySelector(".commit-button");
@@ -117,19 +117,19 @@ const SRP = document.querySelector(".rock-paper-scissors-container");
 localStorage.setItem("srpReload", "false");
 
 informationButton.addEventListener("click", () => {
-  informationDialog.classList.add("animation__dialog--in");
+  informationDialog.classList.add("information-dialog--slide-in");
   informationDialog.showModal();
 });
 
 informationDialog.addEventListener("animationend", () => {
-  informationDialog.classList.remove("animation__dialog--in");
+  informationDialog.classList.remove("information-dialog--slide-in");
 });
 
 dialogCloseButton.addEventListener("click", () => {
-  informationDialog.classList.add("animation__dialog--out");
+  informationDialog.classList.add("information-dialog--slide-out");
   setTimeout(() => {
     informationDialog.close();
-    informationDialog.classList.remove("animation__dialog--out");
+    informationDialog.classList.remove("information-dialog--slide-out");
   }, 1000);
 });
 
@@ -1266,7 +1266,7 @@ function showCountShots(shots, nextPlayer, gameState) {
 }
 
 scrollAnker.addEventListener("click", () => {
-  scrollAnker.classList.toggle("up__anker");
+  scrollAnker.classList.toggle("game__down-anker--up");
   ankerHref = scrollAnker.href;
   setTimeout(() => {
     // tooggle from #opponent__board to #game__board and back
