@@ -15,9 +15,9 @@ const SRPChoice = document.querySelectorAll(".SRP-choice");
 let lastContainer = null;
 
 // Informationbox
-const dialogCloseButton = document.querySelector(".dialog--close");
-const informationDialog = document.querySelector(".information__dialog");
-const informationButton = document.querySelector(".information__button");
+const dialogCloseButton = document.querySelector(".dialog-close");
+const informationDialog = document.querySelector(".information-dialog");
+const informationButton = document.querySelector(".information-button");
 
 const connectionGameHub = new signalR.HubConnectionBuilder()
   .withUrl(gameHubApi)
@@ -62,7 +62,7 @@ connectionGameHub
 Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
 loadHitShips(gamePlayerId);
 
-const muteButton = document.querySelector(".mute__button");
+const muteButton = document.querySelector(".mute-button");
 let mute = false;
 
 getUser(gamePlayerId);
@@ -70,8 +70,10 @@ getUser(gamePlayerId);
 let boardState = new Array(10).fill(null).map(() => new Array(10).fill(0));
 let originField = null;
 let toggle = false;
-let myBoard = document.getElementById("game__board");
-let gameOpponent = document.getElementById("opponent__board");
+const myBoard = document.getElementById("game__board");
+const gameOpponent = document.getElementById("opponent__board");
+
+const scrollAnker = document.querySelector(".game__down-anker");
 
 let finishField = null;
 const commit_button = document.querySelector(".commit-button");
@@ -115,19 +117,19 @@ const SRP = document.querySelector(".rock-paper-scissors-container");
 localStorage.setItem("srpReload", "false");
 
 informationButton.addEventListener("click", () => {
-  informationDialog.classList.add("animation__dialog--in");
+  informationDialog.classList.add("information-dialog--slide-in");
   informationDialog.showModal();
 });
 
 informationDialog.addEventListener("animationend", () => {
-  informationDialog.classList.remove("animation__dialog--in");
+  informationDialog.classList.remove("information-dialog--slide-in");
 });
 
 dialogCloseButton.addEventListener("click", () => {
-  informationDialog.classList.add("animation__dialog--out");
+  informationDialog.classList.add("information-dialog--slide-out");
   setTimeout(() => {
     informationDialog.close();
-    informationDialog.classList.remove("animation__dialog--out");
+    informationDialog.classList.remove("information-dialog--slide-out");
   }, 1000);
 });
 
@@ -215,6 +217,7 @@ function drag(draggable, pointXY, e) {
   const yClient = pointXY.clientY;
   const xPage = pointXY.pageX;
   const yPage = pointXY.pageY;
+  console.log(`${yClient} | ${yPage}`);
 
   const container = document.elementFromPoint(xClient, yClient);
   const isPlacementValid = dragover(container, e);
@@ -244,17 +247,22 @@ function dragMove(draggable, x, y) {
   const imgURL = "../img/" + imgName + ".png";
   const computedStyle = window.getComputedStyle(draggable);
   const commonDivisor = draggable.offsetWidth % 52;
+  let scale = 1;
+  if (window.innerWidth < 900 || window.innerHeight < 850) {
+    scale = 0.8;
+  }
+  console.log(scale);
   // the 1x1 Ship witdh is allways 52px
-  const shipWitdh = 52;
+  const shipWitdh = 52 * scale;
 
   fakeShip.classList.add("ship--active");
 
   fakeShip.style.backgroundImage = `url(${imgURL})`;
-  fakeShip.style.width = draggable.offsetWidth + "px";
-  fakeShip.style.height = draggable.offsetHeight + "px";
+  fakeShip.style.width = draggable.offsetWidth * scale + "px";
+  fakeShip.style.height = draggable.offsetHeight * scale + "px";
   fakeShip.style.backgroundSize = computedStyle.backgroundSize;
   fakeShip.style.left = x - shipWitdh / 2 - shipWitdh * commonDivisor + "px";
-  fakeShip.style.top = y - draggable.offsetHeight / 2 + "px";
+  fakeShip.style.top = y - (draggable.offsetHeight * scale) / 2 + "px";
 }
 
 function dragend(draggable, e) {
@@ -791,9 +799,11 @@ function loadFiredShots(gamePlayerId) {
       console.error("Es gab einen Fehler bei der Anfrage:", error);
     });
 }
+
 function loadShotsFromOpponent() {
   loadShotsFromOpponentFromTheDB(gamePlayerId);
 }
+
 function loadShotsFromOpponentFromTheDB(gamePlayerId) {
   const API_URL = api + gamePlayerId + "/LoadShotsFromOpponent";
   fetch(API_URL, {
@@ -968,6 +978,7 @@ SRPChoice.forEach((srp) => {
     });
   });
 });
+
 async function IsSRPIsSet() {
   const API_URL = api + gamePlayerId + "/CheckIfSRPIsSet";
   const result = await fetch(API_URL, {
@@ -1253,3 +1264,14 @@ function showCountShots(shots, nextPlayer, gameState) {
     });
   }
 }
+
+scrollAnker.addEventListener("click", () => {
+  scrollAnker.classList.toggle("game__down-anker--up");
+  ankerHref = scrollAnker.href;
+  setTimeout(() => {
+    // tooggle from #opponent__board to #game__board and back
+    scrollAnker.href = ankerHref.includes("#opponent__board")
+      ? "#container"
+      : "#opponent__board";
+  });
+});
