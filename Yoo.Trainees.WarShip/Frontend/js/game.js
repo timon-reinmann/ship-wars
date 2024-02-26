@@ -59,7 +59,7 @@ connectionGameHub
     return console.error(err.toString());
   });
 
-Promise.all([CheckIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
+Promise.all([checkIfBoardSet(gamePlayerId), loadFiredShots(gamePlayerId)]);
 loadHitShips(gamePlayerId);
 
 const muteButton = document.querySelector(".mute-button");
@@ -217,7 +217,6 @@ function drag(draggable, pointXY, e) {
   const yClient = pointXY.clientY;
   const xPage = pointXY.pageX;
   const yPage = pointXY.pageY;
-  console.log(`${yClient} | ${yPage}`);
 
   const container = document.elementFromPoint(xClient, yClient);
   const isPlacementValid = dragover(container, e);
@@ -251,7 +250,6 @@ function dragMove(draggable, x, y) {
   if (window.innerWidth < 900 || window.innerHeight < 850) {
     scale = 0.8;
   }
-  console.log(scale);
   // the 1x1 Ship witdh is allways 52px
   const shipWitdh = 52 * scale;
 
@@ -268,8 +266,10 @@ function dragMove(draggable, x, y) {
 function dragend(draggable, e) {
   let isPlacementValid = true;
   if (
-    dragover(lastContainer, e) &&
-    !lastContainer.classList.contains("opponentField")
+    lastContainer !== null &&
+    !lastContainer.classList.contains("opponentField") &&
+    !lastContainer.classList.contains("ship") &&
+    dragover(lastContainer, e)
   ) {
     lastContainer.appendChild(draggable);
   } else {
@@ -740,7 +740,7 @@ async function checkReadyToShoot(gamePlayerId) {
   return test;
 }
 
-function CheckIfBoardSet(gameId) {
+function checkIfBoardSet(gameId) {
   const API_URL = api + gameId + "/BoardState";
   return fetch(API_URL, {
     credentials: "omit",
