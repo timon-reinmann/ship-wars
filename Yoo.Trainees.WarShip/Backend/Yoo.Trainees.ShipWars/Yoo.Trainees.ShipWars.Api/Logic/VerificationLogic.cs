@@ -1,10 +1,8 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Data;
-using System.Diagnostics.Metrics;
+﻿using System.Data;
 using Yoo.Trainees.ShipWars.Api.Controllers;
 using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
-using Yoo.Trainees.ShipWars.DataBase.Migrations;
+using Yoo.Trainees.ShipWars.Common.Enums;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
 {
@@ -12,7 +10,12 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
     {
         private List<Ship> ships = GameController.Ships;
         private DataTable dtShip = default;
-        private readonly ApplicationDbContext applicationDbContext;
+        private readonly ApplicationDbContext _applicationDbContext;
+
+        public VerificationLogic(ApplicationDbContext applicationDbContext)
+        {
+            _applicationDbContext = applicationDbContext;
+        }
 
         public bool VerifyEverything(SaveShipDto[] shipDtos, bool isBotLobby)
         {
@@ -176,11 +179,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             return true;
         }
 
-        public bool VerifyBotShot(IList<SaveShotsDto> shots, SaveShotsDto lastShot)
+        public BotResponse VerifyBotShot(IList<SaveShotsDto> shots, SaveShotsDto lastShot, Guid gamePlayerId)
         {
             if (lastShot.X > 9 || lastShot.X < 0 || lastShot.Y > 9 || lastShot.Y < 0)
             {
-                return false;
+                return BotResponse.Outside;
             }
 
             if (shots.Count > 1)
@@ -188,11 +191,69 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 // Check if a shot with this coordinates already exists. If yes, verification fails
                 var shotAlreadyExists = shots.Any(x => x.X == lastShot.X && x.Y == lastShot.Y);
 
-                return !shotAlreadyExists;
+
+                var gameId = (from gp in _applicationDbContext.GamePlayer
+                              where gp.Id.Equals(gamePlayerId)
+                              select gp.GameId).SingleOrDefault();
+
+                var botGamePlayer = (from gp in _applicationDbContext.GamePlayer
+                                     where !gp.Id.Equals(gamePlayerId) && gp.GameId.Equals(gameId)
+                                     select gp).SingleOrDefault();
+
+                var allHitBotShots = (from hgs in _applicationDbContext.HardGameShot
+                                      where hgs.Hit == ShipHit.Hit && hgs.Player.Equals(botGamePlayer)
+                                      orderby hgs.CreatedAt descending
+                                      select new BotShotHardGameDto { X = hgs.X, Y = hgs.Y, MainShot = hgs.MainShot }).ToList();
+
+                var step = (from hgs in _applicationDbContext.HardGameShot
+                            where hgs.Player.Equals(botGamePlayer)
+                            orderby hgs.CreatedAt descending
+                            select hgs.Step).FirstOrDefault();
+
+
+                var allHitBotShotsFromCurrentShip = new List<SaveShotsDto>();
+                if (allHitBotShots.Count != 0 && step != Step.Random)
+                {
+                    for (int i = 0; i < allHitBotShots.Count; i++)
+                    {
+
+                        if (allHitBotShots[i].MainShot == false && allHitBotShots.Count != 0)
+                        {
+                            allHitBotShots.Remove(allHitBotShots[i]);
+                            i = i - 1;
+                        }
+                        else
+                        {
+                            allHitBotShots.Remove(allHitBotShots[i]);
+                            break;
+                        }
+                    }
+
+                    foreach (var hitShot in allHitBotShots)
+                    {
+                        if (lastShot.X == hitShot.X + 1 || lastShot.Y == hitShot.Y + 1 || lastShot.X == hitShot.X - 1 || lastShot.Y == hitShot.Y - 1)
+                        {
+                            return BotResponse.NotValidArea;
+                        }
+
+                        if (lastShot.X == hitShot.X + 1 && lastShot.Y == hitShot.Y + 1 || lastShot.X == hitShot.X - 1 && lastShot.Y == hitShot.Y - 1)
+                        {
+                            return BotResponse.NotValidArea;
+                        }
+
+                        if (lastShot.X == hitShot.X + 1 && lastShot.Y == hitShot.Y - 1 || lastShot.X == hitShot.X - 1 && lastShot.Y == hitShot.Y + 1)
+                        {
+                            return BotResponse.NotValidArea;
+                        }
+                    }
+                }
+
+                if (shotAlreadyExists) return BotResponse.AlredyExist;
 
             }
 
-            return true;
+
+            return BotResponse.Approved;
         }
         public SaveShipDto VerifyShipHit(List<SaveShipDto> ships, SaveShotsDto shot)
         {

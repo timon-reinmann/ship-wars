@@ -1,14 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Yoo.Trainees.ShipWars.Common.Enums;
 
 namespace Yoo.Trainees.ShipWars.DataBase.Entities
 {
-
-    public enum ScissorsRockPaper
-    {
-        Scissors,
-        Rock,
-        Paper
-    }
     public class GamePlayer
     {
         [Key]

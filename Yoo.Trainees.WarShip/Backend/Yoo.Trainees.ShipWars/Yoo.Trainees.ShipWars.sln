@@ -10,7 +10,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yoo.Trainees.ShipWars.Api",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yoo.Trainees.ShipWars.DataBase", "Yoo.Trainees.ShipWars.DataBase\Yoo.Trainees.ShipWars.DataBase.csproj", "{AE3AB843-0FEB-42BF-B60C-5565ED687BBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yoo.Trainees.ShipWars.Api.Test", "Yoo.Trainees.ShipWars.Api.Test\Yoo.Trainees.ShipWars.Api.Test.csproj", "{79D5FCB2-EEC7-4323-BC94-55A291BC6303}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yoo.Trainees.ShipWars.Api.Test", "Yoo.Trainees.ShipWars.Api.Test\Yoo.Trainees.ShipWars.Api.Test.csproj", "{79D5FCB2-EEC7-4323-BC94-55A291BC6303}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yoo.Trainees.ShipWars.Common", "Yoo.Trainees.ShipWars.Common\Yoo.Trainees.ShipWars.Common.csproj", "{7512D4AA-05E4-4CFE-ACE2-83D549DC4402}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{79D5FCB2-EEC7-4323-BC94-55A291BC6303}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79D5FCB2-EEC7-4323-BC94-55A291BC6303}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79D5FCB2-EEC7-4323-BC94-55A291BC6303}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7512D4AA-05E4-4CFE-ACE2-83D549DC4402}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7512D4AA-05E4-4CFE-ACE2-83D549DC4402}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7512D4AA-05E4-4CFE-ACE2-83D549DC4402}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7512D4AA-05E4-4CFE-ACE2-83D549DC4402}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

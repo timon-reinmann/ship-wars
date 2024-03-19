@@ -249,7 +249,7 @@ body {
 }
 
 .ship__selection--active {
-  transform: scale(0);
+  scale: 0;
 }
 
 .ship__selection .ship {
@@ -438,7 +438,7 @@ body {
 }
 
 .commit-button--active {
-  transform: scale(0);
+  scale: 0;
 }
 
 .error-popup {

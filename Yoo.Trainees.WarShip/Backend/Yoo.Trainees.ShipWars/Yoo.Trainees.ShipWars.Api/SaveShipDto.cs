@@ -1,10 +1,6 @@
-﻿namespace Yoo.Trainees.ShipWars.Api
-{
-    public enum Direction
-    {
-        horizontal,
-        vertical
-    }
+﻿using Yoo.Trainees.ShipWars.Common.Enums;
+namespace Yoo.Trainees.ShipWars.Api
+{ 
     public class SaveShipDto
     {
         public int X { get; set; }

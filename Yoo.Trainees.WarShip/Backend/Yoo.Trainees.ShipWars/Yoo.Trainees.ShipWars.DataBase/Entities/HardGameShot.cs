@@ -1,30 +1,7 @@
-﻿
-using System.Diagnostics;
+﻿using Yoo.Trainees.ShipWars.Common.Enums;
 
 namespace Yoo.Trainees.ShipWars.DataBase.Entities
 {
-    public enum Step
-    {
-        Random,
-        ShootAround,
-        ShootInThisDirection,
-        ShootInTheOtherDirection
-    }
-
-    public enum Navigation
-    {
-        top,
-        bottom,
-        left,
-        right,
-        none
-    }
-
-    public enum ShipHit
-    {
-        Missed,
-        Hit
-    }
     public class HardGameShot
     {
         public Guid Id { get; set; }

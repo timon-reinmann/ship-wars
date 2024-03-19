@@ -1,4 +1,5 @@
 ﻿using Yoo.Trainees.ShipWars.DataBase.Entities;
+using Yoo.Trainees.ShipWars.Common.Enums;
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
 {

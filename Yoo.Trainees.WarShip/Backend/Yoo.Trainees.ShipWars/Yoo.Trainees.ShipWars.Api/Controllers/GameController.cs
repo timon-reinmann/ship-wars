@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Yoo.Trainees.ShipWars.Api.Logic;
-using Yoo.Trainees.ShipWars.DataBase;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
-using Yoo.Trainees.ShipWars.DataBase.Migrations;
+using Yoo.Trainees.ShipWars.Common.Enums;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,12 +24,6 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
                 new Ship { Length = 3, Name = "cruiser" },
                 new Ship { Length = 1, Name = "submarine" }
         };
-
-        public enum GameMode
-        {
-            hard,
-            easy
-        }
 
         public GameController(IGameLogic gameLogic, IEmailSender emailSender, IConfiguration configuration, IVerificationLogic verificationLogic, IBotLogic botLogic)
         {
@@ -84,14 +77,14 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         {
             try
             {
-                var shipHit = DataBase.Entities.ShipHit.Missed;
+                var shipHit = ShipHit.Missed;
                 if (easyGame)
                 {
-                    shipHit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)_botLogic.CheckIfBotHit(xy, gamePlayerId);
+                    shipHit = (ShipHit)_botLogic.CheckIfBotHit(xy, gamePlayerId);
                 }
                 else if (hardGame) 
                 {
-                    shipHit = (Yoo.Trainees.ShipWars.DataBase.Entities.ShipHit)_botLogic.GetShipHit(xy, gamePlayerId, gameId);
+                    shipHit = (ShipHit)_botLogic.GetShipHit(xy, gamePlayerId, gameId);
                 }
                 return Ok(new { hit = shipHit });
             }
@@ -108,11 +101,10 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         {
             Guid gameId = _botLogic.GetGame(gamePlayerId).Id;
             bool isBotLobby = _botLogic.IsBotLobby(gameId);
-            var finalGamePlayerId = isBotLobby ? _botLogic.GetBotGamePlayerId(gamePlayerId) : gamePlayerId;
             try
             {
                 _gameLogic.VerifyAndSaveShot(xy, gamePlayerId);
-                var shipHit = _gameLogic.CheckIfShipHit(xy, finalGamePlayerId);
+                var shipHit = _gameLogic.CheckIfShipHit(xy, gamePlayerId);
 
                 if (!isBotLobby)
                 {
@@ -252,7 +244,7 @@ namespace Yoo.Trainees.ShipWars.Api.Controllers
         {
             SaveShotsDto botShotPositions = null;
             var game = _botLogic.GetGame(gamePlayerId);
-            GameMode gameMode = (Yoo.Trainees.ShipWars.Api.Controllers.GameController.GameMode)_botLogic.GetGameMode(game.Id);
+            GameMode gameMode = (GameMode)_botLogic.GetGameMode(game.Id);
             if (gameMode == GameMode.easy)
             {
                 botShotPositions = _botLogic.BotRandomShotPosition(gamePlayerId);

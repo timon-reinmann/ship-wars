@@ -1,51 +1,16 @@
 ﻿using Yoo.Trainees.ShipWars.DataBase;
+using Yoo.Trainees.ShipWars.Common.Enums;
 using Yoo.Trainees.ShipWars.DataBase.Entities;
 
 
 namespace Yoo.Trainees.ShipWars.Api.Logic
-{
-    public enum RockPaperScissorsState
-    {
-        Waiting,
-        Lost,
-        Won,
-        Draw,
-        Redo
-    }
-
-    public enum GameMode
-    {
-        hard,
-        easy
-    }
-
-    public enum ShipHit
-    {
-        Missed,
-        Hit
-    }
-
-    public enum GameState
-    {
-        Ongoing,
-        Won,
-        Lost,
-        Prep,
-        Complete
-    }
-
+{   
     public class GameLogic : IGameLogic
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IConfiguration _configuration;
         private IVerificationLogic _verificationLogic;
         private IBotLogic _botLogic;
-
-        public enum GameMode
-        {
-            hard, 
-            easy
-        }
         public GameLogic(ApplicationDbContext applicationDbContext, IVerificationLogic verificationLogic, IConfiguration configuration, IBotLogic botLogic)
         {
             this._applicationDbContext = applicationDbContext;
@@ -94,7 +59,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                 GameStatus = GameState.Prep.ToString(),
                 GamePlayers = gamePlayers,
                 IsBotGame = bot,
-                GameMode = (Yoo.Trainees.ShipWars.DataBase.Entities.GameMode)gameMode,
+                GameMode = (GameMode)gameMode,
                 Date = DateTime.Now
             };
 
@@ -126,7 +91,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                     ShipId = Guid.Parse(shipType.Id.ToString()),
                     X = Ship.X,
                     Y = Ship.Y,
-                    Direction = (Yoo.Trainees.ShipWars.DataBase.Entities.Direction)Ship.Direction,
+                    Direction = (Direction)Ship.Direction,
                     Life = shipType.Length,
                     IsHuman = true
                 };
@@ -159,7 +124,7 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
             var gamePlayer = from sp in _applicationDbContext.ShipPosition
                              join g in _applicationDbContext.Ship on sp.ShipId equals g.Id
                              where sp.GamePlayerId.Equals(gamePlayerId)
-                             select new ShipPositionDto { X = sp.X, Y = sp.Y, Direction = (Yoo.Trainees.ShipWars.Api.Direction)sp.Direction, Name = g.Name };
+                             select new ShipPositionDto { X = sp.X, Y = sp.Y, Direction = (Direction)sp.Direction, Name = g.Name };
             if (gamePlayer.Count() == int.Parse(_configuration["Player:PlayerCount"]))
                 return gamePlayer.ToArray();
             return null;
@@ -299,12 +264,11 @@ namespace Yoo.Trainees.ShipWars.Api.Logic
                            where gp.Id != gamePlayerId && gp.GameId.Equals(game.Id)
                            select gp).FirstOrDefault();
 
-            this._verificationLogic = new VerificationLogic();
             var ships = (from sp in _applicationDbContext.ShipPosition
                          where sp.GamePlayer.Id.Equals(player2.Id)
                          select new SaveShipDto
                          {
-                             Direction = (Yoo.Trainees.ShipWars.Api.Direction)sp.Direction,
+                             Direction = (Direction)sp.Direction,
                              Id = sp.Id,
                              ShipType = sp.Ship.Name,
                              X = sp.X,

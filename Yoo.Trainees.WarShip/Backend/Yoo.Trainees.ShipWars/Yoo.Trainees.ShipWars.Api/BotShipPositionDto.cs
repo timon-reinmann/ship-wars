@@ -1,4 +1,6 @@
-﻿namespace Yoo.Trainees.ShipWars.Api
+﻿using Yoo.Trainees.ShipWars.Common.Enums;
+
+namespace Yoo.Trainees.ShipWars.Api
 {
     public class BotShipPositionDto
     {

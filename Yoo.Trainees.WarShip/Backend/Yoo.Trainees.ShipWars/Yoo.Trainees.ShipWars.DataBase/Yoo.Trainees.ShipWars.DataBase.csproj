@@ -20,4 +20,8 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Yoo.Trainees.ShipWars.Common\Yoo.Trainees.ShipWars.Common.csproj" />
+  </ItemGroup>
+
 </Project>

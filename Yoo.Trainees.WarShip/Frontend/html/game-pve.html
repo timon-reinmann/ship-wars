@@ -138,23 +138,29 @@
         </div>
       </div>
     </main>
-        <button class="mute__button">
-          <i class="fa-solid fa-volume-high"></i>
+    <div class="game__buttons">
+      <button class="mute-button">
+        <i class="fa-solid fa-volume-high mute-button__icon"></i>
+      </button>
+      <button class="information-button">
+        <i class="fa-solid fa-info information-button__icon"></i>
+      </button>
+      <a href="#opponent__board" class="game__down-anker">
+        <i class="fa-duotone fa-angles-down game__down-anker-icon"></i>
+      </a>
+
+      <dialog class="information-dialog">
+        <h1>Information</h1>
+        <img
+          src="../img/ship-turning.gif"
+          class="information-dialog__image"
+          alt="rotating ship gif" />
+        <button class="button dialog-close">
+          <i class="fa-solid fa-circle-xmark dialog-close__icon"></i>
         </button>
-        <button class="information__button">
-          <i class="fa-solid fa-info"></i>
-        </button>
-        <dialog class="information__dialog">
-          <h1>Information</h1>
-          <img
-            src="../img/ship-turning.gif"
-            class="information__img"
-            alt="rotating ship gif" />
-          <button class="button dialog--close">
-            <i class="fa-solid fa-circle-xmark dialog__img--close"></i>
-          </button>
-          Click on me to rotate me
-        </dialog>
+        Click on me to rotate me
+      </dialog>
+    </div>
 
     </div>
     <script src="../js/styles-overrides.js"></script>

@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Yoo.Trainees.ShipWars.Api\Yoo.Trainees.ShipWars.Api.csproj" />
+    <ProjectReference Include="..\Yoo.Trainees.ShipWars.Common\Yoo.Trainees.ShipWars.Common.csproj" />
     <ProjectReference Include="..\Yoo.Trainees.ShipWars.DataBase\Yoo.Trainees.ShipWars.DataBase.csproj" />
   </ItemGroup>
 

@@ -1,14 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
+using Yoo.Trainees.ShipWars.Common.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Yoo.Trainees.ShipWars.DataBase.Entities
 {
-    public enum GameMode
-    {
-        hard,
-        easy
-    }
     public class Game
     {
         public Guid Id { get; set; }
